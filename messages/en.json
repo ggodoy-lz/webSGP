@@ -1,0 +1,370 @@
+{
+  "nav": {
+    "home": "Home",
+    "licencias": "Licenses",
+    "regalias": "Royalties",
+    "isrc": "ISRC Code",
+    "sobreNosotros": "About Us",
+    "noticias": "News",
+    "galardones": "Awards",
+    "contacto": "Contact",
+    "language": "ES"
+  },
+  "hero": {
+    "tagline": "Protecting your phonographic rights",
+    "subtitle": "SGP represents national and international phonographic producers throughout Paraguay and Paraguayan producers worldwide through our agreements with IFPI and WIPO.",
+    "ctaPago": "Get paid",
+    "ctaLicencia": "Get a licence",
+    "scroll": "Learn more"
+  },
+  "twoCards": {
+    "pago": {
+      "title": "Get paid",
+      "description": "If you make music, you deserve to get paid every time it's played. We collect royalties in Paraguay and around the world through our agreements with IFPI and WIPO.",
+      "cta": "More about royalties"
+    },
+    "licencia": {
+      "title": "Get a licence",
+      "description": "If you use recorded music in your business, radio, TV or online service, you need an SGP licence. Protect your activity and support creators.",
+      "cta": "More about licensing"
+    }
+  },
+  "portals": {
+    "title": "Our services",
+    "subtitle": "Access SGP management portals",
+    "items": {
+      "regalias": {
+        "title": "Royalties Portal",
+        "description": "Manage the collection of your phonographic rights"
+      },
+      "licencias": {
+        "title": "Licensing",
+        "description": "Calculate and pay your music usage licence"
+      },
+      "isrc": {
+        "title": "ISRC Code",
+        "description": "Request your international recording identifier"
+      },
+      "repertorio": {
+        "title": "Repertoire",
+        "description": "Search the database of registered works"
+      }
+    },
+    "cta": "Explore"
+  },
+  "partners": {
+    "title": "We work on behalf of",
+    "subtitle": "We represent the leading labels and producers who trust SGP to manage their rights in Paraguay and worldwide."
+  },
+  "newsPreview": {
+    "title": "Latest news",
+    "subtitle": "Stay informed about the phonographic industry",
+    "cta": "View all news",
+    "readMore": "Read more"
+  },
+  "awardsPreview": {
+    "title": "Recognition",
+    "subtitle": "Streaming Awards and Propya Awards",
+    "cta": "View awards",
+    "streaming": "Streaming Awards",
+    "propya": "Propya Awards"
+  },
+  "whatsapp": {
+    "tooltip": "Contact via WhatsApp"
+  },
+  "footer": {
+    "description": "Society of Phonographic Producers Management of Paraguay. Member of IFPI and WIPO.",
+    "links": {
+      "title": "Links",
+      "licencias": "Licenses",
+      "regalias": "Royalties",
+      "isrc": "ISRC Code",
+      "sobreNosotros": "About Us",
+      "noticias": "News",
+      "contacto": "Contact"
+    },
+    "legal": {
+      "title": "Legal",
+      "marcoLegal": "Legal Framework",
+      "privacidad": "Privacy Policy",
+      "terminos": "Terms of Use"
+    },
+    "contact": {
+      "title": "Contact",
+      "address": "Asunción, Paraguay",
+      "email": "info@sgp.com.py",
+      "phone": "+595 981 968 005"
+    },
+    "social": {
+      "follow": "Follow us on"
+    },
+    "copy": "© {year} SGP — All rights reserved."
+  },
+  "licencias": {
+    "hero": {
+      "title": "Licences",
+      "subtitle": "Everything you need to know to legally use music in your business"
+    },
+    "types": {
+      "title": "Licence types",
+      "radio": {
+        "title": "Radio & TV",
+        "description": "For radio and television broadcasters that transmit recorded music."
+      },
+      "comercio": {
+        "title": "Shops & venues",
+        "description": "For businesses, bars, restaurants and public spaces that play music."
+      },
+      "digital": {
+        "title": "Digital platforms",
+        "description": "For streaming services, apps and online platforms."
+      },
+      "eventos": {
+        "title": "Events",
+        "description": "For live events, festivals and shows with recorded music."
+      }
+    },
+    "calculator": {
+      "title": "Calculate your licence",
+      "subtitle": "Fill in your details and we'll send you a personalised quote",
+      "fields": {
+        "tipoNegocio": "Business type",
+        "tipoNegocioPlaceholder": "Select type",
+        "aforo": "Capacity",
+        "aforoPlaceholder": "Number of people",
+        "superficie": "Floor area (m²)",
+        "superficiePlaceholder": "Square metres",
+        "nombre": "Full name",
+        "nombrePlaceholder": "Your name",
+        "empresa": "Company",
+        "empresaPlaceholder": "Your company name",
+        "email": "Email address",
+        "emailPlaceholder": "you@email.com",
+        "telefono": "Phone",
+        "telefonoPlaceholder": "+595 ...",
+        "mensaje": "Additional message",
+        "mensajePlaceholder": "Additional details about your music use..."
+      },
+      "tiposNegocio": {
+        "radio": "Radio",
+        "tv": "Television",
+        "bar": "Bar / Restaurant",
+        "comercio": "Shop / Venue",
+        "hotel": "Hotel",
+        "gimnasio": "Gym / Spa",
+        "evento": "Event",
+        "digital": "Digital platform",
+        "otro": "Other"
+      },
+      "submit": "Request quote",
+      "sending": "Sending...",
+      "success": "Your request was sent! The SGP team will contact you soon.",
+      "error": "There was an error. Please try again.",
+      "estimado": "Approximate monthly estimate"
+    },
+    "pagopar": {
+      "title": "Pay your licence online",
+      "subtitle": "Use Pagopar to pay quickly and securely. Special discount for online payment.",
+      "cta": "Pay with Pagopar",
+      "descuento": "10% discount when paying online",
+      "recurrente": "Enable recurring payments and never miss a renewal"
+    }
+  },
+  "regalias": {
+    "hero": {
+      "title": "Royalties for producers",
+      "subtitle": "Receive what you're owed for every play of your music in Paraguay and worldwide"
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "steps": {
+        "registro": {
+          "title": "Register your repertoire",
+          "description": "Enrol your phonographic productions with SGP with all necessary information."
+        },
+        "monitoreo": {
+          "title": "We monitor usage",
+          "description": "SGP monitors the use of your music on radio, TV, platforms and events in Paraguay."
+        },
+        "recaudacion": {
+          "title": "We collect royalties",
+          "description": "We collect licences from music users and distribute the proceeds."
+        },
+        "pago": {
+          "title": "We pay you",
+          "description": "You receive your royalty payment directly to your account, transparently."
+        }
+      }
+    },
+    "convenios": {
+      "title": "International reach",
+      "subtitle": "Thanks to our agreements with IFPI and WIPO, your rights are protected worldwide."
+    },
+    "cta": {
+      "title": "Want to register?",
+      "subtitle": "Contact us and an SGP representative will guide you through the process.",
+      "button": "Contact us"
+    }
+  },
+  "isrc": {
+    "hero": {
+      "title": "ISRC Code",
+      "subtitle": "The International Standard Recording Code is the unique identifier for each phonogram"
+    },
+    "whatIs": {
+      "title": "What is ISRC?",
+      "description": "The ISRC (International Standard Recording Code) is a 12-character code that uniquely identifies each sound recording or music video internationally. SGP is the national ISRC registration agency in Paraguay."
+    },
+    "whyNeed": {
+      "title": "Why do you need an ISRC?",
+      "items": {
+        "identificacion": "Identifies your recording on any platform worldwide",
+        "regalias": "Facilitates royalty collection on digital platforms",
+        "proteccion": "Protects your phonographic rights internationally",
+        "streaming": "Required for distribution on Spotify, Apple Music, etc."
+      }
+    },
+    "form": {
+      "title": "Request your ISRC code",
+      "fields": {
+        "productora": "Producer / Label",
+        "productoraPlaceholder": "Your producer's name",
+        "nombreObra": "Work title",
+        "nombreObraPlaceholder": "Recording title",
+        "artista": "Artist / Performer",
+        "artistaPlaceholder": "Artist name",
+        "anio": "Year of recording",
+        "anioPlaceholder": "YYYY",
+        "cantidad": "Number of codes",
+        "cantidadPlaceholder": "Number of recordings",
+        "nombre": "Contact name",
+        "nombrePlaceholder": "Your name",
+        "email": "Email address",
+        "emailPlaceholder": "you@email.com",
+        "telefono": "Phone",
+        "telefonoPlaceholder": "+595 ..."
+      },
+      "submit": "Request ISRC",
+      "sending": "Sending...",
+      "success": "Request received! We'll contact you within 48 hours.",
+      "error": "There was an error. Please try again."
+    }
+  },
+  "sobreNosotros": {
+    "hero": {
+      "title": "About SGP",
+      "subtitle": "Protecting the rights of Paraguayan phonographic producers since our founding"
+    },
+    "mision": {
+      "title": "Our mission",
+      "description": "SGP is a private entity dedicated to the collective management of phonographic producers' rights in Paraguay. We represent national and international producers, ensuring they receive fair compensation for the use of their works."
+    },
+    "ifpiWipo": {
+      "title": "Members of IFPI and WIPO",
+      "description": "Through our agreements with the International Federation of the Phonographic Industry (IFPI) and the World Intellectual Property Organization (WIPO), Paraguayan producers have their rights protected in more than 70 countries."
+    },
+    "marcoLegal": {
+      "title": "Legal framework",
+      "description": "SGP operates under the framework of Law No. 1328/98 on Copyright and Related Rights of Paraguay, which establishes the protection of phonographic producers' rights.",
+      "ley": "Law No. 1328/98",
+      "decreto": "Regulatory Decree",
+      "convenios": "International Agreements"
+    },
+    "equipo": {
+      "title": "Our team",
+      "departamentos": {
+        "repertorio": "Repertoire and Distribution Department",
+        "comercial": "Commercial Department",
+        "legal": "Legal Department",
+        "admin": "Administration"
+      }
+    }
+  },
+  "noticias": {
+    "hero": {
+      "title": "News",
+      "subtitle": "The latest from the phonographic industry and SGP"
+    },
+    "categories": {
+      "all": "All",
+      "industria": "Industry",
+      "sgp": "SGP",
+      "legal": "Legal",
+      "streaming": "Streaming"
+    },
+    "readMore": "Read more",
+    "backToNews": "Back to news",
+    "publishedOn": "Published on",
+    "shareArticle": "Share article"
+  },
+  "galardones": {
+    "hero": {
+      "title": "Awards & Recognition",
+      "subtitle": "Celebrating the success of Paraguayan phonographic producers"
+    },
+    "streaming": {
+      "title": "Streaming Awards",
+      "description": "SGP presents awards to Paraguayan artists and producers who reach significant milestones on streaming platforms such as Spotify, Apple Music, YouTube and more.",
+      "niveles": {
+        "oro": "Gold",
+        "platino": "Platinum",
+        "diamante": "Diamond"
+      }
+    },
+    "propya": {
+      "title": "Propya Awards",
+      "description": "The Propya Awards are the Paraguayan phonographic industry prizes, organised by SGP to recognise excellence in national music production.",
+      "categorias": "Categories",
+      "ediciones": "Previous editions"
+    }
+  },
+  "contacto": {
+    "hero": {
+      "title": "Contact",
+      "subtitle": "We're here to help. Get in touch through any of these channels."
+    },
+    "form": {
+      "title": "Send us a message",
+      "fields": {
+        "nombre": "Full name",
+        "nombrePlaceholder": "Your name",
+        "empresa": "Company (optional)",
+        "empresaPlaceholder": "Your company",
+        "email": "Email address",
+        "emailPlaceholder": "you@email.com",
+        "telefono": "Phone",
+        "telefonoPlaceholder": "+595 ...",
+        "asunto": "Subject",
+        "asuntoPlaceholder": "How can we help?",
+        "mensaje": "Message",
+        "mensajePlaceholder": "Tell us your enquiry..."
+      },
+      "submit": "Send message",
+      "sending": "Sending...",
+      "success": "Message sent! We'll get back to you shortly.",
+      "error": "There was an error. Please try again."
+    },
+    "info": {
+      "title": "Contact information",
+      "whatsapp": "WhatsApp (Commercial Department)",
+      "email": "Email address",
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "address": "Address",
+      "addressValue": "Asunción, Paraguay",
+      "hours": "Business hours",
+      "hoursValue": "Monday to Friday, 8:00 - 17:00"
+    }
+  },
+  "common": {
+    "learnMore": "Learn more",
+    "contactUs": "Contact us",
+    "backHome": "Back to home",
+    "loading": "Loading...",
+    "error404": {
+      "title": "Page not found",
+      "description": "The page you're looking for doesn't exist.",
+      "cta": "Back to home"
+    }
+  }
+}

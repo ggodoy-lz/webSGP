@@ -1,26 +1,99 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   SGP v3 — "Typographic Luxury" Design System
+   Cream-first, typography-led, editorial feel
+   ───────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Brand palette */
+  --orange:    #f0552f;
+  --dark:      #212226;
+  --blue:      #4666a6;
+  --gold:      #f2b33d;
+  --cream:     #f2e2c4;
+  --white:     #feffff;
+
+  /* Extended */
+  --cream-dark:   #e8d2ae;
+  --cream-darker: #d9c096;
+  --orange-dark:  #d1401e;
+  --dark-2:       #2c2f36;
+  --gray-50:      #faf9f7;
+  --gray-100:     #f5f2ec;
+  --gray-200:     #e8e3da;
+  --gray-400:     #b5ad9f;
+  --gray-600:     #756e60;
+
+  /* Typography scale */
+  --display: clamp(5rem, 14vw, 14rem);
+  --h1:      clamp(3rem, 7vw, 8rem);
+  --h2:      clamp(2rem, 4vw, 4rem);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-orange:       var(--orange);
+  --color-orange-dark:  var(--orange-dark);
+  --color-dark:         var(--dark);
+  --color-dark-2:       var(--dark-2);
+  --color-blue:         var(--blue);
+  --color-gold:         var(--gold);
+  --color-cream:        var(--cream);
+  --color-cream-dark:   var(--cream-dark);
+  --color-cream-darker: var(--cream-darker);
+  --color-sgp-white:    var(--white);
+  --color-gray-50:      var(--gray-50);
+  --color-gray-100:     var(--gray-100);
+  --color-gray-200:     var(--gray-200);
+  --color-gray-400:     var(--gray-400);
+  --color-gray-600:     var(--gray-600);
+  --font-display:       var(--font-antonio);
+  --font-body:          var(--font-montserrat);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--cream);
+  color: var(--dark);
+  font-family: var(--font-montserrat), Montserrat, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* Headings default to display font */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-antonio), Antonio, sans-serif;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--orange);
+  color: var(--white);
+}
+
+/* Scrollbar (webkit) */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--cream); }
+::-webkit-scrollbar-thumb { background: var(--orange); }
+
+/* Utility: display font */
+.font-display {
+  font-family: var(--font-antonio), Antonio, sans-serif;
+}
+
+/* Outline text (ghost) */
+.text-outline {
+  -webkit-text-stroke: 1.5px currentColor;
+  color: transparent;
+}
+
+/* Thin horizontal rule */
+.hr-thin {
+  border: none;
+  height: 1px;
+  background: var(--dark);
+  opacity: 0.12;
 }

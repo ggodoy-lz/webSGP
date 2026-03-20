@@ -1,0 +1,370 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "licencias": "Licencias",
+    "regalias": "Regalías",
+    "isrc": "Código ISRC",
+    "sobreNosotros": "Sobre Nosotros",
+    "noticias": "Noticias",
+    "galardones": "Galardones",
+    "contacto": "Contacto",
+    "language": "EN"
+  },
+  "hero": {
+    "tagline": "Protegemos tus derechos fonográficos",
+    "subtitle": "SGP representa a productores fonográficos nacionales e internacionales en todo el territorio paraguayo y a productores paraguayos en el mundo.",
+    "ctaPago": "Recibí tu pago",
+    "ctaLicencia": "Obtené una licencia",
+    "scroll": "Conocé más"
+  },
+  "twoCards": {
+    "pago": {
+      "title": "Recibí tu pago",
+      "description": "Si producís música, tenés derecho a cobrar cada vez que se utiliza tu obra. Recaudamos regalías en Paraguay y en todo el mundo a través de nuestros convenios con IFPI y WIPO.",
+      "cta": "Más sobre regalías"
+    },
+    "licencia": {
+      "title": "Obtené una licencia",
+      "description": "Si utilizás música grabada en tu negocio, radio, TV o servicio online, necesitás una licencia SGP. Protegé tu actividad y apoyá a los creadores.",
+      "cta": "Más sobre licencias"
+    }
+  },
+  "portals": {
+    "title": "Nuestros servicios",
+    "subtitle": "Accedé a los portales de gestión de SGP",
+    "items": {
+      "regalias": {
+        "title": "Portal de Regalías",
+        "description": "Gestioná el cobro de tus derechos fonográficos"
+      },
+      "licencias": {
+        "title": "Licenciamiento",
+        "description": "Calculá y pagá tu licencia de uso de música"
+      },
+      "isrc": {
+        "title": "Código ISRC",
+        "description": "Solicitá tu identificador internacional de grabación"
+      },
+      "repertorio": {
+        "title": "Repertorio",
+        "description": "Consultá la base de datos de obras registradas"
+      }
+    },
+    "cta": "Explorar"
+  },
+  "partners": {
+    "title": "Trabajamos en nombre de",
+    "subtitle": "Representamos a los principales sellos y productores que confían en SGP para gestionar sus derechos en Paraguay y el mundo."
+  },
+  "newsPreview": {
+    "title": "Últimas noticias",
+    "subtitle": "Mantente informado sobre la industria fonográfica",
+    "cta": "Ver todas las noticias",
+    "readMore": "Leer más"
+  },
+  "awardsPreview": {
+    "title": "Reconocimientos",
+    "subtitle": "Galardones de Streaming y Propya Awards",
+    "cta": "Ver galardones",
+    "streaming": "Galardones de Streaming",
+    "propya": "Propya Awards"
+  },
+  "whatsapp": {
+    "tooltip": "Contactar por WhatsApp"
+  },
+  "footer": {
+    "description": "Sociedad de Gestión de Productores Fonográficos del Paraguay. Miembro de IFPI y WIPO.",
+    "links": {
+      "title": "Enlaces",
+      "licencias": "Licencias",
+      "regalias": "Regalías",
+      "isrc": "Código ISRC",
+      "sobreNosotros": "Sobre Nosotros",
+      "noticias": "Noticias",
+      "contacto": "Contacto"
+    },
+    "legal": {
+      "title": "Legal",
+      "marcoLegal": "Marco Legal",
+      "privacidad": "Política de Privacidad",
+      "terminos": "Términos de Uso"
+    },
+    "contact": {
+      "title": "Contacto",
+      "address": "Asunción, Paraguay",
+      "email": "info@sgp.com.py",
+      "phone": "+595 981 968 005"
+    },
+    "social": {
+      "follow": "Seguinos en"
+    },
+    "copy": "© {year} SGP — Todos los derechos reservados."
+  },
+  "licencias": {
+    "hero": {
+      "title": "Licencias",
+      "subtitle": "Todo lo que necesitás saber para usar música en tu negocio de forma legal"
+    },
+    "types": {
+      "title": "Tipos de licencia",
+      "radio": {
+        "title": "Radio y TV",
+        "description": "Para emisoras de radio y televisión que transmiten música grabada."
+      },
+      "comercio": {
+        "title": "Comercios y locales",
+        "description": "Para negocios, bares, restaurantes y espacios públicos que reproducen música."
+      },
+      "digital": {
+        "title": "Plataformas digitales",
+        "description": "Para servicios de streaming, aplicaciones y plataformas online."
+      },
+      "eventos": {
+        "title": "Eventos",
+        "description": "Para eventos en vivo, festivales y espectáculos con música grabada."
+      }
+    },
+    "calculator": {
+      "title": "Calculá tu licencia",
+      "subtitle": "Completá los datos y te enviamos un presupuesto personalizado",
+      "fields": {
+        "tipoNegocio": "Tipo de negocio",
+        "tipoNegocioPlaceholder": "Seleccioná el tipo",
+        "aforo": "Aforo / Capacidad",
+        "aforoPlaceholder": "Número de personas",
+        "superficie": "Superficie (m²)",
+        "superficiePlaceholder": "Metros cuadrados",
+        "nombre": "Nombre completo",
+        "nombrePlaceholder": "Tu nombre",
+        "empresa": "Empresa",
+        "empresaPlaceholder": "Nombre de tu empresa",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "tu@email.com",
+        "telefono": "Teléfono",
+        "telefonoPlaceholder": "+595 ...",
+        "mensaje": "Mensaje adicional",
+        "mensajePlaceholder": "Detalles adicionales sobre tu uso de música..."
+      },
+      "tiposNegocio": {
+        "radio": "Radio",
+        "tv": "Televisión",
+        "bar": "Bar / Restaurante",
+        "comercio": "Comercio / Local",
+        "hotel": "Hotel",
+        "gimnasio": "Gimnasio / Spa",
+        "evento": "Evento",
+        "digital": "Plataforma digital",
+        "otro": "Otro"
+      },
+      "submit": "Solicitar presupuesto",
+      "sending": "Enviando...",
+      "success": "¡Tu solicitud fue enviada! El equipo de SGP se contactará contigo pronto.",
+      "error": "Hubo un error. Por favor intentá de nuevo.",
+      "estimado": "Estimado mensual aproximado"
+    },
+    "pagopar": {
+      "title": "Pagá tu licencia online",
+      "subtitle": "Usá Pagopar para pagar de forma rápida y segura. Descuento especial por pago en línea.",
+      "cta": "Pagar con Pagopar",
+      "descuento": "10% de descuento pagando online",
+      "recurrente": "Activá pagos recurrentes y nunca olvides renovar"
+    }
+  },
+  "regalias": {
+    "hero": {
+      "title": "Regalías para productores",
+      "subtitle": "Recibí lo que te corresponde por cada reproducción de tu música en Paraguay y el mundo"
+    },
+    "howItWorks": {
+      "title": "¿Cómo funciona?",
+      "steps": {
+        "registro": {
+          "title": "Registrá tu repertorio",
+          "description": "Inscribí tus producciones fonográficas en SGP con toda la información necesaria."
+        },
+        "monitoreo": {
+          "title": "Monitoreamos el uso",
+          "description": "SGP monitorea el uso de tu música en radios, TV, plataformas y eventos en Paraguay."
+        },
+        "recaudacion": {
+          "title": "Recaudamos las regalías",
+          "description": "Cobramos las licencias a los usuarios de música y distribuimos lo recaudado."
+        },
+        "pago": {
+          "title": "Te pagamos",
+          "description": "Recibís tu pago de regalías directamente en tu cuenta, de forma transparente."
+        }
+      }
+    },
+    "convenios": {
+      "title": "Alcance internacional",
+      "subtitle": "Gracias a nuestros convenios con IFPI y WIPO, tus derechos están protegidos en todo el mundo."
+    },
+    "cta": {
+      "title": "¿Querés registrarte?",
+      "subtitle": "Contactanos y un representante de SGP te guiará en el proceso.",
+      "button": "Contactar"
+    }
+  },
+  "isrc": {
+    "hero": {
+      "title": "Código ISRC",
+      "subtitle": "El Código Internacional Estándar de Grabación es el identificador único de cada fonograma"
+    },
+    "whatIs": {
+      "title": "¿Qué es el ISRC?",
+      "description": "El ISRC (International Standard Recording Code) es un código de 12 caracteres que identifica de forma única cada grabación sonora o videoclip musical a nivel internacional. SGP es la agencia nacional de registro ISRC en Paraguay."
+    },
+    "whyNeed": {
+      "title": "¿Por qué necesitás un ISRC?",
+      "items": {
+        "identificacion": "Identifica tu grabación en cualquier plataforma del mundo",
+        "regalias": "Facilita la recaudación de regalías en plataformas digitales",
+        "proteccion": "Protege tus derechos fonográficos internacionalmente",
+        "streaming": "Requisito para distribución en Spotify, Apple Music, etc."
+      }
+    },
+    "form": {
+      "title": "Solicitá tu código ISRC",
+      "fields": {
+        "productora": "Productora / Sello",
+        "productoraPlaceholder": "Nombre de tu productora",
+        "nombreObra": "Nombre de la obra",
+        "nombreObraPlaceholder": "Título de la grabación",
+        "artista": "Artista / Intérprete",
+        "artistaPlaceholder": "Nombre del artista",
+        "anio": "Año de grabación",
+        "anioPlaceholder": "YYYY",
+        "cantidad": "Cantidad de códigos",
+        "cantidadPlaceholder": "Número de grabaciones",
+        "nombre": "Nombre de contacto",
+        "nombrePlaceholder": "Tu nombre",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "tu@email.com",
+        "telefono": "Teléfono",
+        "telefonoPlaceholder": "+595 ..."
+      },
+      "submit": "Solicitar ISRC",
+      "sending": "Enviando...",
+      "success": "¡Solicitud recibida! Nos contactaremos contigo en las próximas 48 horas.",
+      "error": "Hubo un error. Por favor intentá de nuevo."
+    }
+  },
+  "sobreNosotros": {
+    "hero": {
+      "title": "Sobre SGP",
+      "subtitle": "Protegiendo los derechos de los productores fonográficos del Paraguay desde nuestra fundación"
+    },
+    "mision": {
+      "title": "Nuestra misión",
+      "description": "SGP es una entidad privada dedicada a la gestión colectiva de los derechos de los productores fonográficos en Paraguay. Representamos a productores nacionales e internacionales, asegurando que reciban la compensación justa por el uso de sus obras."
+    },
+    "ifpiWipo": {
+      "title": "Miembros de IFPI y WIPO",
+      "description": "A través de nuestros convenios con la Federación Internacional de la Industria Fonográfica (IFPI) y la Organización Mundial de la Propiedad Intelectual (WIPO), los productores paraguayos tienen sus derechos protegidos en más de 70 países."
+    },
+    "marcoLegal": {
+      "title": "Marco legal",
+      "description": "SGP opera bajo el marco de la Ley N.º 1328/98 de Derechos de Autor y Derechos Conexos de Paraguay, que establece la protección de los derechos de los productores fonográficos.",
+      "ley": "Ley N.º 1328/98",
+      "decreto": "Decreto Reglamentario",
+      "convenios": "Convenios Internacionales"
+    },
+    "equipo": {
+      "title": "Nuestro equipo",
+      "departamentos": {
+        "repertorio": "Departamento de Repertorio y Distribución",
+        "comercial": "Departamento Comercial",
+        "legal": "Departamento Legal",
+        "admin": "Administración"
+      }
+    }
+  },
+  "noticias": {
+    "hero": {
+      "title": "Noticias",
+      "subtitle": "Las últimas novedades de la industria fonográfica y de SGP"
+    },
+    "categories": {
+      "all": "Todas",
+      "industria": "Industria",
+      "sgp": "SGP",
+      "legal": "Legal",
+      "streaming": "Streaming"
+    },
+    "readMore": "Leer más",
+    "backToNews": "Volver a noticias",
+    "publishedOn": "Publicado el",
+    "shareArticle": "Compartir artículo"
+  },
+  "galardones": {
+    "hero": {
+      "title": "Galardones y Reconocimientos",
+      "subtitle": "Celebramos el éxito de los productores fonográficos paraguayos"
+    },
+    "streaming": {
+      "title": "Galardones de Streaming",
+      "description": "SGP entrega reconocimientos a los artistas y productores paraguayos que alcanzan hitos significativos en plataformas de streaming como Spotify, Apple Music, YouTube y más.",
+      "niveles": {
+        "oro": "Oro",
+        "platino": "Platino",
+        "diamante": "Diamante"
+      }
+    },
+    "propya": {
+      "title": "Propya Awards",
+      "description": "Los Propya Awards son los premios de la industria fonográfica paraguaya, organizados por SGP para reconocer la excelencia en la producción musical nacional.",
+      "categorias": "Categorías",
+      "ediciones": "Ediciones anteriores"
+    }
+  },
+  "contacto": {
+    "hero": {
+      "title": "Contacto",
+      "subtitle": "Estamos para ayudarte. Comunicate con nosotros por cualquiera de estos medios."
+    },
+    "form": {
+      "title": "Envianos un mensaje",
+      "fields": {
+        "nombre": "Nombre completo",
+        "nombrePlaceholder": "Tu nombre",
+        "empresa": "Empresa (opcional)",
+        "empresaPlaceholder": "Tu empresa",
+        "email": "Correo electrónico",
+        "emailPlaceholder": "tu@email.com",
+        "telefono": "Teléfono",
+        "telefonoPlaceholder": "+595 ...",
+        "asunto": "Asunto",
+        "asuntoPlaceholder": "¿En qué te podemos ayudar?",
+        "mensaje": "Mensaje",
+        "mensajePlaceholder": "Contanos tu consulta..."
+      },
+      "submit": "Enviar mensaje",
+      "sending": "Enviando...",
+      "success": "¡Mensaje enviado! Te responderemos a la brevedad.",
+      "error": "Hubo un error. Por favor intentá de nuevo."
+    },
+    "info": {
+      "title": "Información de contacto",
+      "whatsapp": "WhatsApp (Departamento Comercial)",
+      "email": "Correo electrónico",
+      "instagram": "Instagram",
+      "facebook": "Facebook",
+      "address": "Dirección",
+      "addressValue": "Asunción, Paraguay",
+      "hours": "Horario de atención",
+      "hoursValue": "Lunes a viernes, 8:00 - 17:00"
+    }
+  },
+  "common": {
+    "learnMore": "Conocé más",
+    "contactUs": "Contactanos",
+    "backHome": "Volver al inicio",
+    "loading": "Cargando...",
+    "error404": {
+      "title": "Página no encontrada",
+      "description": "La página que buscás no existe.",
+      "cta": "Volver al inicio"
+    }
+  }
+}
