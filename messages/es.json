@@ -370,6 +370,100 @@
       "hoursValue": "Lunes a viernes, 8:00 - 17:00"
     }
   },
+  "tarifario": {
+    "title": "Calculadora de Tarifas",
+    "subtitle": "Estimá tu tarifa mensual de licencia en 4 pasos simples",
+    "step1": "Tipo de local",
+    "step2": "Datos del local",
+    "step3": "Días y horarios",
+    "step4": "Medio de uso",
+    "resultado": "Resultado",
+    "siguiente": "Siguiente",
+    "anterior": "Anterior",
+    "calcular": "Calcular tarifa",
+    "reiniciar": "Nueva consulta",
+    "solicitar": "Solicitar cotización formal",
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
+    "tarifaMensual": "Tarifa mensual estimada",
+    "grupos": {
+      "gastronomia": "Gastronomía",
+      "comercial": "Comercial / Retail",
+      "entretenimiento": "Entretenimiento Nocturno",
+      "hoteles": "Hoteles y Alojamiento",
+      "estetica": "Estética y Cuidado Personal",
+      "academias": "Academias de Danza",
+      "gimnasios": "Gimnasios",
+      "oficinas": "Oficinas y Corporativo",
+      "motel": "Motel"
+    },
+    "gruposDesc": {
+      "gastronomia": "Bares, restaurantes, cafeterías y similares",
+      "comercial": "Tiendas, supermercados, farmacias y similares",
+      "entretenimiento": "Discotecas, karaokes, pubs con baile",
+      "hoteles": "Hoteles, apart hoteles, hostels, posadas",
+      "estetica": "Salones de belleza, peluquerías, spas",
+      "academias": "Academias de danza (tarifa fija)",
+      "gimnasios": "Musculación, aeróbica, spinning, zumba",
+      "oficinas": "Empresas, oficinas, cooperativas",
+      "motel": "Moteles"
+    },
+    "fields": {
+      "tipoLocal": "Tipo de local",
+      "tipoLocalPlaceholder": "Seleccioná el tipo",
+      "mesas": "Cantidad de mesas",
+      "mesasPlaceholder": "Ej: 15",
+      "butacas": "Butacas sueltas (opcional)",
+      "butacasPlaceholder": "Ej: 5",
+      "metrosCuadrados": "Superficie total (m²)",
+      "metrosCuadradosPlaceholder": "Ej: 80",
+      "habitaciones": "Cantidad de habitaciones",
+      "habitacionesPlaceholder": "Ej: 30",
+      "categoriaHotel": "Categoría del hotel",
+      "estaciones": "Estaciones de atención",
+      "estacionesPlaceholder": "Ej: 8",
+      "alumnos": "Cantidad de alumnos",
+      "alumnosPlaceholder": "Ej: 40",
+      "maquinas": "Máquinas / Estaciones",
+      "maquinasPlaceholder": "Ej: 20",
+      "sesiones": "Sesiones por día",
+      "sesionesPlaceholder": "Ej: 3",
+      "sillasEspera": "Sillas de espera",
+      "sillasEsperaPlaceholder": "Ej: 6",
+      "camas": "Cantidad de camas",
+      "camasPlaceholder": "Ej: 20"
+    },
+    "dias": {
+      "label": "Días de apertura",
+      "dom": "Dom",
+      "lun": "Lun",
+      "mar": "Mar",
+      "mie": "Mié",
+      "jue": "Jue",
+      "vie": "Vie",
+      "sab": "Sáb"
+    },
+    "turnos": {
+      "label": "Turnos de uso musical",
+      "manana": "Mañana (4h)",
+      "mediodia": "Mediodía (3h)",
+      "tarde": "Tarde (4h)",
+      "noche": "Noche (5h)"
+    },
+    "horasEstandar": "Se aplican {horas}h estándar por día según el tipo de local",
+    "medio": {
+      "label": "¿Qué medio usa para musicalizar?",
+      "parlante": "Parlantes / Audio",
+      "televisor": "Televisores / Pantallas",
+      "fijo": "Para este rubro se aplica siempre parlante (0.15)"
+    },
+    "hotel": {
+      "estrellas1": "1 Estrella",
+      "estrellas2": "2 Estrellas",
+      "estrellas3": "3 Estrellas",
+      "estrellas4": "4 Estrellas",
+      "estrellas5": "5 Estrellas"
+    }
+  },
   "common": {
     "learnMore": "Conocé más",
     "contactUs": "Contactanos",

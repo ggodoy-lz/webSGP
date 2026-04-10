@@ -3,7 +3,7 @@ import { useTranslations, useLocale } from "next-intl";
 import type { Metadata } from "next";
 import { CheckIcon, ArrowTopRightOnSquareIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import PageHero from "@/components/ui/PageHero";
-import LicenseCalculator from "@/components/ui/LicenseCalculator";
+import TarifarioCalculator from "@/components/ui/TarifarioCalculator";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("licencias");
@@ -63,8 +63,8 @@ export default function LicenciasPage() {
       {/* Calculator */}
       <section className="bg-[#f2e2c4] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <div className="max-w-4xl">
-            <LicenseCalculator />
+          <div className="max-w-5xl">
+            <TarifarioCalculator />
           </div>
         </div>
       </section>

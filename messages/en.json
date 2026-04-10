@@ -370,6 +370,100 @@
       "hoursValue": "Monday to Friday, 8:00 - 17:00"
     }
   },
+  "tarifario": {
+    "title": "Tariff Calculator",
+    "subtitle": "Estimate your monthly license fee in 4 simple steps",
+    "step1": "Business type",
+    "step2": "Business details",
+    "step3": "Days & hours",
+    "step4": "Music medium",
+    "resultado": "Result",
+    "siguiente": "Next",
+    "anterior": "Back",
+    "calcular": "Calculate tariff",
+    "reiniciar": "New query",
+    "solicitar": "Request formal quote",
+    "disclaimer": "This is an estimated value. SGP will confirm the final tariff after verifying the declared data.",
+    "tarifaMensual": "Estimated monthly tariff",
+    "grupos": {
+      "gastronomia": "Gastronomy",
+      "comercial": "Commercial / Retail",
+      "entretenimiento": "Nightlife & Entertainment",
+      "hoteles": "Hotels & Lodging",
+      "estetica": "Beauty & Personal Care",
+      "academias": "Dance Academies",
+      "gimnasios": "Gyms",
+      "oficinas": "Offices & Corporate",
+      "motel": "Motel"
+    },
+    "gruposDesc": {
+      "gastronomia": "Bars, restaurants, cafes and similar",
+      "comercial": "Shops, supermarkets, pharmacies and similar",
+      "entretenimiento": "Nightclubs, karaokes, dance pubs",
+      "hoteles": "Hotels, apart hotels, hostels, inns",
+      "estetica": "Beauty salons, barber shops, spas",
+      "academias": "Dance academies (fixed tariff)",
+      "gimnasios": "Gym, aerobics, spinning, zumba",
+      "oficinas": "Companies, offices, cooperatives",
+      "motel": "Motels"
+    },
+    "fields": {
+      "tipoLocal": "Business type",
+      "tipoLocalPlaceholder": "Select type",
+      "mesas": "Number of tables",
+      "mesasPlaceholder": "E.g.: 15",
+      "butacas": "Additional seats (optional)",
+      "butacasPlaceholder": "E.g.: 5",
+      "metrosCuadrados": "Total area (m²)",
+      "metrosCuadradosPlaceholder": "E.g.: 80",
+      "habitaciones": "Number of rooms",
+      "habitacionesPlaceholder": "E.g.: 30",
+      "categoriaHotel": "Hotel category",
+      "estaciones": "Service stations",
+      "estacionesPlaceholder": "E.g.: 8",
+      "alumnos": "Number of students",
+      "alumnosPlaceholder": "E.g.: 40",
+      "maquinas": "Machines / Stations",
+      "maquinasPlaceholder": "E.g.: 20",
+      "sesiones": "Sessions per day",
+      "sesionesPlaceholder": "E.g.: 3",
+      "sillasEspera": "Waiting chairs",
+      "sillasEsperaPlaceholder": "E.g.: 6",
+      "camas": "Number of beds",
+      "camasPlaceholder": "E.g.: 20"
+    },
+    "dias": {
+      "label": "Opening days",
+      "dom": "Sun",
+      "lun": "Mon",
+      "mar": "Tue",
+      "mie": "Wed",
+      "jue": "Thu",
+      "vie": "Fri",
+      "sab": "Sat"
+    },
+    "turnos": {
+      "label": "Music use shifts",
+      "manana": "Morning (4h)",
+      "mediodia": "Midday (3h)",
+      "tarde": "Afternoon (4h)",
+      "noche": "Night (5h)"
+    },
+    "horasEstandar": "Standard {horas}h per day applies for this business type",
+    "medio": {
+      "label": "What medium do you use for music?",
+      "parlante": "Speakers / Audio",
+      "televisor": "TVs / Screens",
+      "fijo": "For this type, speakers (0.15) always apply"
+    },
+    "hotel": {
+      "estrellas1": "1 Star",
+      "estrellas2": "2 Stars",
+      "estrellas3": "3 Stars",
+      "estrellas4": "4 Stars",
+      "estrellas5": "5 Stars"
+    }
+  },
   "common": {
     "learnMore": "Learn more",
     "contactUs": "Contact us",
