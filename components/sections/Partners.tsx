@@ -1,13 +1,20 @@
 "use client";
 
-import { useRef } from "react";
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 const partners = [
-  "IFPI", "WIPO", "Universal Music Group", "Sony Music Entertainment",
-  "Warner Music Group", "Spotify", "Apple Music", "YouTube Music",
-  "Amazon Music", "Deezer", "TIDAL",
+  { name: "IFPI", color: "#f0552f" },
+  { name: "WIPO", color: "#4666a6" },
+  { name: "Universal Music Group", color: "#f2b33d" },
+  { name: "Sony Music Entertainment", color: "#f0552f" },
+  { name: "Warner Music Group", color: "#4666a6" },
+  { name: "Spotify", color: "#f2b33d" },
+  { name: "Apple Music", color: "#f0552f" },
+  { name: "YouTube Music", color: "#4666a6" },
+  { name: "Amazon Music", color: "#f2b33d" },
+  { name: "Deezer", color: "#f0552f" },
+  { name: "TIDAL", color: "#4666a6" },
 ];
 
 const wrap = (min: number, max: number, v: number) => {
@@ -28,14 +35,19 @@ function Marquee({ speed = 50 }: { speed?: number }) {
   return (
     <div className="overflow-hidden border-t border-b border-[#212226]/10">
       <motion.div className="flex py-5" style={{ x }}>
-        {[...partners, ...partners].map((name, i) => (
+        {[...partners, ...partners].map((p, i) => (
           <div
             key={i}
-            className="flex-shrink-0 flex items-center justify-center border-r border-[#212226]/10"
+            className="flex-shrink-0 flex items-center justify-center border-r border-[#212226]/10 group/item"
             style={{ width: ITEM_W }}
           >
-            <span className="font-display font-black text-sm uppercase tracking-widest text-[#212226]/30 hover:text-[#212226] transition-colors cursor-default px-4 text-center">
-              {name}
+            <span
+              className="font-display font-black text-sm uppercase tracking-widest text-[#212226]/30 transition-colors cursor-default px-4 text-center"
+              style={{ ["--hover-color" as string]: p.color }}
+              onMouseEnter={(e) => { (e.target as HTMLElement).style.color = p.color; }}
+              onMouseLeave={(e) => { (e.target as HTMLElement).style.color = ""; }}
+            >
+              {p.name}
             </span>
           </div>
         ))}

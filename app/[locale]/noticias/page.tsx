@@ -18,7 +18,7 @@ export default function NoticiasPage() {
 
   return (
     <>
-      <PageHero title={t("hero.title")} subtitle={t("hero.subtitle")} tag="SGP" variant="cream" />
+      <PageHero title={t("hero.title")} subtitle={t("hero.subtitle")} tag="SGP" variant="dark" />
 
       <section className="bg-[#feffff] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">

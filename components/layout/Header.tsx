@@ -8,13 +8,13 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { key: "licencias", href: "/licencias" },
-  { key: "regalias", href: "/regalias" },
-  { key: "isrc", href: "/isrc" },
-  { key: "sobreNosotros", href: "/sobre-nosotros" },
-  { key: "noticias", href: "/noticias" },
-  { key: "galardones", href: "/galardones" },
-  { key: "contacto", href: "/contacto" },
+  { key: "licencias", href: "/licencias", color: "#4666a6" },
+  { key: "regalias", href: "/regalias", color: "#f0552f" },
+  { key: "isrc", href: "/isrc", color: "#f2b33d" },
+  { key: "sobreNosotros", href: "/sobre-nosotros", color: "#f0552f" },
+  { key: "noticias", href: "/noticias", color: "#4666a6" },
+  { key: "galardones", href: "/galardones", color: "#f2b33d" },
+  { key: "contacto", href: "/contacto", color: "#f0552f" },
 ] as const;
 
 export default function Header() {
@@ -37,46 +37,59 @@ export default function Header() {
   const isHome = pathname === `/${locale}` || pathname === `/${locale}/`;
 
   const bg = scrolled
-    ? "bg-[#f2e2c4]/95 backdrop-blur-sm shadow-[0_1px_0_0_rgba(33,34,38,0.12)]"
+    ? "bg-[#212226]/95 backdrop-blur-sm shadow-xl"
     : isHome
-    ? "bg-transparent"
-    : "bg-[#f2e2c4]";
+    ? "bg-[#212226]/90 backdrop-blur-sm"
+    : "bg-[#212226]";
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${bg}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${bg}`}>
+      {/* Color service bar */}
+      <div className="h-1 bg-[#f0552f]" />
+
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-        <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="flex items-center justify-between h-16">
 
           {/* Logo */}
-          <Link href={`/${locale}`} className="flex items-baseline gap-2 group">
-            <span className="font-display text-[2.5rem] font-black leading-none text-[#212226] group-hover:text-[#f0552f] transition-colors tracking-tighter">
+          <Link href={`/${locale}`} className="flex items-center gap-3 group">
+            <span className="font-display text-4xl font-black leading-none text-white group-hover:text-[#f0552f] transition-colors tracking-tighter">
               SGP
+            </span>
+            <span className="hidden sm:block text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 leading-tight max-w-[120px]">
+              Productores<br />Fonográficos PY
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-0.5">
-            {navLinks.map(({ key, href: path }) => (
+          <nav className="hidden lg:flex items-center gap-1">
+            {navLinks.map(({ key, href: path, color }) => (
               <Link
                 key={key}
                 href={href(path)}
-                className={`relative px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] transition-colors ${
-                  isActive(path) ? "text-[#f0552f]" : "text-[#212226]/60 hover:text-[#212226]"
-                }`}
+                className="relative px-3 py-1.5 text-xs font-bold uppercase tracking-wider transition-colors duration-200 group/link"
+                style={{
+                  color: isActive(path) ? color : undefined,
+                }}
               >
-                {t(key)}
+                <span className={isActive(path) ? "" : "text-white/70 group-hover/link:text-white transition-colors"}>
+                  {t(key)}
+                </span>
                 {isActive(path) && (
                   <motion.span
-                    layoutId="nav-underline"
-                    className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#f0552f]"
+                    layoutId="nav-active"
+                    className="absolute inset-0 rounded"
+                    style={{ backgroundColor: `${color}15` }}
                   />
                 )}
+                <motion.span
+                  className="absolute bottom-0 left-3 right-3 h-[2px] origin-left scale-x-0 group-hover/link:scale-x-100 transition-transform duration-200"
+                  style={{ backgroundColor: color }}
+                />
               </Link>
             ))}
-            <div className="w-px h-4 bg-[#212226]/20 mx-2" />
             <Link
               href={altPath}
-              className="text-[11px] font-black uppercase tracking-[0.12em] text-[#212226]/40 hover:text-[#f0552f] transition-colors"
+              className="ml-3 text-xs font-black bg-[#f0552f] hover:bg-[#d1401e] text-white px-3 py-1.5 transition-colors uppercase tracking-wider"
             >
               {t("language")}
             </Link>
@@ -85,10 +98,10 @@ export default function Header() {
           {/* Mobile toggle */}
           <button
             onClick={() => setOpen(!open)}
-            className="lg:hidden p-2 text-[#212226]"
+            className="lg:hidden p-2 text-white"
             aria-label="Menú"
           >
-            {open ? <XMarkIcon className="w-5 h-5" /> : <Bars3Icon className="w-5 h-5" />}
+            {open ? <XMarkIcon className="w-6 h-6" /> : <Bars3Icon className="w-6 h-6" />}
           </button>
         </div>
       </div>
@@ -97,25 +110,24 @@ export default function Header() {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            className="lg:hidden bg-[#f2e2c4] border-t border-[#212226]/10"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden bg-[#212226] border-t border-white/10 overflow-hidden"
           >
             <nav className="max-w-screen-xl mx-auto px-6 py-4 flex flex-col gap-1">
-              {navLinks.map(({ key, href: path }) => (
+              {navLinks.map(({ key, href: path, color }) => (
                 <Link
                   key={key}
                   href={href(path)}
                   onClick={() => setOpen(false)}
-                  className={`py-2.5 text-sm font-bold uppercase tracking-wider border-b border-[#212226]/10 ${
-                    isActive(path) ? "text-[#f0552f]" : "text-[#212226]/70"
-                  }`}
+                  className="py-3 text-sm font-bold uppercase tracking-wider border-b border-white/10 transition-colors"
+                  style={{ color: isActive(path) ? color : "rgba(255,255,255,0.8)" }}
                 >
                   {t(key)}
                 </Link>
               ))}
-              <Link href={altPath} onClick={() => setOpen(false)} className="py-2.5 text-sm font-black text-[#f0552f] uppercase tracking-wider">
+              <Link href={altPath} onClick={() => setOpen(false)} className="py-3 mt-2 text-sm font-black text-[#f0552f] uppercase tracking-wider">
                 {t("language")}
               </Link>
             </nav>

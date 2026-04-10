@@ -69,6 +69,20 @@
     "streaming": "Streaming Awards",
     "propya": "Propya Awards"
   },
+  "artistOfMonth": {
+    "tag": "Featured",
+    "title": "Artist of the Month",
+    "description": "Every month we highlight a Paraguayan artist or producer who stands out for their talent, trajectory and impact on the national phonographic industry.",
+    "cta": "View artist of the month",
+    "current": "Current artist of the month",
+    "featured": "Paraguayan artist recognised for their contribution to the phonographic industry"
+  },
+  "rankingSGP": {
+    "tag": "Ranking",
+    "title": "SGP Ranking",
+    "description": "The official ranking of the most-streamed artists and producers in Paraguay, based on data from all streaming platforms.",
+    "cta": "View full ranking"
+  },
   "whatsapp": {
     "tooltip": "Contact via WhatsApp"
   },

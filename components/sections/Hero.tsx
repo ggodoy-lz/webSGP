@@ -6,46 +6,20 @@ import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
-const BARS = 52;
+const BAR_COUNT = 180;
 
-function SoundWave({
-  color = "#f0552f",
-  className = "",
-}: {
-  color?: string;
-  className?: string;
-}) {
-  return (
-    <div className={`flex items-end gap-[3px] ${className}`}>
-      {Array.from({ length: BARS }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="rounded-sm flex-shrink-0"
-          style={{ width: 3, backgroundColor: color }}
-          animate={{
-            height: [
-              `${Math.abs(Math.sin(i * 0.35)) * 40 + 6}px`,
-              `${Math.abs(Math.sin(i * 0.35 + 1.1)) * 55 + 6}px`,
-              `${Math.abs(Math.sin(i * 0.35 + 2.3)) * 30 + 6}px`,
-              `${Math.abs(Math.sin(i * 0.35)) * 40 + 6}px`,
-            ],
-          }}
-          transition={{
-            duration: 2.2 + (i % 7) * 0.2,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: i * 0.038,
-          }}
-        />
-      ))}
-    </div>
-  );
+function generateWave(count: number) {
+  return Array.from({ length: count }, (_, i) => {
+    const base = Math.sin(i * 0.3) * 0.4 + Math.sin(i * 0.7) * 0.3 + Math.sin(i * 1.1) * 0.3;
+    return Math.abs(base) * 0.7 + 0.15;
+  });
 }
 
 export default function Hero() {
   const t = useTranslations("hero");
   const locale = useLocale();
   const ref = useRef<HTMLElement>(null);
+  const bars = generateWave(BAR_COUNT);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0]);
@@ -55,7 +29,29 @@ export default function Hero() {
       ref={ref}
       className="relative min-h-screen bg-[#f2e2c4] overflow-hidden flex flex-col"
     >
-      {/* Main content */}
+      {/* Animated sound wave background — exact V1 structure */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-35 -translate-y-20">
+        <div className="flex items-center gap-[3px] w-full px-8">
+          {bars.map((height, i) => (
+            <motion.div
+              key={i}
+              className="flex-1 bg-[#f0552f] rounded-full"
+              style={{ minWidth: 2 }}
+              animate={{
+                scaleY: [height, height * 1.6, height * 0.8, height * 1.3, height],
+              }}
+              transition={{
+                duration: 2.5 + (i % 7) * 0.3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: i * 0.03,
+              }}
+              initial={{ height: "60px", transformOrigin: "center" }}
+            />
+          ))}
+        </div>
+      </div>
+
       <motion.div
         className="relative z-20 flex-1 flex flex-col items-center justify-center text-center px-6 lg:px-10 py-28"
         style={{ y, opacity }}
@@ -74,7 +70,7 @@ export default function Hero() {
           <div className="h-px w-10 bg-[#f0552f]" />
         </motion.div>
 
-        {/* SGP */}
+        {/* SGP text */}
         <motion.h1
           className="font-display font-black text-[#212226] leading-none tracking-tighter mb-6"
           style={{ fontSize: "clamp(7rem, 20vw, 18rem)" }}
@@ -84,16 +80,6 @@ export default function Hero() {
         >
           SGP
         </motion.h1>
-
-        {/* Sound wave — orange, centered */}
-        <motion.div
-          initial={{ opacity: 0, scaleX: 0 }}
-          animate={{ opacity: 1, scaleX: 1 }}
-          transition={{ duration: 0.7, delay: 0.4 }}
-          className="mb-7 max-w-sm w-full"
-        >
-          <SoundWave color="#f0552f" className="justify-center" />
-        </motion.div>
 
         {/* Full name */}
         <motion.div

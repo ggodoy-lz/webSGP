@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { useTranslations, useLocale } from "next-intl";
 import type { Metadata } from "next";
-import { CheckIcon, ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, ArrowTopRightOnSquareIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import PageHero from "@/components/ui/PageHero";
 import LicenseCalculator from "@/components/ui/LicenseCalculator";
 
@@ -11,6 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 const licTypes = ["radio","comercio","digital","eventos"] as const;
+const licColors = ["#f0552f","#4666a6","#f2b33d","#f0552f"];
 
 export default function LicenciasPage() {
   const t = useTranslations("licencias");
@@ -18,22 +19,35 @@ export default function LicenciasPage() {
 
   return (
     <>
-      <PageHero title={t("hero.title")} subtitle={t("hero.subtitle")} tag="SGP" variant="cream" />
+      <PageHero title={t("hero.title")} subtitle={t("hero.subtitle")} tag="SGP" variant="blue" />
 
-      {/* License types — lista editorial */}
+      {/* Service bar — inspired by v2 */}
+      <div className="bg-[#212226]">
+        <div className="max-w-screen-xl mx-auto px-6 lg:px-10 flex flex-wrap gap-0 divide-x divide-white/10">
+          {licTypes.map((key, i) => (
+            <div key={key} className="flex-1 min-w-[140px] py-4 px-5 text-center border-b-2" style={{ borderColor: licColors[i] }}>
+              <span className="text-xs font-black uppercase tracking-wider text-white/70">
+                {t(`types.${key}.title`)}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* License types */}
       <section className="bg-[#feffff] py-20 lg:py-24">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <h2 className="font-display font-black text-[#212226] text-4xl lg:text-5xl mb-12">
+          <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-12">
             {t("types.title")}
           </h2>
           <div className="border-t border-[#212226]/10">
             {licTypes.map((key, i) => (
               <div key={key} className="group flex flex-col md:flex-row md:items-start gap-4 py-8 border-b border-[#212226]/10 hover:pl-3 transition-all duration-200">
-                <span className="font-display font-black text-[#f0552f] text-sm w-8 shrink-0">
+                <span className="font-display font-black text-sm w-8 shrink-0" style={{ color: licColors[i] }}>
                   {String(i+1).padStart(2,"0")}
                 </span>
                 <div>
-                  <h3 className="font-display font-black text-[#212226] text-2xl mb-2">
+                  <h3 className="font-display font-black text-[#212226] text-xl mb-2">
                     {t(`types.${key}.title`)}
                   </h3>
                   <p className="text-sm text-[#212226]/55 leading-relaxed max-w-xl">
@@ -62,7 +76,7 @@ export default function LicenciasPage() {
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-4">Pagos en línea</p>
               <div className="w-10 h-[3px] bg-[#f0552f] mb-6" />
-              <h2 className="font-display font-black text-white text-4xl lg:text-5xl mb-5">
+              <h2 className="font-display font-black text-white text-3xl lg:text-4xl mb-5">
                 {t("pagopar.title")}
               </h2>
               <p className="text-white/50 text-sm leading-relaxed mb-8">{t("pagopar.subtitle")}</p>
@@ -88,6 +102,29 @@ export default function LicenciasPage() {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Reglamento de Tarifas Generales */}
+      <section className="bg-[#f2e2c4] py-16">
+        <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#feffff] p-8 border-l-4 border-[#f0552f]">
+            <div className="flex items-center gap-4">
+              <DocumentTextIcon className="w-8 h-8 text-[#f0552f] shrink-0" />
+              <div>
+                <h3 className="font-display font-black text-[#212226] text-xl">Reglamento de Tarifas Generales</h3>
+                <p className="text-sm text-[#212226]/50">Documento oficial actualizado — Julio 2023</p>
+              </div>
+            </div>
+            <a
+              href="https://www.sgp.com.py/uploads/files/docs/SGP-REGLAMENTO_DE_TARIFAS_GENERALES_Act_%204Julio2023.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-widest px-6 py-3 transition-colors shrink-0"
+            >
+              Descargar PDF <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </section>

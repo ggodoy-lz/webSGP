@@ -27,7 +27,7 @@ export default function SobreNosotrosPage() {
             <div className="lg:col-span-7">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-4">Misión</p>
               <div className="w-10 h-[3px] bg-[#f0552f] mb-6" />
-              <h2 className="font-display font-black text-[#212226] text-4xl lg:text-5xl mb-6">{t("mision.title")}</h2>
+              <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-6">{t("mision.title")}</h2>
               <p className="text-[#212226]/65 leading-relaxed">{t("mision.description")}</p>
             </div>
             <div className="lg:col-span-4 lg:col-start-9">
@@ -35,10 +35,20 @@ export default function SobreNosotrosPage() {
                 <h3 className="font-display font-black text-[#212226] text-xl mb-3">{t("ifpiWipo.title")}</h3>
                 <p className="text-sm text-[#212226]/60 leading-relaxed mb-6">{t("ifpiWipo.description")}</p>
                 <div className="grid grid-cols-2 gap-2">
-                  {[{n:"IFPI",c:"#f0552f"},{n:"WIPO",c:"#4666a6"}].map(({n,c}) => (
-                    <div key={n} className="flex items-center justify-center py-5" style={{backgroundColor:c}}>
+                  {[
+                    { n: "IFPI", c: "#f0552f", href: "https://www.ifpi.org/" },
+                    { n: "WIPO", c: "#4666a6", href: "https://www.wipo.int/portal/es/index.html" },
+                  ].map(({ n, c, href }) => (
+                    <a
+                      key={n}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center py-5 hover:opacity-80 transition-opacity"
+                      style={{ backgroundColor: c }}
+                    >
                       <span className="font-display font-black text-white text-2xl">{n}</span>
-                    </div>
+                    </a>
                   ))}
                 </div>
               </div>
@@ -54,7 +64,7 @@ export default function SobreNosotrosPage() {
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-4">Marco Legal</p>
               <div className="w-10 h-[3px] bg-[#f0552f] mb-6" />
-              <h2 className="font-display font-black text-white text-4xl lg:text-5xl mb-4">{t("marcoLegal.title")}</h2>
+              <h2 className="font-display font-black text-white text-3xl lg:text-4xl mb-4">{t("marcoLegal.title")}</h2>
               <p className="text-white/50 text-sm leading-relaxed">{t("marcoLegal.description")}</p>
             </div>
             <div className="border-t border-white/10">
@@ -72,11 +82,11 @@ export default function SobreNosotrosPage() {
       {/* Equipo */}
       <section className="bg-[#f2e2c4] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <h2 className="font-display font-black text-[#212226] text-4xl lg:text-5xl mb-12">{t("equipo.title")}</h2>
+          <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-12">{t("equipo.title")}</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {depts.map((dept, i) => (
               <div key={dept} className="bg-[#feffff] p-8 border-l-4 hover:-translate-y-1 transition-transform" style={{borderColor:deptColors[i]}}>
-                <span className="font-display font-black text-[#212226] text-[#212226] text-lg leading-tight">{t(`equipo.departamentos.${dept}`)}</span>
+                <span className="font-display font-black text-[#212226] text-lg leading-tight">{t(`equipo.departamentos.${dept}`)}</span>
               </div>
             ))}
           </div>

@@ -69,6 +69,20 @@
     "streaming": "Galardones de Streaming",
     "propya": "Propya Awards"
   },
+  "artistOfMonth": {
+    "tag": "Destacado",
+    "title": "Artista del Mes",
+    "description": "Cada mes destacamos a un artista o productor paraguayo que se distingue por su talento, trayectoria e impacto en la industria fonográfica nacional.",
+    "cta": "Ver artista del mes",
+    "current": "Artista del mes actual",
+    "featured": "Artista paraguayo destacado por su contribución a la industria fonográfica"
+  },
+  "rankingSGP": {
+    "tag": "Ranking",
+    "title": "Ranking SGP",
+    "description": "El ranking oficial de los artistas y productores más escuchados en Paraguay, basado en datos de todas las plataformas de streaming.",
+    "cta": "Ver ranking completo"
+  },
   "whatsapp": {
     "tooltip": "Contactar por WhatsApp"
   },
