@@ -2,6 +2,7 @@
   "nav": {
     "home": "Inicio",
     "licencias": "Licencias",
+    "tarifario": "Tarifario",
     "regalias": "Regalías",
     "isrc": "Código ISRC",
     "sobreNosotros": "Sobre Nosotros",
@@ -91,6 +92,7 @@
     "links": {
       "title": "Enlaces",
       "licencias": "Licencias",
+      "tarifario": "Tarifario",
       "regalias": "Regalías",
       "isrc": "Código ISRC",
       "sobreNosotros": "Sobre Nosotros",
@@ -175,6 +177,12 @@
       "success": "¡Tu solicitud fue enviada! El equipo de SGP se contactará contigo pronto.",
       "error": "Hubo un error. Por favor intentá de nuevo.",
       "estimado": "Estimado mensual aproximado"
+    },
+    "tarifarioBanner": {
+      "tag": "Herramienta",
+      "title": "Calculadora de tarifas para locales",
+      "description": "Estimá el valor mensual orientativo de tu licencia según el tipo de negocio. El cálculo se realiza en el servidor; el resultado es referencial hasta que SGP confirme los datos.",
+      "cta": "Ir al tarifario"
     },
     "pagopar": {
       "title": "Pagá tu licencia online",
@@ -369,6 +377,16 @@
       "hours": "Horario de atención",
       "hoursValue": "Lunes a viernes, 8:00 - 17:00"
     }
+  },
+  "tarifarioPage": {
+    "metaTitle": "Tarifario — Calculadora SGP",
+    "metaDescription": "Calculá una estimación mensual de tu licencia de uso musical para tu local en Paraguay.",
+    "hero": {
+      "title": "Tarifario",
+      "subtitle": "Calculadora de tarifas para uso de música en locales y establecimientos"
+    },
+    "intro": "Seleccioná el rubro, completá los datos de tu local y obtené una estimación en guaraníes. Si necesitás una cotización formal, contactá al equipo comercial de SGP.",
+    "calculatorHeading": "Completá los pasos"
   },
   "tarifario": {
     "title": "Calculadora de Tarifas",

@@ -61,6 +61,7 @@ export default function Footer() {
               <ul className="space-y-2.5">
                 {[
                   { label: t("links.licencias"), href: `/${locale}/licencias` },
+                  { label: t("links.tarifario"), href: `/${locale}/tarifario` },
                   { label: t("links.regalias"), href: `/${locale}/regalias` },
                   { label: t("links.isrc"), href: `/${locale}/isrc` },
                   { label: t("links.sobreNosotros"), href: `/${locale}/sobre-nosotros` },

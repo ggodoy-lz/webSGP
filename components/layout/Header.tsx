@@ -9,6 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
   { key: "licencias", href: "/licencias", color: "#4666a6" },
+  { key: "tarifario", href: "/tarifario", color: "#f2b33d" },
   { key: "regalias", href: "/regalias", color: "#f0552f" },
   { key: "isrc", href: "/isrc", color: "#f2b33d" },
   { key: "sobreNosotros", href: "/sobre-nosotros", color: "#f0552f" },

@@ -53,7 +53,11 @@ const fmt = (n: number) =>
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
-export default function TarifarioCalculator() {
+export default function TarifarioCalculator({
+  showOuterHeader = true,
+}: {
+  showOuterHeader?: boolean;
+}) {
   const t = useTranslations("tarifario");
 
   const [step, setStep] = useState<Step>(1);
@@ -254,15 +258,17 @@ export default function TarifarioCalculator() {
 
   return (
     <div className="bg-[#feffff] border-t-4 border-[#212226]">
-      <div className="px-8 lg:px-12 py-8 border-b border-[#212226]/10">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
-          Calculadora
-        </p>
-        <h3 className="font-display font-black text-[#212226] text-3xl">
-          {t("title")}
-        </h3>
-        <p className="text-sm text-[#212226]/40 mt-1">{t("subtitle")}</p>
-      </div>
+      {showOuterHeader && (
+        <div className="px-8 lg:px-12 py-8 border-b border-[#212226]/10">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
+            Calculadora
+          </p>
+          <h3 className="font-display font-black text-[#212226] text-3xl">
+            {t("title")}
+          </h3>
+          <p className="text-sm text-[#212226]/40 mt-1">{t("subtitle")}</p>
+        </div>
+      )}
 
       <div className="px-8 lg:px-12 py-10">
         {step < 5 && stepIndicator}

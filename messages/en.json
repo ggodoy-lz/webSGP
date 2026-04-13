@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "licencias": "Licenses",
+    "tarifario": "Tariffs",
     "regalias": "Royalties",
     "isrc": "ISRC Code",
     "sobreNosotros": "About Us",
@@ -91,6 +92,7 @@
     "links": {
       "title": "Links",
       "licencias": "Licenses",
+      "tarifario": "Tariffs",
       "regalias": "Royalties",
       "isrc": "ISRC Code",
       "sobreNosotros": "About Us",
@@ -175,6 +177,12 @@
       "success": "Your request was sent! The SGP team will contact you soon.",
       "error": "There was an error. Please try again.",
       "estimado": "Approximate monthly estimate"
+    },
+    "tarifarioBanner": {
+      "tag": "Tool",
+      "title": "Tariff calculator for venues",
+      "description": "Estimate your indicative monthly license fee by business type. Calculation runs on our servers; the result is for reference until SGP confirms your details.",
+      "cta": "Open tariff calculator"
     },
     "pagopar": {
       "title": "Pay your licence online",
@@ -369,6 +377,16 @@
       "hours": "Business hours",
       "hoursValue": "Monday to Friday, 8:00 - 17:00"
     }
+  },
+  "tarifarioPage": {
+    "metaTitle": "Tariffs — SGP Calculator",
+    "metaDescription": "Get an estimated monthly music license fee for your venue in Paraguay.",
+    "hero": {
+      "title": "Tariffs",
+      "subtitle": "License fee calculator for music use in venues and businesses"
+    },
+    "intro": "Choose your business type, fill in your venue details, and get an estimate in Guaraníes. For a formal quote, contact SGP’s commercial team.",
+    "calculatorHeading": "Follow the steps"
   },
   "tarifario": {
     "title": "Tariff Calculator",

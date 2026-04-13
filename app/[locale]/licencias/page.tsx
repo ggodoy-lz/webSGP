@@ -1,9 +1,9 @@
 import { getTranslations } from "next-intl/server";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
-import { CheckIcon, ArrowTopRightOnSquareIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, ArrowTopRightOnSquareIcon, DocumentTextIcon, CalculatorIcon } from "@heroicons/react/24/outline";
 import PageHero from "@/components/ui/PageHero";
-import TarifarioCalculator from "@/components/ui/TarifarioCalculator";
+import TarifarioPageLink from "@/components/ui/TarifarioPageLink";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("licencias");
@@ -15,7 +15,6 @@ const licColors = ["#f0552f","#4666a6","#f2b33d","#f0552f"];
 
 export default function LicenciasPage() {
   const t = useTranslations("licencias");
-  const locale = useLocale();
 
   return (
     <>
@@ -60,11 +59,27 @@ export default function LicenciasPage() {
         </div>
       </section>
 
-      {/* Calculator */}
-      <section className="bg-[#f2e2c4] py-20">
+      {/* Tarifario — enlace a página dedicada */}
+      <section className="bg-[#f2e2c4] py-16 lg:py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <div className="max-w-5xl">
-            <TarifarioCalculator />
+          <div className="max-w-4xl mx-auto bg-[#feffff] border-t-4 border-[#212226] shadow-sm">
+            <div className="p-8 lg:p-10 flex flex-col md:flex-row md:items-center gap-8">
+              <div className="shrink-0 w-16 h-16 rounded-full bg-[#f0552f]/10 flex items-center justify-center">
+                <CalculatorIcon className="w-8 h-8 text-[#f0552f]" />
+              </div>
+              <div className="flex-1">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+                  {t("tarifarioBanner.tag")}
+                </p>
+                <h2 className="font-display font-black text-[#212226] text-2xl lg:text-3xl mb-3">
+                  {t("tarifarioBanner.title")}
+                </h2>
+                <p className="text-sm text-[#212226]/55 leading-relaxed mb-6">
+                  {t("tarifarioBanner.description")}
+                </p>
+                <TarifarioPageLink />
+              </div>
+            </div>
           </div>
         </div>
       </section>
