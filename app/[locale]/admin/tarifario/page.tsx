@@ -143,10 +143,6 @@ export default function AdminTarifarioPage() {
               >
                 Ingresar
               </button>
-              <p className="text-[10px] text-[#212226]/35 mt-5 text-center leading-relaxed">
-                La contraseña se define con la variable de entorno{" "}
-                <code className="text-[#f0552f]/80">ADMIN_PASSWORD</code> en el servidor.
-              </p>
             </div>
             <div className="text-center mt-8">
               <Link
