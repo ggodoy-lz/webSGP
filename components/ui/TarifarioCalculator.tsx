@@ -173,7 +173,7 @@ export default function TarifarioCalculator({
   const canNext = (() => {
     if (step === 1) return !!grupo && !!tipoLocal;
     if (step === 2) {
-      if (grupo === "gastronomia") return mesas > 0;
+      if (grupo === "gastronomia") return mesas > 0 || butacas > 0;
       if (grupo === "comercial") return metrosCuadrados > 0;
       if (grupo === "entretenimiento") return metrosCuadrados > 0;
       if (grupo === "hoteles") return habitaciones > 0;
