@@ -114,7 +114,8 @@
     "social": {
       "follow": "Follow us on"
     },
-    "copy": "© {year} SGP — All rights reserved."
+    "copy": "© {year} SGP — All rights reserved.",
+    "cta": "Contact"
   },
   "licencias": {
     "hero": {
