@@ -87,14 +87,14 @@ function calcularHorasMensuales(
 ): number {
   const horasPorDia = turnos.reduce((acc, t) => acc + HORAS_POR_TURNO[t], 0);
   const diasPorSemana = dias.length;
-  return horasPorDia * diasPorSemana * 4.33; // semanas promedio por mes
+  return horasPorDia * diasPorSemana * 4; // 4 semanas por mes según spec
 }
 
 function calcularHorasEstandarMensuales(
   dias: DiaSemana[],
   horasPorDia: number,
 ): number {
-  return dias.length * horasPorDia * 4.33;
+  return dias.length * horasPorDia * 4;
 }
 
 function calcularHorasEsteticaMensuales(dias: DiaSemana[]): number {
@@ -106,7 +106,7 @@ function calcularHorasEsteticaMensuales(dias: DiaSemana[]): number {
       total += HORAS_ESTETICA_DOM_JUE;
     }
   }
-  return total * 4.33;
+  return total * 4;
 }
 
 function formulaBase(
@@ -232,14 +232,14 @@ function calcularGimnasios(input: TarifarioInput): number {
     const sesiones = input.sesionesPorDia ?? 0;
     const diasPorSemana = (input.dias ?? []).length;
     const horasPorSesion = MINUTOS_POR_SESION / 60;
-    horas = sesiones * horasPorSesion * diasPorSemana * 4.33;
+    horas = sesiones * horasPorSesion * diasPorSemana * 4;
   } else {
     udaEfectivo = UDA * INCIDENCIAS.indispensable;
     medio = MEDIOS_DE_USO.parlante;
     const sesiones = input.sesionesPorDia ?? 0;
     const diasPorSemana = (input.dias ?? []).length;
     const horasPorSesion = MINUTOS_POR_SESION / 60;
-    horas = sesiones * horasPorSesion * diasPorSemana * 4.33;
+    horas = sesiones * horasPorSesion * diasPorSemana * 4;
   }
 
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
