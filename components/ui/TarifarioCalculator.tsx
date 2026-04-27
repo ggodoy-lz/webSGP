@@ -78,16 +78,19 @@ export default function TarifarioCalculator({
   const [sesionesPorDia, setSesionesPorDia] = useState(0);
   const [sillasEspera, setSillasEspera] = useState(0);
   const [camas, setCamas] = useState(0);
+  const [ubicacion, setUbicacion] = useState<"capital" | "interior">("capital");
 
   const [resultado, setResultado] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
 
-  const needsHorario = grupo !== "academias";
+  // Hoteles usan fórmula lineal: no necesitan días, horas ni medio
+  const needsHorario = grupo !== "academias" && grupo !== "hoteles";
   const needsMedio = (() => {
     if (!grupo) return true;
     if (grupo === "academias") return false;
+    if (grupo === "hoteles") return false;
     if (grupo === "entretenimiento") return false;
     if (grupo === "gimnasios") {
       const sub = getGimnasioSubtipo(tipoLocal);
@@ -97,7 +100,7 @@ export default function TarifarioCalculator({
   })();
 
   const totalSteps = (() => {
-    if (grupo === "academias") return 2;
+    if (grupo === "academias" || grupo === "hoteles") return 2;
     if (!needsMedio) return 3;
     return 4;
   })();
@@ -121,13 +124,13 @@ export default function TarifarioCalculator({
       metrosCuadrados,
       habitaciones, categoriaHotel,
       estaciones,
-      alumnos,
+      alumnos, ubicacion,
       maquinas, sesionesPorDia,
       sillasEspera,
       camas,
       dias, turnos,
     };
-  }, [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones, categoriaHotel, estaciones, alumnos, maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
+  }, [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones, categoriaHotel, estaciones, alumnos, ubicacion, maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
 
   const handleCalcular = async () => {
     setLoading(true);
@@ -160,6 +163,7 @@ export default function TarifarioCalculator({
     setHabitaciones(0); setCategoriaHotel(3);
     setEstaciones(0);
     setAlumnos(0);
+    setUbicacion("capital");
     setMaquinas(0); setSesionesPorDia(0);
     setSillasEspera(0);
     setCamas(0);
@@ -194,7 +198,7 @@ export default function TarifarioCalculator({
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
-      if (grupo === "academias") {
+      if (grupo === "academias" || grupo === "hoteles") {
         handleCalcular();
       } else {
         setStep(3);
@@ -416,12 +420,35 @@ export default function TarifarioCalculator({
                 )}
 
                 {grupo === "academias" && (
-                  <InputField
-                    label={t("fields.alumnos")}
-                    placeholder={t("fields.alumnosPlaceholder")}
-                    value={alumnos}
-                    onChange={setAlumnos}
-                  />
+                  <>
+                    <div className="md:col-span-2">
+                      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
+                        {t("academia.ubicacion")}
+                      </label>
+                      <div className="flex gap-3">
+                        {(["capital", "interior"] as const).map((u) => (
+                          <button
+                            key={u}
+                            type="button"
+                            onClick={() => setUbicacion(u)}
+                            className={`flex-1 px-4 py-3 rounded-lg border text-sm font-bold transition-all ${
+                              ubicacion === u
+                                ? "border-[#f0552f] bg-[#f0552f]/5 text-[#f0552f]"
+                                : "border-[#212226]/10 text-[#212226]/70 hover:border-[#212226]/30"
+                            }`}
+                          >
+                            {t(`academia.${u}`)}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <InputField
+                      label={t("fields.alumnos")}
+                      placeholder={t("fields.alumnosPlaceholder")}
+                      value={alumnos}
+                      onChange={setAlumnos}
+                    />
+                  </>
                 )}
 
                 {grupo === "gimnasios" && (

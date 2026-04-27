@@ -480,6 +480,11 @@
       "estrellas3": "3 Stars",
       "estrellas4": "4 Stars",
       "estrellas5": "5 Stars"
+    },
+    "academia": {
+      "ubicacion": "Academy location",
+      "capital": "Capital (Asunción)",
+      "interior": "Interior (rest of country)"
     }
   },
   "common": {

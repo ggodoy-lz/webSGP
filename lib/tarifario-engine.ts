@@ -22,8 +22,10 @@ import {
   HORAS_ESTETICA_DOM_JUE,
   HORAS_ESTETICA_VIE_SAB,
   ACADEMIA_ADICIONAL_POR_25,
+  TARIFA_MINIMA_OFICINAS,
   buscarRangoM2,
   buscarRangoAcademia,
+  buscarRangoAcademiaInterior,
   getGimnasioSubtipo,
   type GrupoId,
   type MedioDeUso,
@@ -55,6 +57,7 @@ export interface TarifarioInput {
 
   // Academias
   alumnos?: number;
+  ubicacion?: "capital" | "interior";
 
   // Gimnasios
   maquinas?: number;
@@ -84,14 +87,14 @@ function calcularHorasMensuales(
 ): number {
   const horasPorDia = turnos.reduce((acc, t) => acc + HORAS_POR_TURNO[t], 0);
   const diasPorSemana = dias.length;
-  return horasPorDia * diasPorSemana * 4.33; // semanas promedio por mes
+  return horasPorDia * diasPorSemana * 4; // 4 semanas por mes según spec
 }
 
 function calcularHorasEstandarMensuales(
   dias: DiaSemana[],
   horasPorDia: number,
 ): number {
-  return dias.length * horasPorDia * 4.33;
+  return dias.length * horasPorDia * 4;
 }
 
 function calcularHorasEsteticaMensuales(dias: DiaSemana[]): number {
@@ -103,7 +106,7 @@ function calcularHorasEsteticaMensuales(dias: DiaSemana[]): number {
       total += HORAS_ESTETICA_DOM_JUE;
     }
   }
-  return total * 4.33;
+  return total * 4;
 }
 
 function formulaBase(
@@ -163,26 +166,21 @@ function calcularComercialGrande(input: TarifarioInput): number {
 
 function calcularEntretenimiento(input: TarifarioInput): number {
   const m2 = input.metrosCuadrados ?? 0;
-  const rango = buscarRangoM2(m2);
-  if (!rango) return 0;
-
-  const aforoNeto = rango.circ10;
+  // Grupo 3: aforo = 100% del m² total, sin reducción del 60%
+  const aforoNeto = m2;
   const udaEfectivo = UDA * INCIDENCIAS.indispensable;
-  const horas = calcularHorasMensuales(input.dias ?? [], input.turnos ?? []);
+  // Horas estándar: 6 h/día según días seleccionados
+  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
   const medio = MEDIOS_DE_USO.parlante;
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }
 
 function calcularHoteles(input: TarifarioInput): number {
+  // Fórmula lineal: habitaciones × (UDA × % según categoría de estrellas)
   const habitaciones = input.habitaciones ?? 0;
-  const aforoBruto = habitaciones * AFORO_CAMA_HOTEL;
-  const aforoNeto = aforoBruto * DESCUENTO_AFORO;
-  const udaEfectivo = UDA * INCIDENCIAS.secundaria;
   const cat = input.categoriaHotel ?? 3;
-  const categoria = CATEGORIAS_HOTEL[cat] ?? CATEGORIA_DEFAULT;
-  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
-  const medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
-  return formulaBase(udaEfectivo, aforoNeto, horas, categoria, medio);
+  const multiplicador = CATEGORIAS_HOTEL[cat] ?? CATEGORIAS_HOTEL[3];
+  return Math.round(habitaciones * (UDA * multiplicador));
 }
 
 function calcularEstetica(input: TarifarioInput): number {
@@ -197,7 +195,10 @@ function calcularEstetica(input: TarifarioInput): number {
 
 function calcularAcademias(input: TarifarioInput): number {
   const alumnos = input.alumnos ?? 0;
-  const rango = buscarRangoAcademia(alumnos);
+  const esInterior = input.ubicacion === "interior";
+  const rango = esInterior
+    ? buscarRangoAcademiaInterior(alumnos)
+    : buscarRangoAcademia(alumnos);
   if (!rango) return 0;
 
   let tarifa = rango.tarifaTotal;
@@ -231,14 +232,14 @@ function calcularGimnasios(input: TarifarioInput): number {
     const sesiones = input.sesionesPorDia ?? 0;
     const diasPorSemana = (input.dias ?? []).length;
     const horasPorSesion = MINUTOS_POR_SESION / 60;
-    horas = sesiones * horasPorSesion * diasPorSemana * 4.33;
+    horas = sesiones * horasPorSesion * diasPorSemana * 4;
   } else {
     udaEfectivo = UDA * INCIDENCIAS.indispensable;
     medio = MEDIOS_DE_USO.parlante;
     const sesiones = input.sesionesPorDia ?? 0;
     const diasPorSemana = (input.dias ?? []).length;
     const horasPorSesion = MINUTOS_POR_SESION / 60;
-    horas = sesiones * horasPorSesion * diasPorSemana * 4.33;
+    horas = sesiones * horasPorSesion * diasPorSemana * 4;
   }
 
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
@@ -251,7 +252,9 @@ function calcularOficinas(input: TarifarioInput): number {
   const udaEfectivo = UDA * INCIDENCIAS.secundaria;
   const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
   const medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
-  return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
+  const tarifa = formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
+  // Tarifa mínima: 7.5 × UDA = 294.000 Gs.
+  return Math.max(tarifa, TARIFA_MINIMA_OFICINAS);
 }
 
 function calcularMotel(input: TarifarioInput): number {

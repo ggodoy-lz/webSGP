@@ -480,6 +480,11 @@
       "estrellas3": "3 Estrellas",
       "estrellas4": "4 Estrellas",
       "estrellas5": "5 Estrellas"
+    },
+    "academia": {
+      "ubicacion": "Ubicación de la academia",
+      "capital": "Capital (Asunción)",
+      "interior": "Interior del país"
     }
   },
   "common": {
