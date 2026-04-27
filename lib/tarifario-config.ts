@@ -60,11 +60,12 @@ export const INCIDENCIAS: Record<Incidencia, number> = {
 
 export const CATEGORIA_DEFAULT = 0.24;
 
+// 1–3 estrellas / sin categ = 20% | 4 estrellas = 30% | 5 estrellas = 40%
 export const CATEGORIAS_HOTEL: Record<CategoriaHotel, number> = {
-  1: 0.12,
-  2: 0.16,
-  3: 0.24,
-  4: 0.32,
+  1: 0.20,
+  2: 0.20,
+  3: 0.20,
+  4: 0.30,
   5: 0.40,
 };
 
@@ -116,6 +117,16 @@ export const TABLA_ACADEMIAS: AcademiaRango[] = [
 
 export const ACADEMIA_ADICIONAL_POR_25 = 78_400;
 
+export const TABLA_ACADEMIAS_INTERIOR: AcademiaRango[] = [
+  { desde: 1,   hasta: 50,  udaSGP: 4,  udaAPA: 0.50, tarifaTotal: 102_900 },
+  { desde: 51,  hasta: 100, udaSGP: 6,  udaAPA: 0.75, tarifaTotal: 154_840 },
+  { desde: 101, hasta: 200, udaSGP: 8,  udaAPA: 1.25, tarifaTotal: 218_540 },
+  { desde: 201, hasta: 300, udaSGP: 10, udaAPA: 1.75, tarifaTotal: 282_240 },
+  { desde: 301, hasta: 999, udaSGP: 12, udaAPA: 2.00, tarifaTotal: 333_200 },
+];
+
+export const TARIFA_MINIMA_OFICINAS = 294_000; // 7.5 × UDA
+
 // ── Constantes de aforo por grupo ─────────────────────────────────────────
 
 export const AFORO_MESA = 0.49;
@@ -160,6 +171,7 @@ export const GRUPOS: GrupoConfig[] = [
     id: "entretenimiento",
     incidencia: "indispensable",
     medioFijo: "parlante",
+    horasEstandar: 6,
     tipos: [
       "Discoteca", "Karaoke", "Pub con Baile", "Bar con Baile",
       "Sala de Baile", "Club Nocturno", "Otro",
@@ -243,6 +255,10 @@ export function buscarRangoM2(m2: number): AforoRangoM2 | undefined {
 
 export function buscarRangoAcademia(alumnos: number): AcademiaRango | undefined {
   return TABLA_ACADEMIAS.find((r) => alumnos >= r.desde && alumnos <= r.hasta);
+}
+
+export function buscarRangoAcademiaInterior(alumnos: number): AcademiaRango | undefined {
+  return TABLA_ACADEMIAS_INTERIOR.find((r) => alumnos >= r.desde && alumnos <= r.hasta);
 }
 
 export function getGimnasioSubtipo(tipoLocal: string): GimnasioSubtipo {
