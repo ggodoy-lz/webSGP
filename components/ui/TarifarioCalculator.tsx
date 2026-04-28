@@ -189,7 +189,11 @@ export default function TarifarioCalculator({
       if (grupo === "hoteles") return habitaciones > 0;
       if (grupo === "estetica") return estaciones > 0;
       if (grupo === "academias") return alumnos > 0;
-      if (grupo === "gimnasios") return maquinas > 0;
+      if (grupo === "gimnasios") {
+        const sub = getGimnasioSubtipo(tipoLocal);
+        if (sub !== "secundario") return maquinas > 0 && sesionesPorDia > 0;
+        return maquinas > 0;
+      }
       if (grupo === "oficinas") return sillasEspera > 0;
       if (grupo === "motel") return camas > 0;
       return false;
