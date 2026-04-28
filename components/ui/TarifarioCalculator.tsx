@@ -196,9 +196,8 @@ export default function TarifarioCalculator({
     }
     if (step === 3) {
       if (!needsHorario) return true;
-      const grupoConf = GRUPOS.find((g) => g.id === grupo);
-      if (grupoConf?.horasEstandar) return dias.length > 0;
-      return dias.length > 0 && turnos.length > 0;
+      if (grupo === "gastronomia") return dias.length > 0 && turnos.length > 0;
+      return dias.length > 0;
     }
     if (step === 4) return true;
     return false;
@@ -520,7 +519,7 @@ export default function TarifarioCalculator({
                 </div>
               </div>
 
-              {!grupoConfig?.horasEstandar && (
+              {grupo === "gastronomia" && (
                 <div>
                   <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
                     {t("turnos.label")}
