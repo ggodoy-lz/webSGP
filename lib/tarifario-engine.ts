@@ -19,6 +19,8 @@ import {
   TOPE_AFORO_EFECTIVO_GRANDES,
   UDA_PORCENTAJE_GRANDES,
   SHOPPING_TIPOS,
+  ENTRETENIMIENTO_HORAS,
+  ENTRETENIMIENTO_HORAS_DEFAULT,
   HORAS_ESTETICA_DOM_JUE,
   HORAS_ESTETICA_VIE_SAB,
   ACADEMIA_ADICIONAL_POR_25,
@@ -169,7 +171,8 @@ function calcularEntretenimiento(input: TarifarioInput): number {
   // Grupo 3: aforo = 100% del m² total, sin reducción del 60%
   const aforoNeto = m2;
   const udaEfectivo = UDA * INCIDENCIAS.indispensable;
-  const horas = calcularHorasMensuales(input.dias ?? [], input.turnos ?? []);
+  const hPorDia = ENTRETENIMIENTO_HORAS[input.tipoLocal] ?? ENTRETENIMIENTO_HORAS_DEFAULT;
+  const horas = calcularHorasEstandarMensuales(input.dias ?? [], hPorDia);
   const medio = MEDIOS_DE_USO.parlante;
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }

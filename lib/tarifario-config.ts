@@ -171,6 +171,7 @@ export const GRUPOS: GrupoConfig[] = [
     id: "entretenimiento",
     incidencia: "indispensable",
     medioFijo: "parlante",
+    horasEstandar: 6,
     tipos: [
       "Discoteca", "Karaoke", "Pub con Baile", "Bar con Baile",
       "Sala de Baile", "Club Nocturno", "Otro",
@@ -238,6 +239,12 @@ export const GIMNASIO_TIPOS_INDISPENSABLE = [
 ];
 
 export const SHOPPING_TIPOS = ["Shopping", "Centro Comercial"];
+
+export const ENTRETENIMIENTO_HORAS: Record<string, number> = {
+  "Club Nocturno": 8,
+  "Bar con Baile": 5,
+};
+export const ENTRETENIMIENTO_HORAS_DEFAULT = 6;
 
 // ── Horas estándar para estética ──────────────────────────────────────────
 
