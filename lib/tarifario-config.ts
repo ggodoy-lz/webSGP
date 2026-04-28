@@ -190,6 +190,7 @@ export const GRUPOS: GrupoConfig[] = [
   {
     id: "estetica",
     incidencia: "secundaria",
+    horasEstandar: 1, // horas variables por día (Dom-Jue: 5h, Vie-Sáb: 8h) — oculta selector de turnos
     tipos: [
       "Salón de Belleza", "Salón Unisex", "Peluquería", "Barbería",
       "Spa", "Nail", "Centro Estético", "Centro de Depilación",
