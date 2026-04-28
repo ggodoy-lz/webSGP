@@ -520,7 +520,7 @@ export default function TarifarioCalculator({
                 </div>
               </div>
 
-              {!grupoConfig?.horasEstandar ? (
+              {!grupoConfig?.horasEstandar && (
                 <div>
                   <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
                     {t("turnos.label")}
