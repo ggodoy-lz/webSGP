@@ -240,12 +240,6 @@ export const GIMNASIO_TIPOS_INDISPENSABLE = [
 
 export const SHOPPING_TIPOS = ["Shopping", "Centro Comercial"];
 
-export const ENTRETENIMIENTO_HORAS: Record<string, number> = {
-  "Club Nocturno": 8,
-  "Bar con Baile": 5,
-};
-export const ENTRETENIMIENTO_HORAS_DEFAULT = 6;
-
 // ── Horas estándar para estética ──────────────────────────────────────────
 
 export const HORAS_ESTETICA_DOM_JUE = 5;

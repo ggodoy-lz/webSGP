@@ -19,8 +19,6 @@ import {
   TOPE_AFORO_EFECTIVO_GRANDES,
   UDA_PORCENTAJE_GRANDES,
   SHOPPING_TIPOS,
-  ENTRETENIMIENTO_HORAS,
-  ENTRETENIMIENTO_HORAS_DEFAULT,
   HORAS_ESTETICA_DOM_JUE,
   HORAS_ESTETICA_VIE_SAB,
   ACADEMIA_ADICIONAL_POR_25,
@@ -161,7 +159,7 @@ function calcularComercialGrande(input: TarifarioInput): number {
   const udaEfectivo = UDA * UDA_PORCENTAJE_GRANDES;
   const isShopping = SHOPPING_TIPOS.includes(input.tipoLocal);
   const horasStd = isShopping ? 8 : 6;
-  const horas = horasStd * 30; // locales grandes: abiertos los 30 días del mes
+  const horas = calcularHorasEstandarMensuales(input.dias ?? [], horasStd);
   const medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }
@@ -171,8 +169,7 @@ function calcularEntretenimiento(input: TarifarioInput): number {
   // Grupo 3: aforo = 100% del m² total, sin reducción del 60%
   const aforoNeto = m2;
   const udaEfectivo = UDA * INCIDENCIAS.indispensable;
-  const hPorDia = ENTRETENIMIENTO_HORAS[input.tipoLocal] ?? ENTRETENIMIENTO_HORAS_DEFAULT;
-  const horas = calcularHorasEstandarMensuales(input.dias ?? [], hPorDia);
+  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
   const medio = MEDIOS_DE_USO.parlante;
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }
