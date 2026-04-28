@@ -159,7 +159,7 @@ function calcularComercialGrande(input: TarifarioInput): number {
   const udaEfectivo = UDA * UDA_PORCENTAJE_GRANDES;
   const isShopping = SHOPPING_TIPOS.includes(input.tipoLocal);
   const horasStd = isShopping ? 8 : 6;
-  const horas = calcularHorasEstandarMensuales(input.dias ?? [], horasStd);
+  const horas = horasStd * 30; // locales grandes: abiertos los 30 días del mes
   const medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }
