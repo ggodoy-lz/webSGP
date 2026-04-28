@@ -487,6 +487,11 @@
       "ubicacion": "Ubicación de la academia",
       "capital": "Capital (Asunción)",
       "interior": "Interior del país"
+    },
+    "gastronomia": {
+      "baileTitle": "¿Tus clientes bailan en algún horario o día de la semana?",
+      "baileDesc": "Si en algún momento de la noche el local se convierte en \"boliche\", la música está clasificada como indispensable y requiere una licencia adicional.",
+      "baileBtn": "Calcular tarifa de baile"
     }
   },
   "common": {

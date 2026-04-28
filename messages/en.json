@@ -487,6 +487,11 @@
       "ubicacion": "Academy location",
       "capital": "Capital (Asunción)",
       "interior": "Interior (rest of country)"
+    },
+    "gastronomia": {
+      "baileTitle": "Do your customers dance at any time or day of the week?",
+      "baileDesc": "If at any point during the night the venue becomes a dance club, music is classified as indispensable and requires an additional license.",
+      "baileBtn": "Calculate dance tariff"
     }
   },
   "common": {

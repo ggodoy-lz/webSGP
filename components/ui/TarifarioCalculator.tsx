@@ -596,6 +596,30 @@ export default function TarifarioCalculator({
                 <p className="text-sm text-[#212226]/45 max-w-md mx-auto mb-8 leading-relaxed">
                   {t("disclaimer")}
                 </p>
+                {grupo === "gastronomia" && (
+                  <div className="border border-[#212226]/15 rounded-lg px-6 py-5 max-w-sm mx-auto mb-6 text-left">
+                    <p className="text-xs font-black uppercase tracking-wider text-[#212226]/60 mb-2">
+                      {t("gastronomia.baileTitle")}
+                    </p>
+                    <p className="text-xs text-[#212226]/55 leading-relaxed mb-3">
+                      {t("gastronomia.baileDesc")}
+                    </p>
+                    <button
+                      onClick={() => {
+                        handleReset();
+                        setTimeout(() => {
+                          setGrupo("entretenimiento");
+                          setTipoLocal("Bar con Baile");
+                          setStep(2);
+                        }, 50);
+                      }}
+                      className="text-xs font-black text-[#f0552f] hover:underline uppercase tracking-wider"
+                    >
+                      {t("gastronomia.baileBtn")}
+                    </button>
+                  </div>
+                )}
+
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
                   <button
                     onClick={handleReset}
