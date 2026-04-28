@@ -85,6 +85,16 @@ export default function TarifarioCalculator({
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
 
+  // Detecta estrellas implícitas en el nombre del tipo de hotel
+  const hotelEstrellasImplicitas: Record<string, CategoriaHotel> = {
+    "Hotel 1 Estrella": 1,
+    "Hotel 2 Estrellas": 2,
+    "Hotel 3 Estrellas": 3,
+    "Hotel 4 Estrellas": 4,
+    "Hotel 5 Estrellas": 5,
+  };
+  const categoriaImplicita = hotelEstrellasImplicitas[tipoLocal] ?? null;
+
   // Hoteles usan fórmula lineal: no necesitan días, horas ni medio
   const needsHorario = grupo !== "academias" && grupo !== "hoteles";
   const needsMedio = (() => {
@@ -122,7 +132,7 @@ export default function TarifarioCalculator({
       medio,
       mesas, butacas,
       metrosCuadrados,
-      habitaciones, categoriaHotel,
+      habitaciones, categoriaHotel: categoriaImplicita ?? categoriaHotel,
       estaciones,
       alumnos, ubicacion,
       maquinas, sesionesPorDia,
@@ -391,21 +401,28 @@ export default function TarifarioCalculator({
                       <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-2">
                         {t("fields.categoriaHotel")}
                       </label>
-                      <select
-                        value={categoriaHotel}
-                        onChange={(e) =>
-                          setCategoriaHotel(
-                            Number(e.target.value) as CategoriaHotel,
-                          )
-                        }
-                        className={fieldCls + " cursor-pointer"}
-                      >
-                        {([1, 2, 3, 4, 5] as const).map((c) => (
-                          <option key={c} value={c}>
-                            {t(`hotel.estrellas${c}`)}
-                          </option>
-                        ))}
-                      </select>
+                      {categoriaImplicita ? (
+                        <div className={fieldCls + " text-[#212226]/60"}>
+                          {t(`hotel.estrellas${categoriaImplicita}`)}
+                        </div>
+                      ) : (
+                        <select
+                          value={categoriaHotel}
+                          onChange={(e) =>
+                            setCategoriaHotel(
+                              Number(e.target.value) as CategoriaHotel,
+                            )
+                          }
+                          className={fieldCls + " cursor-pointer"}
+                        >
+                          <option value={1}>{t("hotel.sinCategoria")}</option>
+                          {([1, 2, 3, 4, 5] as const).map((c) => (
+                            <option key={c} value={c}>
+                              {t(`hotel.estrellas${c}`)}
+                            </option>
+                          ))}
+                        </select>
+                      )}
                     </div>
                   </>
                 )}

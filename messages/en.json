@@ -480,7 +480,8 @@
       "estrellas2": "2 Stars",
       "estrellas3": "3 Stars",
       "estrellas4": "4 Stars",
-      "estrellas5": "5 Stars"
+      "estrellas5": "5 Stars",
+      "sinCategoria": "No category"
     },
     "academia": {
       "ubicacion": "Academy location",
