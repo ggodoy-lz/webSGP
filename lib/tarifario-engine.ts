@@ -169,8 +169,7 @@ function calcularEntretenimiento(input: TarifarioInput): number {
   // Grupo 3: aforo = 100% del m² total, sin reducción del 60%
   const aforoNeto = m2;
   const udaEfectivo = UDA * INCIDENCIAS.indispensable;
-  // Horas estándar: 6 h/día según días seleccionados
-  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
+  const horas = calcularHorasMensuales(input.dias ?? [], input.turnos ?? []);
   const medio = MEDIOS_DE_USO.parlante;
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }

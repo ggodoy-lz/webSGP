@@ -171,7 +171,6 @@ export const GRUPOS: GrupoConfig[] = [
     id: "entretenimiento",
     incidencia: "indispensable",
     medioFijo: "parlante",
-    horasEstandar: 6,
     tipos: [
       "Discoteca", "Karaoke", "Pub con Baile", "Bar con Baile",
       "Sala de Baile", "Club Nocturno", "Otro",
