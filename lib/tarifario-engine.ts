@@ -203,8 +203,9 @@ function calcularAcademias(input: TarifarioInput): number {
   let tarifa = rango.tarifaTotal;
 
   if (alumnos > 300) {
-    const excedente = alumnos - 300;
-    const bloques = Math.ceil(excedente / 25);
+    // La tarifa base cubre los primeros 25 alumnos sobre 300 (301-325).
+    // Cada 25 adicionales a partir de 326 suman un bloque.
+    const bloques = Math.floor((alumnos - 301) / 25);
     tarifa = rango.tarifaTotal + bloques * ACADEMIA_ADICIONAL_POR_25;
   }
 
