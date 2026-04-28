@@ -401,28 +401,11 @@ export default function TarifarioCalculator({
                       <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-2">
                         {t("fields.categoriaHotel")}
                       </label>
-                      {categoriaImplicita ? (
-                        <div className={fieldCls + " text-[#212226]/60"}>
-                          {t(`hotel.estrellas${categoriaImplicita}`)}
-                        </div>
-                      ) : (
-                        <select
-                          value={categoriaHotel}
-                          onChange={(e) =>
-                            setCategoriaHotel(
-                              Number(e.target.value) as CategoriaHotel,
-                            )
-                          }
-                          className={fieldCls + " cursor-pointer"}
-                        >
-                          <option value={1}>{t("hotel.sinCategoria")}</option>
-                          {([1, 2, 3, 4, 5] as const).map((c) => (
-                            <option key={c} value={c}>
-                              {t(`hotel.estrellas${c}`)}
-                            </option>
-                          ))}
-                        </select>
-                      )}
+                      <div className={fieldCls + " text-[#212226]/60"}>
+                        {categoriaImplicita
+                          ? t(`hotel.estrellas${categoriaImplicita}`)
+                          : t("hotel.sinCategoria")}
+                      </div>
                     </div>
                   </>
                 )}
