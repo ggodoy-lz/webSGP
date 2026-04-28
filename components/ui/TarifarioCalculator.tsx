@@ -596,7 +596,7 @@ export default function TarifarioCalculator({
                 <p className="text-sm text-[#212226]/45 max-w-md mx-auto mb-8 leading-relaxed">
                   {t("disclaimer")}
                 </p>
-                {grupo === "gastronomia" && (
+                {grupo === "gastronomia" && turnos.includes("noche") && (
                   <div className="border border-[#212226]/15 rounded-lg px-6 py-5 max-w-sm mx-auto mb-6 text-left">
                     <p className="text-xs font-black uppercase tracking-wider text-[#212226]/60 mb-2">
                       {t("gastronomia.baileTitle")}

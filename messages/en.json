@@ -463,10 +463,10 @@
     },
     "turnos": {
       "label": "Music use shifts",
-      "manana": "Morning (4h)",
-      "mediodia": "Midday (3h)",
-      "tarde": "Afternoon (4h)",
-      "noche": "Night (5h)"
+      "manana": "Morning",
+      "mediodia": "Midday",
+      "tarde": "Afternoon",
+      "noche": "Night"
     },
     "horasEstandar": "Standard {horas}h per day applies for this business type",
     "medio": {

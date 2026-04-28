@@ -463,10 +463,10 @@
     },
     "turnos": {
       "label": "Turnos de uso musical",
-      "manana": "Mañana (4h)",
-      "mediodia": "Mediodía (3h)",
-      "tarde": "Tarde (4h)",
-      "noche": "Noche (5h)"
+      "manana": "Mañana",
+      "mediodia": "Mediodía",
+      "tarde": "Tarde",
+      "noche": "Noche"
     },
     "horasEstandar": "Se aplican {horas}h estándar por día según el tipo de local",
     "medio": {
