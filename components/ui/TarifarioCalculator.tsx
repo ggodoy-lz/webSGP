@@ -520,16 +520,7 @@ export default function TarifarioCalculator({
                 </div>
               </div>
 
-              {grupoConfig?.horasEstandar ? (
-                <div className="bg-[#f2e2c4]/50 rounded-lg px-4 py-3 text-sm text-[#212226]/60">
-                  {t("horasEstandar", {
-                    horas:
-                      SHOPPING_TIPOS.includes(tipoLocal)
-                        ? 8
-                        : grupoConfig.horasEstandar,
-                  })}
-                </div>
-              ) : (
+              {!grupoConfig?.horasEstandar ? (
                 <div>
                   <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
                     {t("turnos.label")}
@@ -582,9 +573,6 @@ export default function TarifarioCalculator({
                       className={`text-sm font-bold ${medio === m ? "text-[#f0552f]" : "text-[#212226]/70"}`}
                     >
                       {t(`medio.${m}`)}
-                    </span>
-                    <span className="block text-xs text-[#212226]/35 mt-1">
-                      {m === "parlante" ? "× 0.15" : "× 0.12"}
                     </span>
                   </button>
                 ))}
