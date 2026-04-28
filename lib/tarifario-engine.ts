@@ -252,7 +252,8 @@ function calcularOficinas(input: TarifarioInput): number {
   const udaEfectivo = UDA * INCIDENCIAS.secundaria;
   const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
   const medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
-  return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
+  const tarifa = formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
+  return Math.max(tarifa, TARIFA_MINIMA_OFICINAS);
 }
 
 function calcularMotel(input: TarifarioInput): number {
