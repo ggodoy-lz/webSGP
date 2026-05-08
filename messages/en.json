@@ -492,6 +492,10 @@
       "baileTitle": "Do your customers dance at any time or day of the week?",
       "baileDesc": "If at any point during the night the venue becomes a dance club, music is classified as indispensable and requires an additional license.",
       "baileBtn": "Calculate dance tariff"
+    },
+    "gimnasio": {
+      "agregarServicio": "Add another service",
+      "subtotal": "Accumulated total"
     }
   },
   "common": {

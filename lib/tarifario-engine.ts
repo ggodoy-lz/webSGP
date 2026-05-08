@@ -220,9 +220,21 @@ function calcularAcademias(input: TarifarioInput): number {
 
 function calcularGimnasios(input: TarifarioInput): number {
   const subtipo = getGimnasioSubtipo(input.tipoLocal);
+
+  // 7C — Uso Indispensable: input es m², 1h por sesión
+  if (subtipo === "indispensable") {
+    const m2 = input.metrosCuadrados ?? 0;
+    const aforoNeto = m2 * DESCUENTO_AFORO;
+    const udaEfectivo = UDA * INCIDENCIAS.indispensable;
+    const sesiones = input.sesionesPorDia ?? 0;
+    const diasPorSemana = (input.dias ?? []).length;
+    const horas = sesiones * diasPorSemana * 4; // 1h por sesión
+    return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, MEDIOS_DE_USO.parlante);
+  }
+
+  // 7A y 7B — input es máquinas/estaciones × 0.16
   const maquinas = input.maquinas ?? 0;
-  const aforoBruto = maquinas * AFORO_ESTACION_GYM;
-  const aforoNeto = aforoBruto * DESCUENTO_AFORO;
+  const aforoNeto = maquinas * AFORO_ESTACION_GYM * DESCUENTO_AFORO;
 
   let udaEfectivo: number;
   let medio: number;
@@ -232,15 +244,9 @@ function calcularGimnasios(input: TarifarioInput): number {
     udaEfectivo = UDA * INCIDENCIAS.secundaria;
     medio = MEDIOS_DE_USO[input.medio ?? "parlante"];
     horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
-  } else if (subtipo === "necesario") {
-    udaEfectivo = UDA * INCIDENCIAS.necesaria;
-    medio = MEDIOS_DE_USO.parlante;
-    const sesiones = input.sesionesPorDia ?? 0;
-    const diasPorSemana = (input.dias ?? []).length;
-    const horasPorSesion = MINUTOS_POR_SESION / 60;
-    horas = sesiones * horasPorSesion * diasPorSemana * 4;
   } else {
-    udaEfectivo = UDA * INCIDENCIAS.indispensable;
+    // necesario
+    udaEfectivo = UDA * INCIDENCIAS.necesaria;
     medio = MEDIOS_DE_USO.parlante;
     const sesiones = input.sesionesPorDia ?? 0;
     const diasPorSemana = (input.dias ?? []).length;

@@ -82,6 +82,7 @@ export default function TarifarioCalculator({
 
   const [resultado, setResultado] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [gimnasioServicios, setGimnasioServicios] = useState<{ tipo: string; tarifa: number }[]>([]);
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
 
@@ -178,6 +179,7 @@ export default function TarifarioCalculator({
     setSillasEspera(0);
     setCamas(0);
     setResultado(null);
+    setGimnasioServicios([]);
   };
 
   const canNext = (() => {
@@ -191,7 +193,8 @@ export default function TarifarioCalculator({
       if (grupo === "academias") return alumnos > 0;
       if (grupo === "gimnasios") {
         const sub = getGimnasioSubtipo(tipoLocal);
-        if (sub !== "secundario") return maquinas > 0 && sesionesPorDia > 0;
+        if (sub === "indispensable") return metrosCuadrados > 0 && sesionesPorDia > 0;
+        if (sub === "necesario") return maquinas > 0 && sesionesPorDia > 0;
         return maquinas > 0;
       }
       if (grupo === "oficinas") return sillasEspera > 0;
@@ -456,12 +459,21 @@ export default function TarifarioCalculator({
 
                 {grupo === "gimnasios" && (
                   <>
-                    <InputField
-                      label={t("fields.maquinas")}
-                      placeholder={t("fields.maquinasPlaceholder")}
-                      value={maquinas}
-                      onChange={setMaquinas}
-                    />
+                    {getGimnasioSubtipo(tipoLocal) === "indispensable" ? (
+                      <InputField
+                        label={t("fields.metrosCuadrados")}
+                        placeholder={t("fields.metrosCuadradosPlaceholder")}
+                        value={metrosCuadrados}
+                        onChange={setMetrosCuadrados}
+                      />
+                    ) : (
+                      <InputField
+                        label={t("fields.maquinas")}
+                        placeholder={t("fields.maquinasPlaceholder")}
+                        value={maquinas}
+                        onChange={setMaquinas}
+                      />
+                    )}
                     {getGimnasioSubtipo(tipoLocal) !== "secundario" && (
                       <InputField
                         label={t("fields.sesiones")}
@@ -590,6 +602,23 @@ export default function TarifarioCalculator({
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-2">
                   {t("tarifaMensual")}
                 </p>
+
+                {/* Desglose multi-servicio gimnasios */}
+                {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
+                  <div className="max-w-sm mx-auto mb-4 text-left border border-[#212226]/10 rounded-lg overflow-hidden">
+                    {gimnasioServicios.map((s, i) => (
+                      <div key={i} className="flex justify-between items-center px-4 py-2 border-b border-[#212226]/5 text-xs text-[#212226]/60">
+                        <span>{s.tipo}</span>
+                        <span className="font-bold">{fmt(s.tarifa)}</span>
+                      </div>
+                    ))}
+                    <div className="flex justify-between items-center px-4 py-2 bg-[#212226]/3 text-xs font-black text-[#212226]/70">
+                      <span>{t("gimnasio.subtotal")}</span>
+                      <span>{fmt(gimnasioServicios.reduce((a, s) => a + s.tarifa, 0) + (resultado ?? 0))}</span>
+                    </div>
+                  </div>
+                )}
+
                 <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl mb-4">
                   {fmt(resultado ?? 0)}
                 </p>
@@ -621,6 +650,24 @@ export default function TarifarioCalculator({
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  {grupo === "gimnasios" && (
+                    <button
+                      onClick={() => {
+                        setGimnasioServicios(prev => [...prev, { tipo: tipoLocal, tarifa: resultado ?? 0 }]);
+                        setTipoLocal("");
+                        setMaquinas(0);
+                        setSesionesPorDia(0);
+                        setMetrosCuadrados(0);
+                        setDias([]);
+                        setMedio("parlante");
+                        setResultado(null);
+                        setStep(1);
+                      }}
+                      className="inline-flex items-center justify-center gap-2 border border-[#f0552f] text-[#f0552f] hover:bg-[#f0552f] hover:text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
+                    >
+                      + {t("gimnasio.agregarServicio")}
+                    </button>
+                  )}
                   <button
                     onClick={handleReset}
                     className="inline-flex items-center justify-center gap-2 bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
