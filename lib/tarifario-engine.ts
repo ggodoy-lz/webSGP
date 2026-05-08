@@ -8,6 +8,8 @@ import {
   MEDIOS_DE_USO,
   DESCUENTO_AFORO,
   HORAS_POR_TURNO,
+  HORAS_POR_TURNO_SEMANA,
+  HORAS_POR_TURNO_FDS,
   MINUTOS_POR_SESION,
   AFORO_MESA,
   AFORO_BUTACA,
@@ -85,15 +87,19 @@ function calcularHorasMensuales(
   dias: DiaSemana[],
   turnos: Turno[],
 ): number {
-  const horasPorDia = turnos.reduce((acc, t) => acc + HORAS_POR_TURNO[t], 0);
-  const diasPorSemana = dias.length;
-  return horasPorDia * diasPorSemana * 4; // 4 semanas por mes según spec
+  const diasFds = dias.filter(d => d === "vie" || d === "sab");
+  const diasSem = dias.filter(d => d !== "vie" && d !== "sab");
+  const horasSem = turnos.reduce((acc, t) => acc + HORAS_POR_TURNO_SEMANA[t], 0);
+  const horasFds = turnos.reduce((acc, t) => acc + HORAS_POR_TURNO_FDS[t], 0);
+  return (diasSem.length * horasSem + diasFds.length * horasFds) * 4;
 }
 
 function calcularHorasEstandarMensuales(
   dias: DiaSemana[],
   horasPorDia: number,
 ): number {
+  // Si abre los 7 días de la semana → 30 días fijos; si no → días × 4 semanas
+  if (dias.length === 7) return horasPorDia * 30;
   return dias.length * horasPorDia * 4;
 }
 
@@ -169,7 +175,7 @@ function calcularEntretenimiento(input: TarifarioInput): number {
   // Grupo 3: aforo = 100% del m² total, sin reducción del 60%
   const aforoNeto = m2;
   const udaEfectivo = UDA * INCIDENCIAS.indispensable;
-  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 6);
+  const horas = calcularHorasEstandarMensuales(input.dias ?? [], 5);
   const medio = MEDIOS_DE_USO.parlante;
   return formulaBase(udaEfectivo, aforoNeto, horas, CATEGORIA_DEFAULT, medio);
 }

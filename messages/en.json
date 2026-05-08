@@ -433,7 +433,7 @@
       "mesasPlaceholder": "E.g.: 15",
       "butacas": "Additional seats (optional)",
       "butacasPlaceholder": "E.g.: 5",
-      "metrosCuadrados": "Total area (m²)",
+      "metrosCuadrados": "Sales floor area (m²)",
       "metrosCuadradosPlaceholder": "E.g.: 80",
       "habitaciones": "Number of rooms",
       "habitacionesPlaceholder": "E.g.: 30",

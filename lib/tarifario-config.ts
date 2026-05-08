@@ -76,11 +76,26 @@ export const MEDIOS_DE_USO: Record<MedioDeUso, number> = {
 
 export const DESCUENTO_AFORO = 0.60;
 
-export const HORAS_POR_TURNO: Record<Turno, number> = {
-  manana: 4,
+// Horas por turno según día de la semana (Dom–Jue vs Vie–Sáb)
+export const HORAS_POR_TURNO_SEMANA: Record<Turno, number> = {
+  manana: 2,
+  mediodia: 2,
+  tarde: 2,
+  noche: 2,
+};
+export const HORAS_POR_TURNO_FDS: Record<Turno, number> = {
+  manana: 2,
   mediodia: 3,
-  tarde: 4,
+  tarde: 3,
   noche: 5,
+};
+
+// Mantenido por compatibilidad — ya no se usa en gastronomía
+export const HORAS_POR_TURNO: Record<Turno, number> = {
+  manana: 2,
+  mediodia: 2,
+  tarde: 2,
+  noche: 2,
 };
 
 export const DIAS_SEMANA: DiaSemana[] = [
