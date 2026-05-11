@@ -714,45 +714,48 @@ export default function TarifarioCalculator({
                   </div>
                 )}
 
-                {/* Tarifa principal */}
-                <div className="mb-1">
-                  <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
-                    {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
-                  </p>
-                </div>
-                <p className="text-sm font-semibold text-[#212226]/50 mb-6">
-                  {t("tarifaMensual")}
-                </p>
+                {/* Layout dos columnas en desktop */}
+                <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 mb-8">
 
-                {/* Resumen de datos ingresados */}
-                <div className="mb-8 grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-lg">
-                  {[
-                    { label: t("summary.rubro"), value: grupo ? t(`grupos.${grupo}`) : null },
-                    { label: t("summary.tipo"), value: tipoLocal || null },
-                    { label: t("summary.datos"), value: datosLocal || null },
-                    needsHorario && dias.length > 0
-                      ? { label: t("summary.horario"), value: `${dias.length} ${t("summary.diasSeleccionados")}` }
-                      : null,
-                    needsMedio
-                      ? { label: t("summary.medio"), value: t(`medio.${medio}`) }
-                      : null,
-                  ]
-                    .filter(Boolean)
-                    .map((item) => item && (
-                      <div key={item.label} className="rounded-xl border border-[#212226]/8 bg-[#faf9f7] px-4 py-3">
-                        <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 mb-1">
-                          {item.label}
-                        </p>
-                        <p className="text-sm font-bold text-[#212226]/75 leading-tight">
-                          {item.value}
-                        </p>
-                      </div>
-                    ))}
-                </div>
+                  {/* Izquierda: precio */}
+                  <div className="shrink-0 mb-6 lg:mb-0">
+                    <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
+                      {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
+                    </p>
+                    <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
+                      {t("tarifaMensual")}
+                    </p>
+                    <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
+                      {t("disclaimer")}
+                    </p>
+                  </div>
 
-                <p className="text-xs text-[#212226]/32 max-w-md leading-relaxed mb-8">
-                  {t("disclaimer")}
-                </p>
+                  {/* Derecha: resumen */}
+                  <div className="flex-1 grid grid-cols-2 gap-2.5">
+                    {[
+                      { label: t("summary.rubro"), value: grupo ? t(`grupos.${grupo}`) : null },
+                      { label: t("summary.tipo"), value: tipoLocal || null },
+                      { label: t("summary.datos"), value: datosLocal || null },
+                      needsHorario && dias.length > 0
+                        ? { label: t("summary.horario"), value: `${dias.length} ${t("summary.diasSeleccionados")}` }
+                        : null,
+                      needsMedio
+                        ? { label: t("summary.medio"), value: t(`medio.${medio}`) }
+                        : null,
+                    ]
+                      .filter(Boolean)
+                      .map((item) => item && (
+                        <div key={item.label} className="rounded-xl border border-[#212226]/8 bg-[#faf9f7] px-4 py-3">
+                          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 mb-1">
+                            {item.label}
+                          </p>
+                          <p className="text-sm font-bold text-[#212226]/75 leading-tight">
+                            {item.value}
+                          </p>
+                        </div>
+                      ))}
+                  </div>
+                </div>
 
                 {/* Aviso baile */}
                 {grupo === "gastronomia" && turnos.includes("noche") && (
