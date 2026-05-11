@@ -682,7 +682,7 @@ export default function TarifarioCalculator({
 
             {/* ── STEP 5: Resultado ────────────────────── */}
             {step === 5 && (
-              <motion.div key="s5" {...motionProps} className="max-w-2xl">
+              <motion.div key="s5" {...motionProps}>
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
                   {t("resultado")}
                 </p>
