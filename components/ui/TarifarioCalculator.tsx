@@ -687,33 +687,6 @@ export default function TarifarioCalculator({
                   {t("resultado")}
                 </p>
 
-                {/* Desglose gimnasio */}
-                {grupo === "gimnasios" && resultado !== null && (
-                  <div className="max-w-sm mb-6 rounded-2xl border border-[#212226]/8 overflow-hidden">
-                    {gimnasioServicios.map((s, i) => (
-                      <div
-                        key={i}
-                        className="flex justify-between items-center px-4 py-3 border-b border-[#212226]/6 text-sm"
-                      >
-                        <span className="text-[#212226]/55">{s.tipo}</span>
-                        <span className="font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between items-center px-4 py-3 border-b border-[#212226]/6 text-sm">
-                      <span className="text-[#212226]/55">
-                        {tipoLocal || t("gimnasio.servicioActual")}
-                      </span>
-                      <span className="font-black text-[#212226]/75">{fmt(resultado)}</span>
-                    </div>
-                    {gimnasioServicios.length > 0 && (
-                      <div className="flex justify-between items-center px-4 py-3.5 bg-[#f0552f]/5 text-sm font-black">
-                        <span className="text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
-                        <span className="text-[#f0552f] text-base">{fmt(gimnasioTotal)}</span>
-                      </div>
-                    )}
-                  </div>
-                )}
-
                 {/* Layout dos columnas en desktop */}
                 <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 mb-8">
 
@@ -730,8 +703,28 @@ export default function TarifarioCalculator({
                     </p>
                   </div>
 
-                  {/* Derecha: resumen */}
-                  <div className="flex-1 grid grid-cols-2 gap-2.5">
+                  {/* Derecha: resumen + desglose gimnasio */}
+                  <div className="flex-1 rounded-2xl border border-[#212226]/8 overflow-hidden">
+                    {/* Desglose gimnasio (si aplica) */}
+                    {grupo === "gimnasios" && resultado !== null && gimnasioServicios.length > 0 && (
+                      <>
+                        {gimnasioServicios.map((s, i) => (
+                          <div key={i} className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/6 bg-[#faf9f7]">
+                            <span className="text-sm text-[#212226]/55">{s.tipo}</span>
+                            <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
+                          </div>
+                        ))}
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/6 bg-[#faf9f7]">
+                          <span className="text-sm text-[#212226]/55">{tipoLocal || t("gimnasio.servicioActual")}</span>
+                          <span className="text-sm font-black text-[#212226]/75">{fmt(resultado)}</span>
+                        </div>
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/10 bg-[#f0552f]/5">
+                          <span className="text-sm font-black text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
+                          <span className="text-sm font-black text-[#f0552f]">{fmt(gimnasioTotal)}</span>
+                        </div>
+                      </>
+                    )}
+                    {/* Filas de resumen */}
                     {[
                       { label: t("summary.rubro"), value: grupo ? t(`grupos.${grupo}`) : null },
                       { label: t("summary.tipo"), value: tipoLocal || null },
@@ -744,14 +737,17 @@ export default function TarifarioCalculator({
                         : null,
                     ]
                       .filter(Boolean)
-                      .map((item) => item && (
-                        <div key={item.label} className="rounded-xl border border-[#212226]/8 bg-[#faf9f7] px-4 py-3">
-                          <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 mb-1">
+                      .map((item, i, arr) => item && (
+                        <div
+                          key={item.label}
+                          className={`flex items-center justify-between gap-6 px-5 py-3.5 ${i < arr.length - 1 ? "border-b border-[#212226]/6" : ""}`}
+                        >
+                          <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 shrink-0">
                             {item.label}
-                          </p>
-                          <p className="text-sm font-bold text-[#212226]/75 leading-tight">
+                          </span>
+                          <span className="text-sm font-bold text-[#212226]/75 text-right">
                             {item.value}
-                          </p>
+                          </span>
                         </div>
                       ))}
                   </div>
