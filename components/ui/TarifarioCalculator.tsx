@@ -72,6 +72,7 @@ export default function TarifarioCalculator({
   const [grupo, setGrupo] = useState<GrupoId | null>(null);
   const [tipoLocal, setTipoLocal] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("");
+  const [tipoModalOpen, setTipoModalOpen] = useState(false);
   const [medio, setMedio] = useState<MedioDeUso>("parlante");
   const [dias, setDias] = useState<DiaSemana[]>([]);
   const [turnos, setTurnos] = useState<Turno[]>([]);
@@ -368,6 +369,7 @@ export default function TarifarioCalculator({
                             setGrupo(g.id);
                             setTipoLocal("");
                             setTipoFiltro("");
+                            setTipoModalOpen(true);
                           }}
                           className={`group flex items-start gap-3 rounded-2xl border p-4 text-left transition-all disabled:opacity-25 disabled:cursor-not-allowed ${
                             selected
@@ -406,52 +408,22 @@ export default function TarifarioCalculator({
                   </div>
                 </div>
 
-                {/* Tipo de local (aparece tras seleccionar rubro) */}
-                <AnimatePresence>
-                  {grupo && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      transition={{ duration: 0.18 }}
+                {/* Tipo seleccionado — chip debajo de la grilla */}
+                {tipoLocal && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#212226]/35">
+                      {t("fields.tipoLocal")}:
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setTipoModalOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#f0552f] bg-[#f0552f]/6 px-3 py-1.5 text-sm font-bold text-[#f0552f] hover:bg-[#f0552f]/12 transition-colors"
                     >
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-3">
-                        {t("fields.tipoLocal")}
-                      </p>
-
-                      {tiposDisponibles.length > 8 && (
-                        <input
-                          type="search"
-                          value={tipoFiltro}
-                          onChange={(e) => setTipoFiltro(e.target.value)}
-                          placeholder={t("fields.buscarTipo")}
-                          className="mb-3 h-10 w-full max-w-xs rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none placeholder:text-[#212226]/28 focus:border-[#f0552f] transition-colors"
-                          autoFocus
-                        />
-                      )}
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-0.5">
-                        {tiposFiltrados.map((tp) => {
-                          const selected = tipoLocal === tp;
-                          return (
-                            <button
-                              key={tp}
-                              type="button"
-                              onClick={() => setTipoLocal(tp)}
-                              className={`rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition-all ${
-                                selected
-                                  ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
-                                  : "border-[#212226]/8 bg-white text-[#212226]/62 hover:border-[#f0552f]/35 hover:text-[#212226]"
-                              }`}
-                            >
-                              {tp}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      {tipoLocal}
+                      <span className="text-[10px] text-[#f0552f]/60 font-normal">✎</span>
+                    </button>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -940,6 +912,86 @@ export default function TarifarioCalculator({
           </div>
         </aside>
       </div>
+
+      {/* ── Modal tipo de local ─────────────────────── */}
+      <AnimatePresence>
+        {tipoModalOpen && grupo && grupoConfig && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#212226]/55 px-4 py-6 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => { if (tipoLocal) setTipoModalOpen(false); }}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              className="w-full max-w-2xl rounded-2xl border border-[#212226]/10 bg-[#feffff] shadow-[0_32px_80px_rgba(33,34,38,0.22)] overflow-hidden"
+              initial={{ opacity: 0, y: 20, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 20, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-[#212226]/8">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
+                    {t(`grupos.${grupo}`)}
+                  </p>
+                  <h4 className="font-display text-2xl font-black leading-none text-[#212226]">
+                    {t("fields.tipoLocal")}
+                  </h4>
+                </div>
+                {tipoLocal && (
+                  <button
+                    type="button"
+                    onClick={() => setTipoModalOpen(false)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#212226]/10 text-[#212226]/45 hover:border-[#f0552f] hover:text-[#f0552f] transition-colors"
+                    aria-label="Cerrar"
+                  >
+                    <span className="text-lg leading-none">×</span>
+                  </button>
+                )}
+              </div>
+
+              <div className="px-6 py-5">
+                {tiposDisponibles.length > 8 && (
+                  <input
+                    type="search"
+                    value={tipoFiltro}
+                    onChange={(e) => setTipoFiltro(e.target.value)}
+                    placeholder={t("fields.buscarTipo")}
+                    className="mb-4 h-11 w-full rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none placeholder:text-[#212226]/28 focus:border-[#f0552f] transition-colors"
+                    autoFocus
+                  />
+                )}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[55vh] overflow-y-auto pr-0.5">
+                  {tiposFiltrados.map((tp) => {
+                    const selected = tipoLocal === tp;
+                    return (
+                      <button
+                        key={tp}
+                        type="button"
+                        onClick={() => {
+                          setTipoLocal(tp);
+                          setTipoModalOpen(false);
+                        }}
+                        className={`rounded-xl border px-4 py-3 text-left text-sm font-semibold transition-all ${
+                          selected
+                            ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
+                            : "border-[#212226]/8 bg-[#faf9f7] text-[#212226]/65 hover:border-[#f0552f]/35 hover:bg-white hover:text-[#212226]"
+                        }`}
+                      >
+                        {tp}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
