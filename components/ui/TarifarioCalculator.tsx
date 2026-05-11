@@ -7,7 +7,11 @@ import {
   ArrowRightIcon,
   ArrowLeftIcon,
   ArrowPathIcon,
-  XMarkIcon,
+  CheckIcon,
+  PlusIcon,
+  MinusIcon,
+  SpeakerWaveIcon,
+  ComputerDesktopIcon,
   BuildingStorefrontIcon,
   BuildingOffice2Icon,
   MusicalNoteIcon,
@@ -52,10 +56,10 @@ const fmt = (n: number) =>
     minimumFractionDigits: 0,
   }).format(n);
 
-type Step = 1 | 2 | 3 | 4 | 5;
-
 const compactNumber = (n: number) =>
   n > 0 ? new Intl.NumberFormat("es-PY").format(n) : "";
+
+type Step = 1 | 2 | 3 | 4 | 5;
 
 export default function TarifarioCalculator({
   showOuterHeader = true,
@@ -68,8 +72,6 @@ export default function TarifarioCalculator({
   const [grupo, setGrupo] = useState<GrupoId | null>(null);
   const [tipoLocal, setTipoLocal] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("");
-  const [grupoModalOpen, setGrupoModalOpen] = useState(false);
-  const [tipoModalOpen, setTipoModalOpen] = useState(false);
   const [medio, setMedio] = useState<MedioDeUso>("parlante");
   const [dias, setDias] = useState<DiaSemana[]>([]);
   const [turnos, setTurnos] = useState<Turno[]>([]);
@@ -93,10 +95,11 @@ export default function TarifarioCalculator({
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
   const gimnasioTotal =
-    gimnasioServicios.reduce((acc, servicio) => acc + servicio.tarifa, 0) +
+    gimnasioServicios.reduce((acc, s) => acc + s.tarifa, 0) +
     (grupo === "gimnasios" ? (resultado ?? 0) : 0);
   const tarifaVisible = grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0);
   const tieneTarifaVisible = resultado !== null || gimnasioServicios.length > 0;
+
   const tiposDisponibles =
     grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
       ? grupoConfig.tipos.filter((tp) => GIMNASIO_TIPOS_SECUNDARIO.includes(tp))
@@ -107,7 +110,6 @@ export default function TarifarioCalculator({
   const agregandoServicioGimnasio =
     step === 1 && grupo === "gimnasios" && gimnasioServicios.length > 0;
 
-  // Detecta estrellas implícitas en el nombre del tipo de hotel
   const hotelEstrellasImplicitas: Record<string, CategoriaHotel> = {
     "Hotel 1 Estrella": 1,
     "Hotel 2 Estrellas": 2,
@@ -116,21 +118,14 @@ export default function TarifarioCalculator({
     "Hotel 5 Estrellas": 5,
   };
   const categoriaImplicita = hotelEstrellasImplicitas[tipoLocal] ?? null;
-  const subtipoGimnasio = grupo === "gimnasios" && tipoLocal
-    ? getGimnasioSubtipo(tipoLocal)
-    : null;
+  const subtipoGimnasio =
+    grupo === "gimnasios" && tipoLocal ? getGimnasioSubtipo(tipoLocal) : null;
 
-  // Hoteles usan fórmula lineal: no necesitan días, horas ni medio
   const needsHorario = grupo !== "academias" && grupo !== "hoteles";
   const needsMedio = (() => {
     if (!grupo) return true;
-    if (grupo === "academias") return false;
-    if (grupo === "hoteles") return false;
-    if (grupo === "entretenimiento") return false;
-    if (grupo === "gimnasios") {
-      const sub = getGimnasioSubtipo(tipoLocal);
-      return sub === "secundario";
-    }
+    if (grupo === "academias" || grupo === "hoteles" || grupo === "entretenimiento") return false;
+    if (grupo === "gimnasios") return getGimnasioSubtipo(tipoLocal) === "secundario";
     return true;
   })();
 
@@ -145,27 +140,27 @@ export default function TarifarioCalculator({
       prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d],
     );
 
-  const toggleTurno = (t: Turno) =>
+  const toggleTurno = (tr: Turno) =>
     setTurnos((prev) =>
-      prev.includes(t) ? prev.filter((x) => x !== t) : [...prev, t],
+      prev.includes(tr) ? prev.filter((x) => x !== tr) : [...prev, tr],
     );
 
-  const buildInput = useCallback((): TarifarioInput => {
-    return {
-      grupo: grupo!,
-      tipoLocal,
-      medio,
-      mesas, butacas,
-      metrosCuadrados,
-      habitaciones, categoriaHotel: categoriaImplicita ?? categoriaHotel,
-      estaciones,
-      alumnos, ubicacion,
-      maquinas, sesionesPorDia,
-      sillasEspera,
-      camas,
-      dias, turnos,
-    };
-  }, [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones, categoriaImplicita, categoriaHotel, estaciones, alumnos, ubicacion, maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
+  const buildInput = useCallback((): TarifarioInput => ({
+    grupo: grupo!,
+    tipoLocal,
+    medio,
+    mesas, butacas,
+    metrosCuadrados,
+    habitaciones, categoriaHotel: categoriaImplicita ?? categoriaHotel,
+    estaciones,
+    alumnos, ubicacion,
+    maquinas, sesionesPorDia,
+    sillasEspera,
+    camas,
+    dias, turnos,
+  }), [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones,
+    categoriaImplicita, categoriaHotel, estaciones, alumnos, ubicacion,
+    maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
 
   const handleCalcular = async () => {
     setLoading(true);
@@ -187,32 +182,21 @@ export default function TarifarioCalculator({
   };
 
   const handleReset = () => {
-    setStep(1);
-    setGrupo(null);
-    setTipoLocal("");
-    setTipoFiltro("");
-    setMedio("parlante");
-    setDias([]);
-    setTurnos([]);
-    setMesas(0); setButacas(0);
-    setMetrosCuadrados(0);
-    setHabitaciones(0); setCategoriaHotel(3);
-    setEstaciones(0);
-    setAlumnos(0);
-    setUbicacion("capital");
+    setStep(1); setGrupo(null); setTipoLocal(""); setTipoFiltro("");
+    setMedio("parlante"); setDias([]); setTurnos([]);
+    setMesas(0); setButacas(0); setMetrosCuadrados(0);
+    setHabitaciones(0); setCategoriaHotel(3); setEstaciones(0);
+    setAlumnos(0); setUbicacion("capital");
     setMaquinas(0); setSesionesPorDia(0);
-    setSillasEspera(0);
-    setCamas(0);
-    setResultado(null);
-    setGimnasioServicios([]);
+    setSillasEspera(0); setCamas(0);
+    setResultado(null); setGimnasioServicios([]);
   };
 
   const canNext = (() => {
     if (step === 1) return !!grupo && !!tipoLocal;
     if (step === 2) {
       if (grupo === "gastronomia") return mesas > 0 || butacas > 0;
-      if (grupo === "comercial") return metrosCuadrados > 0;
-      if (grupo === "entretenimiento") return metrosCuadrados > 0;
+      if (grupo === "comercial" || grupo === "entretenimiento") return metrosCuadrados > 0;
       if (grupo === "hoteles") return habitaciones > 0;
       if (grupo === "estetica") return estaciones > 0;
       if (grupo === "academias") return alumnos > 0;
@@ -236,23 +220,14 @@ export default function TarifarioCalculator({
   })();
 
   const handleNext = () => {
-    if (step === 1) {
-      setStep(2);
-    } else if (step === 2) {
-      if (grupo === "academias" || grupo === "hoteles") {
-        handleCalcular();
-      } else {
-        setStep(3);
-      }
+    if (step === 1) setStep(2);
+    else if (step === 2) {
+      if (grupo === "academias" || grupo === "hoteles") handleCalcular();
+      else setStep(3);
     } else if (step === 3) {
-      if (!needsMedio) {
-        handleCalcular();
-      } else {
-        setStep(4);
-      }
-    } else if (step === 4) {
-      handleCalcular();
-    }
+      if (!needsMedio) handleCalcular();
+      else setStep(4);
+    } else if (step === 4) handleCalcular();
   };
 
   const handleBack = () => {
@@ -261,462 +236,537 @@ export default function TarifarioCalculator({
     else if (step === 2) setStep(1);
   };
 
-  const fieldCls =
-    "w-full bg-transparent border border-[#212226]/15 rounded-lg px-4 py-3 text-sm outline-none transition-colors focus:border-[#f0552f] placeholder:text-[#212226]/30";
-
   const datosLocal = (() => {
     if (grupo === "gastronomia") {
-      const values = [
+      return [
         mesas > 0 ? `${compactNumber(mesas)} ${t("fields.mesas").toLowerCase()}` : "",
         butacas > 0 ? `${compactNumber(butacas)} ${t("fields.butacas").toLowerCase()}` : "",
-      ].filter(Boolean);
-      return values.join(" / ");
+      ].filter(Boolean).join(" / ");
     }
-    if (grupo === "comercial" || grupo === "entretenimiento") {
-      return metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m2` : "";
-    }
-    if (grupo === "hoteles") {
+    if (grupo === "comercial" || grupo === "entretenimiento")
+      return metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m²` : "";
+    if (grupo === "hoteles")
       return habitaciones > 0 ? `${compactNumber(habitaciones)} ${t("fields.habitaciones").toLowerCase()}` : "";
-    }
-    if (grupo === "estetica") {
+    if (grupo === "estetica")
       return estaciones > 0 ? `${compactNumber(estaciones)} ${t("fields.estaciones").toLowerCase()}` : "";
-    }
-    if (grupo === "academias") {
+    if (grupo === "academias")
       return alumnos > 0 ? `${compactNumber(alumnos)} ${t("fields.alumnos").toLowerCase()}` : "";
-    }
     if (grupo === "gimnasios") {
-      const base = subtipoGimnasio === "indispensable"
-        ? (metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m2` : "")
-        : (maquinas > 0 ? `${compactNumber(maquinas)} ${t("fields.maquinas").toLowerCase()}` : "");
-      const sesiones = sesionesPorDia > 0 ? `${compactNumber(sesionesPorDia)} ${t("fields.sesiones").toLowerCase()}` : "";
-      return [base, sesiones].filter(Boolean).join(" / ");
+      const base =
+        subtipoGimnasio === "indispensable"
+          ? metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m²` : ""
+          : maquinas > 0 ? `${compactNumber(maquinas)} ${t("fields.maquinas").toLowerCase()}` : "";
+      const ses = sesionesPorDia > 0 ? `${compactNumber(sesionesPorDia)} ${t("fields.sesiones").toLowerCase()}` : "";
+      return [base, ses].filter(Boolean).join(" / ");
     }
-    if (grupo === "oficinas") {
+    if (grupo === "oficinas")
       return sillasEspera > 0 ? `${compactNumber(sillasEspera)} ${t("fields.sillasEspera").toLowerCase()}` : "";
-    }
-    if (grupo === "motel") {
+    if (grupo === "motel")
       return camas > 0 ? `${compactNumber(camas)} ${t("fields.camas").toLowerCase()}` : "";
-    }
     return "";
   })();
 
   const avisoContextual = (() => {
-    if (grupo === "gastronomia" && turnos.includes("noche")) {
-      return t("summary.noticeGastronomiaNoche");
-    }
-    if (grupo === "oficinas") {
-      return t("summary.noticeOficinas");
-    }
-    if ((grupo === "comercial" || grupo === "entretenimiento") && dias.length === 7) {
-      return t("summary.notice30Dias");
-    }
-    if (grupo === "gimnasios") {
-      return t("gimnasio.agregarAviso");
-    }
+    if (grupo === "gastronomia" && turnos.includes("noche")) return t("summary.noticeGastronomiaNoche");
+    if (grupo === "oficinas") return t("summary.noticeOficinas");
+    if ((grupo === "comercial" || grupo === "entretenimiento") && dias.length === 7) return t("summary.notice30Dias");
+    if (grupo === "gimnasios") return t("gimnasio.agregarAviso");
     return "";
   })();
 
   const motionProps = {
-    initial: { opacity: 0, x: 20 },
-    animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: -20 },
-    transition: { duration: 0.25 },
+    initial: { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -12 },
+    transition: { duration: 0.22 },
   };
 
-  const stepLabels = [
-    t("step1"),
-    t("step2"),
-    t("step3"),
-    t("step4"),
-  ].slice(0, totalSteps);
+  const stepLabels = [t("step1"), t("step2"), t("step3"), t("step4")].slice(0, totalSteps);
 
   return (
     <div className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]">
       {showOuterHeader && (
-        <div className="border-b border-[#212226]/10 px-6 py-4 lg:px-9">
-          <div className="max-w-3xl">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
-              Calculadora
-            </p>
-            <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
-              {t("title")}
-            </h3>
-            <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
-          </div>
+        <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+            Calculadora
+          </p>
+          <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
+            {t("title")}
+          </h3>
+          <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px] xl:grid-cols-[minmax(0,1fr)_360px]">
-        <section className="px-5 py-4 sm:px-6 lg:px-9 lg:py-5">
-          <div className="max-w-5xl">
-            {step < 5 && (
-              <div className="mb-5">
-                <div className="flex flex-wrap gap-2">
-                  {stepLabels.map((label, index) => {
-                    const s = index + 1;
-                    const active = step === s;
-                    const done = step > s;
-                    return (
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
+        {/* ── Main content ───────────────────────────── */}
+        <section className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
+
+          {/* Step indicator */}
+          {step < 5 && (
+            <div className="flex items-center mb-8">
+              {stepLabels.map((label, idx) => {
+                const s = idx + 1;
+                const active = step === s;
+                const done = step > s;
+                return (
+                  <div key={label} className="flex items-center flex-1 last:flex-none">
+                    <div className="flex items-center gap-2 shrink-0">
                       <div
-                        key={label}
-                        className={`flex min-w-[132px] flex-1 items-center gap-3 border px-4 py-2 transition-colors ${
+                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-black transition-all ${
                           active
-                            ? "border-[#f0552f] bg-[#f0552f]/5"
+                            ? "bg-[#f0552f] text-white shadow-[0_0_0_3px_rgba(240,85,47,0.15)]"
                             : done
-                              ? "border-[#212226] bg-[#212226] text-white"
-                              : "border-[#212226]/10 bg-[#faf9f7]"
+                            ? "bg-[#212226] text-white"
+                            : "bg-[#212226]/10 text-[#212226]/30"
                         }`}
                       >
-                        <span
-                          className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[10px] font-black ${
-                            active || done ? "bg-[#f0552f] text-white" : "bg-[#212226]/10 text-[#212226]/45"
+                        {done ? <CheckIcon className="h-3.5 w-3.5" /> : s}
+                      </div>
+                      <span
+                        className={`hidden sm:block text-[11px] font-bold transition-colors ${
+                          active ? "text-[#212226]" : done ? "text-[#212226]/50" : "text-[#212226]/25"
+                        }`}
+                      >
+                        {label}
+                      </span>
+                    </div>
+                    {idx < stepLabels.length - 1 && (
+                      <div
+                        className={`flex-1 mx-3 h-px transition-colors ${
+                          step > idx + 1 ? "bg-[#212226]/30" : "bg-[#212226]/8"
+                        }`}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <AnimatePresence mode="wait">
+
+            {/* ── STEP 1: Rubro + Tipo inline ─────────── */}
+            {step === 1 && (
+              <motion.div key="s1" {...motionProps} className="space-y-7">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-4">
+                    {agregandoServicioGimnasio
+                      ? t("gimnasio.nuevoServicio")
+                      : "01 — " + t("summary.rubro")}
+                  </p>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                    {GRUPOS.map((g) => {
+                      const Icon = GRUPO_ICONS[g.id];
+                      const selected = grupo === g.id;
+                      const disabled = agregandoServicioGimnasio && g.id !== "gimnasios";
+                      return (
+                        <button
+                          key={g.id}
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => {
+                            setGrupo(g.id);
+                            setTipoLocal("");
+                            setTipoFiltro("");
+                          }}
+                          className={`group flex items-start gap-3 rounded-2xl border p-4 text-left transition-all disabled:opacity-25 disabled:cursor-not-allowed ${
+                            selected
+                              ? "border-[#f0552f] bg-[#f0552f]/6 shadow-[0_2px_12px_rgba(240,85,47,0.12)]"
+                              : "border-[#212226]/8 bg-[#faf9f7] hover:border-[#f0552f]/30 hover:bg-white hover:shadow-sm"
                           }`}
                         >
-                          {s}
-                        </span>
-                        <span className={`text-[10px] font-black uppercase tracking-[0.16em] ${active ? "text-[#f0552f]" : done ? "text-white/70" : "text-[#212226]/40"}`}>
-                          {label}
-                        </span>
+                          <div
+                            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all ${
+                              selected
+                                ? "bg-[#f0552f] text-white"
+                                : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                            }`}
+                          >
+                            <Icon className="h-4.5 w-4.5 h-[18px] w-[18px]" />
+                          </div>
+                          <div className="min-w-0">
+                            <span
+                              className={`block text-[13px] font-black leading-tight ${
+                                selected ? "text-[#f0552f]" : "text-[#212226]/72"
+                              }`}
+                            >
+                              {t(`grupos.${g.id}`)}
+                            </span>
+                            <span
+                              className={`mt-1 block text-[11px] leading-snug ${
+                                selected ? "text-[#f0552f]/55" : "text-[#212226]/32"
+                              }`}
+                            >
+                              {t(`gruposDesc.${g.id}`)}
+                            </span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Tipo de local (aparece tras seleccionar rubro) */}
+                <AnimatePresence>
+                  {grupo && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      transition={{ duration: 0.18 }}
+                    >
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-3">
+                        {t("fields.tipoLocal")}
+                      </p>
+
+                      {tiposDisponibles.length > 8 && (
+                        <input
+                          type="search"
+                          value={tipoFiltro}
+                          onChange={(e) => setTipoFiltro(e.target.value)}
+                          placeholder={t("fields.buscarTipo")}
+                          className="mb-3 h-10 w-full max-w-xs rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none placeholder:text-[#212226]/28 focus:border-[#f0552f] transition-colors"
+                          autoFocus
+                        />
+                      )}
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 max-h-52 overflow-y-auto pr-0.5">
+                        {tiposFiltrados.map((tp) => {
+                          const selected = tipoLocal === tp;
+                          return (
+                            <button
+                              key={tp}
+                              type="button"
+                              onClick={() => setTipoLocal(tp)}
+                              className={`rounded-xl border px-3 py-2.5 text-left text-sm font-semibold transition-all ${
+                                selected
+                                  ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
+                                  : "border-[#212226]/8 bg-white text-[#212226]/62 hover:border-[#f0552f]/35 hover:text-[#212226]"
+                              }`}
+                            >
+                              {tp}
+                            </button>
+                          );
+                        })}
                       </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {/* ── STEP 2: Datos del local ──────────────── */}
+            {step === 2 && (
+              <motion.div key="s2" {...motionProps}>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                  02 — {t("step2")}
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-lg">
+                  {grupo === "gastronomia" && (
+                    <>
+                      <NumberStepper
+                        label={t("fields.mesas")}
+                        placeholder={t("fields.mesasPlaceholder")}
+                        value={mesas}
+                        onChange={setMesas}
+                      />
+                      <NumberStepper
+                        label={t("fields.butacas")}
+                        placeholder={t("fields.butacasPlaceholder")}
+                        value={butacas}
+                        onChange={setButacas}
+                        optional
+                      />
+                    </>
+                  )}
+
+                  {(grupo === "comercial" || grupo === "entretenimiento") && (
+                    <NumberStepper
+                      label={t("fields.metrosCuadrados")}
+                      placeholder={t("fields.metrosCuadradosPlaceholder")}
+                      value={metrosCuadrados}
+                      onChange={setMetrosCuadrados}
+                    />
+                  )}
+
+                  {grupo === "hoteles" && (
+                    <>
+                      <NumberStepper
+                        label={t("fields.habitaciones")}
+                        placeholder={t("fields.habitacionesPlaceholder")}
+                        value={habitaciones}
+                        onChange={setHabitaciones}
+                      />
+                      <div>
+                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+                          {t("fields.categoriaHotel")}
+                        </label>
+                        <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm text-[#212226]/55">
+                          {categoriaImplicita
+                            ? t(`hotel.estrellas${categoriaImplicita}`)
+                            : t("hotel.sinCategoria")}
+                        </div>
+                      </div>
+                    </>
+                  )}
+
+                  {grupo === "estetica" && (
+                    <NumberStepper
+                      label={t("fields.estaciones")}
+                      placeholder={t("fields.estacionesPlaceholder")}
+                      value={estaciones}
+                      onChange={setEstaciones}
+                    />
+                  )}
+
+                  {grupo === "academias" && (
+                    <>
+                      <div className="md:col-span-2">
+                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-3">
+                          {t("academia.ubicacion")}
+                        </label>
+                        <div className="flex gap-3">
+                          {(["capital", "interior"] as const).map((u) => (
+                            <button
+                              key={u}
+                              type="button"
+                              onClick={() => setUbicacion(u)}
+                              className={`flex-1 rounded-xl border py-3 px-4 text-sm font-bold transition-all ${
+                                ubicacion === u
+                                  ? "border-[#f0552f] bg-[#f0552f]/7 text-[#f0552f]"
+                                  : "border-[#212226]/10 text-[#212226]/55 hover:border-[#212226]/22"
+                              }`}
+                            >
+                              {t(`academia.${u}`)}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <NumberStepper
+                        label={t("fields.alumnos")}
+                        placeholder={t("fields.alumnosPlaceholder")}
+                        value={alumnos}
+                        onChange={setAlumnos}
+                      />
+                    </>
+                  )}
+
+                  {grupo === "gimnasios" && (
+                    <>
+                      {getGimnasioSubtipo(tipoLocal) === "indispensable" ? (
+                        <NumberStepper
+                          label={t("fields.metrosCuadrados")}
+                          placeholder={t("fields.metrosCuadradosPlaceholder")}
+                          value={metrosCuadrados}
+                          onChange={setMetrosCuadrados}
+                        />
+                      ) : (
+                        <NumberStepper
+                          label={t("fields.maquinas")}
+                          placeholder={t("fields.maquinasPlaceholder")}
+                          value={maquinas}
+                          onChange={setMaquinas}
+                        />
+                      )}
+                      {getGimnasioSubtipo(tipoLocal) !== "secundario" && (
+                        <NumberStepper
+                          label={t("fields.sesiones")}
+                          placeholder={t("fields.sesionesPlaceholder")}
+                          value={sesionesPorDia}
+                          onChange={setSesionesPorDia}
+                        />
+                      )}
+                    </>
+                  )}
+
+                  {grupo === "oficinas" && (
+                    <NumberStepper
+                      label={t("fields.sillasEspera")}
+                      placeholder={t("fields.sillasEsperaPlaceholder")}
+                      value={sillasEspera}
+                      onChange={setSillasEspera}
+                    />
+                  )}
+
+                  {grupo === "motel" && (
+                    <NumberStepper
+                      label={t("fields.camas")}
+                      placeholder={t("fields.camasPlaceholder")}
+                      value={camas}
+                      onChange={setCamas}
+                    />
+                  )}
+                </div>
+              </motion.div>
+            )}
+
+            {/* ── STEP 3: Días y horarios ──────────────── */}
+            {step === 3 && (
+              <motion.div key="s3" {...motionProps} className="space-y-8">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                  03 — {t("step3")}
+                </p>
+
+                <div>
+                  <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-3">
+                    {t("dias.label")}
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {DIAS_SEMANA.map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() => toggleDia(d)}
+                        className={`min-w-[52px] rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${
+                          dias.includes(d)
+                            ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
+                            : "border-[#212226]/10 text-[#212226]/50 hover:border-[#f0552f]/30 hover:text-[#212226]"
+                        }`}
+                      >
+                        {t(`dias.${d}`)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {grupo === "gastronomia" && (
+                  <div>
+                    <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-3">
+                      {t("turnos.label")}
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {TURNOS.map((tr) => (
+                        <button
+                          key={tr}
+                          type="button"
+                          onClick={() => toggleTurno(tr)}
+                          className={`rounded-xl border px-5 py-2.5 text-sm font-bold transition-all ${
+                            turnos.includes(tr)
+                              ? "border-[#4666a6] bg-[#4666a6] text-white shadow-sm"
+                              : "border-[#212226]/10 text-[#212226]/50 hover:border-[#4666a6]/35 hover:text-[#212226]"
+                          }`}
+                        >
+                          {t(`turnos.${tr}`)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            )}
+
+            {/* ── STEP 4: Medio de uso ─────────────────── */}
+            {step === 4 && (
+              <motion.div key="s4" {...motionProps}>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                  04 — {t("step4")}
+                </p>
+
+                <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-4">
+                  {t("medio.label")}
+                </label>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md">
+                  {(["parlante", "televisor"] as const).map((m) => {
+                    const Icon = m === "parlante" ? SpeakerWaveIcon : ComputerDesktopIcon;
+                    const selected = medio === m;
+                    return (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => setMedio(m)}
+                        className={`group flex items-center gap-4 rounded-2xl border p-5 text-left transition-all ${
+                          selected
+                            ? "border-[#f0552f] bg-[#f0552f]/6 shadow-[0_2px_12px_rgba(240,85,47,0.1)]"
+                            : "border-[#212226]/10 hover:border-[#f0552f]/30 hover:bg-white"
+                        }`}
+                      >
+                        <div
+                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all ${
+                            selected
+                              ? "bg-[#f0552f] text-white"
+                              : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <div className="flex-1">
+                          <span
+                            className={`block text-sm font-black ${
+                              selected ? "text-[#f0552f]" : "text-[#212226]/70"
+                            }`}
+                          >
+                            {t(`medio.${m}`)}
+                          </span>
+                          <span className="block text-[11px] text-[#212226]/38 mt-0.5">
+                            {m === "parlante" ? "Coef. 0.15" : "Coef. 0.12"}
+                          </span>
+                        </div>
+                        {selected && (
+                          <CheckIcon className="h-4 w-4 text-[#f0552f] shrink-0" />
+                        )}
+                      </button>
                     );
                   })}
                 </div>
-              </div>
+              </motion.div>
             )}
 
-            <AnimatePresence mode="wait">
-              {/* ── STEP 1: Grupo + Tipo ──────────────────── */}
-              {step === 1 && (
-                <motion.div key="s1" {...motionProps}>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-3">
-                    01 — {agregandoServicioGimnasio ? t("gimnasio.nuevoServicio") : t("step1")}
-                  </p>
+            {/* ── STEP 5: Resultado ────────────────────── */}
+            {step === 5 && (
+              <motion.div key="s5" {...motionProps}>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                  {t("resultado")}
+                </p>
 
-                  <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-                    <div className="border border-[#212226]/10 bg-[#faf9f7] p-6">
-                      <p className="mb-1 text-[10px] font-black uppercase tracking-wider text-[#212226]/50">
-                        {t("summary.rubro")}
-                      </p>
-                      <p className="font-display text-3xl font-black leading-none text-[#212226]">
-                        {grupo ? t(`grupos.${grupo}`) : t("fields.sinRubro")}
-                      </p>
-                      <p className="mt-3 min-h-9 text-xs leading-relaxed text-[#212226]/45">
-                        {grupo ? t(`gruposDesc.${grupo}`) : t("summary.empty")}
-                      </p>
-                      {!agregandoServicioGimnasio && (
-                        <button
-                          type="button"
-                          onClick={() => setGrupoModalOpen(true)}
-                          className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#f0552f]"
-                        >
-                          {grupo ? t("fields.cambiarRubro") : t("fields.seleccionarRubro")}
-                          <ArrowRightIcon className="h-4 w-4" />
-                        </button>
-                      )}
-                    </div>
-
-                    <div className="border border-[#212226]/10 bg-[#faf9f7] p-6">
-                      <p className="mb-1 text-[10px] font-black uppercase tracking-wider text-[#212226]/50">
-                        {t("fields.tipoLocal")}
-                      </p>
-                      <p className="font-display text-3xl font-black leading-none text-[#212226]">
-                        {tipoLocal || t("fields.sinTipo")}
-                      </p>
-                      <p className="mt-3 min-h-9 text-xs leading-relaxed text-[#212226]/45">
-                        {grupo ? t("fields.tipoLocalHelper") : t("fields.seleccionarRubroPrimero")}
-                      </p>
-                      <button
-                        type="button"
-                        onClick={() => setTipoModalOpen(true)}
-                        disabled={!grupo}
-                        className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#f0552f] disabled:bg-[#212226]/25"
+                {/* Desglose gimnasio */}
+                {grupo === "gimnasios" && resultado !== null && (
+                  <div className="max-w-sm mb-6 rounded-2xl border border-[#212226]/8 overflow-hidden">
+                    {gimnasioServicios.map((s, i) => (
+                      <div
+                        key={i}
+                        className="flex justify-between items-center px-4 py-3 border-b border-[#212226]/6 text-sm"
                       >
-                        {tipoLocal ? t("fields.cambiarTipo") : t("fields.seleccionarTipo")}
-                        <ArrowRightIcon className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-
-          {/* ── STEP 2: Datos del local ──────────────── */}
-          {step === 2 && (
-            <motion.div key="s2" {...motionProps}>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
-                02 — {t("step2")}
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {grupo === "gastronomia" && (
-                  <>
-                    <InputField
-                      label={t("fields.mesas")}
-                      placeholder={t("fields.mesasPlaceholder")}
-                      value={mesas}
-                      onChange={setMesas}
-                    />
-                    <InputField
-                      label={t("fields.butacas")}
-                      placeholder={t("fields.butacasPlaceholder")}
-                      value={butacas}
-                      onChange={setButacas}
-                    />
-                  </>
-                )}
-
-                {(grupo === "comercial" || grupo === "entretenimiento") && (
-                  <InputField
-                    label={t("fields.metrosCuadrados")}
-                    placeholder={t("fields.metrosCuadradosPlaceholder")}
-                    value={metrosCuadrados}
-                    onChange={setMetrosCuadrados}
-                  />
-                )}
-
-                {grupo === "hoteles" && (
-                  <>
-                    <InputField
-                      label={t("fields.habitaciones")}
-                      placeholder={t("fields.habitacionesPlaceholder")}
-                      value={habitaciones}
-                      onChange={setHabitaciones}
-                    />
-                    <div>
-                      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-2">
-                        {t("fields.categoriaHotel")}
-                      </label>
-                      <div className={fieldCls + " text-[#212226]/60"}>
-                        {categoriaImplicita
-                          ? t(`hotel.estrellas${categoriaImplicita}`)
-                          : t("hotel.sinCategoria")}
+                        <span className="text-[#212226]/55">{s.tipo}</span>
+                        <span className="font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
                       </div>
-                    </div>
-                  </>
-                )}
-
-                {grupo === "estetica" && (
-                  <InputField
-                    label={t("fields.estaciones")}
-                    placeholder={t("fields.estacionesPlaceholder")}
-                    value={estaciones}
-                    onChange={setEstaciones}
-                  />
-                )}
-
-                {grupo === "academias" && (
-                  <>
-                    <div className="md:col-span-2">
-                      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
-                        {t("academia.ubicacion")}
-                      </label>
-                      <div className="flex gap-3">
-                        {(["capital", "interior"] as const).map((u) => (
-                          <button
-                            key={u}
-                            type="button"
-                            onClick={() => setUbicacion(u)}
-                            className={`flex-1 px-4 py-3 rounded-lg border text-sm font-bold transition-all ${
-                              ubicacion === u
-                                ? "border-[#f0552f] bg-[#f0552f]/5 text-[#f0552f]"
-                                : "border-[#212226]/10 text-[#212226]/70 hover:border-[#212226]/30"
-                            }`}
-                          >
-                            {t(`academia.${u}`)}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <InputField
-                      label={t("fields.alumnos")}
-                      placeholder={t("fields.alumnosPlaceholder")}
-                      value={alumnos}
-                      onChange={setAlumnos}
-                    />
-                  </>
-                )}
-
-                {grupo === "gimnasios" && (
-                  <>
-                    {getGimnasioSubtipo(tipoLocal) === "indispensable" ? (
-                      <InputField
-                        label={t("fields.metrosCuadrados")}
-                        placeholder={t("fields.metrosCuadradosPlaceholder")}
-                        value={metrosCuadrados}
-                        onChange={setMetrosCuadrados}
-                      />
-                    ) : (
-                      <InputField
-                        label={t("fields.maquinas")}
-                        placeholder={t("fields.maquinasPlaceholder")}
-                        value={maquinas}
-                        onChange={setMaquinas}
-                      />
-                    )}
-                    {getGimnasioSubtipo(tipoLocal) !== "secundario" && (
-                      <InputField
-                        label={t("fields.sesiones")}
-                        placeholder={t("fields.sesionesPlaceholder")}
-                        value={sesionesPorDia}
-                        onChange={setSesionesPorDia}
-                      />
-                    )}
-                  </>
-                )}
-
-                {grupo === "oficinas" && (
-                  <InputField
-                    label={t("fields.sillasEspera")}
-                    placeholder={t("fields.sillasEsperaPlaceholder")}
-                    value={sillasEspera}
-                    onChange={setSillasEspera}
-                  />
-                )}
-
-                {grupo === "motel" && (
-                  <InputField
-                    label={t("fields.camas")}
-                    placeholder={t("fields.camasPlaceholder")}
-                    value={camas}
-                    onChange={setCamas}
-                  />
-                )}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── STEP 3: Días y horarios ──────────────── */}
-          {step === 3 && (
-            <motion.div key="s3" {...motionProps}>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
-                03 — {t("step3")}
-              </p>
-
-              <div className="mb-8">
-                <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
-                  {t("dias.label")}
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {DIAS_SEMANA.map((d) => (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => toggleDia(d)}
-                      className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                        dias.includes(d)
-                          ? "bg-[#f0552f] text-white"
-                          : "bg-[#212226]/5 text-[#212226]/50 hover:bg-[#212226]/10"
-                      }`}
-                    >
-                      {t(`dias.${d}`)}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {grupo === "gastronomia" && (
-                <div>
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-3">
-                    {t("turnos.label")}
-                  </label>
-                  <div className="flex flex-wrap gap-2">
-                    {TURNOS.map((tr) => (
-                      <button
-                        key={tr}
-                        type="button"
-                        onClick={() => toggleTurno(tr)}
-                        className={`px-4 py-2 rounded-lg text-xs font-bold transition-all ${
-                          turnos.includes(tr)
-                            ? "bg-[#4666a6] text-white"
-                            : "bg-[#212226]/5 text-[#212226]/50 hover:bg-[#212226]/10"
-                        }`}
-                      >
-                        {t(`turnos.${tr}`)}
-                      </button>
                     ))}
+                    <div className="flex justify-between items-center px-4 py-3 border-b border-[#212226]/6 text-sm">
+                      <span className="text-[#212226]/55">
+                        {tipoLocal || t("gimnasio.servicioActual")}
+                      </span>
+                      <span className="font-black text-[#212226]/75">{fmt(resultado)}</span>
+                    </div>
+                    {gimnasioServicios.length > 0 && (
+                      <div className="flex justify-between items-center px-4 py-3.5 bg-[#f0552f]/5 text-sm font-black">
+                        <span className="text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
+                        <span className="text-[#f0552f] text-base">{fmt(gimnasioTotal)}</span>
+                      </div>
+                    )}
                   </div>
+                )}
+
+                {/* Tarifa principal */}
+                <div className="mb-1">
+                  <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
+                    {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
+                  </p>
                 </div>
-              )}
-            </motion.div>
-          )}
-
-          {/* ── STEP 4: Medio de uso ─────────────────── */}
-          {step === 4 && (
-            <motion.div key="s4" {...motionProps}>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
-                04 — {t("step4")}
-              </p>
-
-              <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-4">
-                {t("medio.label")}
-              </label>
-
-              <div className="flex flex-col sm:flex-row gap-3">
-                {(["parlante", "televisor"] as const).map((m) => (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setMedio(m)}
-                    className={`flex-1 px-6 py-4 rounded-lg border text-left transition-all ${
-                      medio === m
-                        ? "border-[#f0552f] bg-[#f0552f]/5"
-                        : "border-[#212226]/10 hover:border-[#212226]/30"
-                    }`}
-                  >
-                    <span
-                      className={`text-sm font-bold ${medio === m ? "text-[#f0552f]" : "text-[#212226]/70"}`}
-                    >
-                      {t(`medio.${m}`)}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
-          {/* ── STEP 5: Resultado ────────────────────── */}
-          {step === 5 && (
-            <motion.div key="s5" {...motionProps}>
-              <div className="text-center py-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-2">
+                <p className="text-sm font-semibold text-[#212226]/50 mb-1">
                   {t("tarifaMensual")}
                 </p>
-
-                {grupo === "gimnasios" && resultado !== null && (
-                  <div className="max-w-md mx-auto mb-6 text-left border border-[#212226]/10 rounded-lg overflow-hidden">
-                    {gimnasioServicios.map((s, i) => (
-                      <div key={i} className="flex justify-between items-center px-4 py-2 border-b border-[#212226]/5 text-xs text-[#212226]/60">
-                        <span>{s.tipo}</span>
-                        <span className="font-bold">{fmt(s.tarifa)}</span>
-                      </div>
-                    ))}
-                    <div className="flex justify-between items-center px-4 py-2 border-b border-[#212226]/5 text-xs text-[#212226]/60">
-                      <span>{tipoLocal || t("gimnasio.servicioActual")}</span>
-                      <span className="font-bold">{fmt(resultado)}</span>
-                    </div>
-                    <div className="flex justify-between items-center px-4 py-3 bg-[#212226]/5 text-xs font-black text-[#212226]/70">
-                      <span>{t("gimnasio.totalFinal")}</span>
-                      <span>{fmt(gimnasioTotal)}</span>
-                    </div>
-                  </div>
-                )}
-
-                <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl mb-4">
-                  {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
-                </p>
-                <p className="text-sm text-[#212226]/45 max-w-md mx-auto mb-8 leading-relaxed">
+                <p className="text-xs text-[#212226]/32 max-w-md leading-relaxed mb-8">
                   {t("disclaimer")}
                 </p>
-                {grupo === "gimnasios" && (
-                  <p className="text-xs text-[#212226]/50 max-w-md mx-auto mb-6 leading-relaxed">
-                    {t("gimnasio.agregarAviso")}
-                  </p>
-                )}
+
+                {/* Aviso baile */}
                 {grupo === "gastronomia" && turnos.includes("noche") && (
-                  <div className="border border-[#212226]/15 rounded-lg px-6 py-5 max-w-sm mx-auto mb-6 text-left">
-                    <p className="text-xs font-black uppercase tracking-wider text-[#212226]/60 mb-2">
+                  <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4 max-w-sm mb-6">
+                    <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
                       {t("gastronomia.baileTitle")}
                     </p>
-                    <p className="text-xs text-[#212226]/55 leading-relaxed mb-3">
+                    <p className="text-xs text-[#212226]/52 leading-relaxed mb-3">
                       {t("gastronomia.baileDesc")}
                     </p>
                     <button
@@ -730,16 +780,20 @@ export default function TarifarioCalculator({
                       }}
                       className="text-xs font-black text-[#f0552f] hover:underline uppercase tracking-wider"
                     >
-                      {t("gastronomia.baileBtn")}
+                      {t("gastronomia.baileBtn")} →
                     </button>
                   </div>
                 )}
 
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                {/* Acciones */}
+                <div className="flex flex-wrap gap-3">
                   {grupo === "gimnasios" && (
                     <button
                       onClick={() => {
-                        setGimnasioServicios(prev => [...prev, { tipo: tipoLocal, tarifa: resultado ?? 0 }]);
+                        setGimnasioServicios((prev) => [
+                          ...prev,
+                          { tipo: tipoLocal, tarifa: resultado ?? 0 },
+                        ]);
                         setGrupo("gimnasios");
                         setTipoLocal("");
                         setTipoFiltro("");
@@ -751,324 +805,207 @@ export default function TarifarioCalculator({
                         setResultado(null);
                         setStep(1);
                       }}
-                      className="inline-flex items-center justify-center gap-2 border border-[#f0552f] text-[#f0552f] hover:bg-[#f0552f] hover:text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
+                      className="inline-flex items-center gap-2 rounded-xl border border-[#f0552f] text-[#f0552f] hover:bg-[#f0552f] hover:text-white text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 transition-all"
                     >
-                      + {t("gimnasio.agregarServicio")}
+                      <PlusIcon className="w-3.5 h-3.5" />
+                      {t("gimnasio.agregarServicio")}
                     </button>
                   )}
                   <button
                     onClick={handleReset}
-                    className="inline-flex items-center justify-center gap-2 bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 transition-all"
                   >
-                    <ArrowPathIcon className="w-4 h-4" />
+                    <ArrowPathIcon className="w-3.5 h-3.5" />
                     {t("reiniciar")}
                   </button>
                 </div>
-              </div>
-            </motion.div>
-          )}
-            </AnimatePresence>
-
-            {/* ── Navigation ─────────────────────────────── */}
-            {step < 5 && (
-              <div className="mt-3 flex items-center justify-between border-t border-[#212226]/10 pt-3">
-                {step > 1 ? (
-                  <button
-                    onClick={handleBack}
-                    className="inline-flex items-center gap-2 text-sm font-bold text-[#212226]/50 transition-colors hover:text-[#212226]"
-                  >
-                    <ArrowLeftIcon className="w-4 h-4" />
-                    {t("anterior")}
-                  </button>
-                ) : (
-                  <div />
-                )}
-
-                <button
-                  onClick={handleNext}
-                  disabled={!canNext || loading}
-                  className="inline-flex h-11 min-w-[160px] items-center justify-center gap-3 bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors duration-300 hover:bg-[#f0552f] disabled:bg-[#212226]/25"
-                >
-                  {loading ? (
-                    "Calculando..."
-                  ) : step === totalSteps ? (
-                    <>{t("calcular")}</>
-                  ) : (
-                    <>
-                      {t("siguiente")}
-                      <ArrowRightIcon className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
+
+          {/* ── Navegación ──────────────────────────────── */}
+          {step < 5 && (
+            <div className="mt-7 flex items-center justify-between border-t border-[#212226]/8 pt-5">
+              {step > 1 ? (
+                <button
+                  onClick={handleBack}
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#212226]/40 hover:text-[#212226] transition-colors"
+                >
+                  <ArrowLeftIcon className="w-4 h-4" />
+                  {t("anterior")}
+                </button>
+              ) : (
+                <div />
+              )}
+
+              <button
+                onClick={handleNext}
+                disabled={!canNext || loading}
+                className="inline-flex h-11 min-w-[156px] items-center justify-center gap-2.5 rounded-xl bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f] disabled:bg-[#212226]/18 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  "Calculando..."
+                ) : step === totalSteps ? (
+                  t("calcular")
+                ) : (
+                  <>
+                    {t("siguiente")}
+                    <ArrowRightIcon className="w-3.5 h-3.5" />
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </section>
 
+        {/* ── Sidebar resumen ─────────────────────────── */}
         <aside className="border-t border-[#212226]/10 bg-[#212226] px-6 py-8 text-white lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch">
-          <div className="space-y-6">
+          <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/35 mb-2">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mb-3">
                 {t("summary.title")}
               </p>
               <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
                 {tieneTarifaVisible ? fmt(tarifaVisible) : "—"}
               </p>
-              <p className="text-xs text-white/45 mt-3 leading-relaxed">
+              <p className="text-xs text-white/38 mt-2 leading-relaxed">
                 {tieneTarifaVisible ? t("tarifaMensual") : t("summary.empty")}
               </p>
             </div>
 
-            <div className="divide-y divide-white/10 border-y border-white/10">
-              <SummaryRow label={t("summary.rubro")} value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")} />
-              <SummaryRow label={t("summary.tipo")} value={tipoLocal || t("summary.pending")} />
-              <SummaryRow label={t("summary.datos")} value={datosLocal || t("summary.pending")} />
+            <div className="divide-y divide-white/8 border-y border-white/8">
+              <SummaryRow
+                label={t("summary.rubro")}
+                value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")}
+              />
+              <SummaryRow
+                label={t("summary.tipo")}
+                value={tipoLocal || t("summary.pending")}
+              />
+              <SummaryRow
+                label={t("summary.datos")}
+                value={datosLocal || t("summary.pending")}
+              />
               {grupo && needsHorario && (
                 <SummaryRow
                   label={t("summary.horario")}
-                  value={dias.length > 0 ? `${dias.length} ${t("summary.diasSeleccionados")}` : t("summary.pending")}
+                  value={
+                    dias.length > 0
+                      ? `${dias.length} ${t("summary.diasSeleccionados")}`
+                      : t("summary.pending")
+                  }
                 />
               )}
               {grupo && needsMedio && (
-                <SummaryRow label={t("summary.medio")} value={t(`medio.${medio}`)} />
+                <SummaryRow
+                  label={t("summary.medio")}
+                  value={t(`medio.${medio}`)}
+                />
               )}
             </div>
 
             {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
-              <div className="border border-white/10 bg-white/5">
-                <div className="px-4 py-3 border-b border-white/10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/40">
+              <div className="rounded-xl border border-white/10 overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-white/10 bg-white/5">
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/35">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
-                {gimnasioServicios.map((servicio, index) => (
-                  <div key={`${servicio.tipo}-${index}`} className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/5 text-xs">
-                    <span className="font-bold text-white/65">{servicio.tipo}</span>
-                    <span className="font-black text-white">{fmt(servicio.tarifa)}</span>
+                {gimnasioServicios.map((s, i) => (
+                  <div
+                    key={i}
+                    className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 text-xs"
+                  >
+                    <span className="text-white/55">{s.tipo}</span>
+                    <span className="font-black text-white">{fmt(s.tarifa)}</span>
                   </div>
                 ))}
               </div>
             )}
 
             {avisoContextual && (
-              <div className="border-l-4 border-[#f0552f] bg-white/8 px-4 py-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#f0552f] mb-2">
+              <div className="border-l-2 border-[#f0552f] pl-4 py-0.5">
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#f0552f] mb-1.5">
                   {t("summary.noticeTitle")}
                 </p>
-                <p className="text-xs text-white/60 leading-relaxed">
+                <p className="text-[11px] text-white/45 leading-relaxed">
                   {avisoContextual}
                 </p>
               </div>
             )}
 
-            <p className="text-[11px] text-white/35 leading-relaxed">
+            <p className="text-[11px] text-white/22 leading-relaxed">
               {t("disclaimer")}
             </p>
           </div>
         </aside>
       </div>
-
-      <AnimatePresence>
-        {grupoModalOpen && (
-          <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-[#212226]/60 px-4 py-6 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label={t("fields.seleccionarRubro")}
-              className="w-full max-w-4xl border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.22)]"
-              initial={{ opacity: 0, y: 24, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex items-start justify-between gap-6 border-b border-[#212226]/10 px-6 py-5">
-                <div>
-                  <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f]">
-                    01
-                  </p>
-                  <h4 className="font-display text-3xl font-black leading-none text-[#212226]">
-                    {t("fields.seleccionarRubro")}
-                  </h4>
-                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#212226]/45">
-                    {t("summary.empty")}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setGrupoModalOpen(false)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#212226]/10 text-[#212226]/55 transition-colors hover:border-[#f0552f] hover:text-[#f0552f]"
-                  aria-label="Cerrar"
-                >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 px-6 py-5 sm:grid-cols-2 lg:grid-cols-3">
-                {GRUPOS.map((g) => {
-                  const Icon = GRUPO_ICONS[g.id];
-                  const selected = grupo === g.id;
-                  return (
-                    <button
-                      key={g.id}
-                      type="button"
-                      onClick={() => {
-                        setGrupo(g.id);
-                        setTipoLocal("");
-                        setTipoFiltro("");
-                        setGrupoModalOpen(false);
-                        setTipoModalOpen(true);
-                      }}
-                      className={`group flex min-h-[92px] items-start gap-4 border p-4 text-left transition-all ${
-                        selected
-                          ? "border-[#f0552f] bg-[#f0552f] text-white shadow-[0_18px_40px_rgba(240,85,47,0.16)]"
-                          : "border-[#212226]/10 bg-[#faf9f7] hover:border-[#f0552f]/50 hover:bg-white"
-                      }`}
-                    >
-                      <Icon
-                        className={`mt-0.5 h-6 w-6 shrink-0 ${selected ? "text-white" : "text-[#212226]/35 group-hover:text-[#f0552f]"}`}
-                      />
-                      <span>
-                        <span className={`block text-sm font-black leading-tight ${selected ? "text-white" : "text-[#212226]/75"}`}>
-                          {t(`grupos.${g.id}`)}
-                        </span>
-                        <span className={`mt-2 block text-[11px] leading-snug ${selected ? "text-white/72" : "text-[#212226]/38"}`}>
-                          {t(`gruposDesc.${g.id}`)}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {tipoModalOpen && grupo && grupoConfig && (
-          <motion.div
-            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#212226]/60 px-4 py-6 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <motion.div
-              role="dialog"
-              aria-modal="true"
-              aria-label={t("fields.tipoLocal")}
-              className="w-full max-w-4xl border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.22)]"
-              initial={{ opacity: 0, y: 24, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 24, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div className="flex items-start justify-between gap-6 border-b border-[#212226]/10 px-6 py-5">
-                <div>
-                  <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f]">
-                    {t(`grupos.${grupo}`)}
-                  </p>
-                  <h4 className="font-display text-3xl font-black leading-none text-[#212226]">
-                    {t("fields.tipoLocal")}
-                  </h4>
-                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#212226]/45">
-                    {t("fields.tipoLocalHelper")}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setTipoModalOpen(false)}
-                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#212226]/10 text-[#212226]/55 transition-colors hover:border-[#f0552f] hover:text-[#f0552f]"
-                  aria-label="Cerrar"
-                >
-                  <XMarkIcon className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="px-6 py-5">
-                {tiposDisponibles.length > 8 && (
-                  <input
-                    type="search"
-                    value={tipoFiltro}
-                    onChange={(e) => setTipoFiltro(e.target.value)}
-                    placeholder={t("fields.buscarTipo")}
-                    className="mb-4 h-12 w-full border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none transition-colors placeholder:text-[#212226]/30 focus:border-[#f0552f]"
-                    autoFocus
-                  />
-                )}
-
-                <div className="max-h-[52vh] overflow-y-auto pr-1">
-                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                    {tiposFiltrados.map((tp) => {
-                      const selected = tipoLocal === tp;
-                      return (
-                        <button
-                          key={tp}
-                          type="button"
-                          onClick={() => {
-                            setTipoLocal(tp);
-                            setTipoModalOpen(false);
-                          }}
-                          className={`min-h-14 border px-4 py-3 text-left text-sm font-bold transition-all ${
-                            selected
-                              ? "border-[#212226] bg-[#212226] text-white"
-                              : "border-[#212226]/10 bg-white text-[#212226]/68 hover:border-[#f0552f] hover:text-[#212226]"
-                          }`}
-                        >
-                          {tp}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
 
+// ── Sub-componentes ──────────────────────────────────────────────────────────
+
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="py-3 flex items-start justify-between gap-4">
-      <span className="text-[10px] font-black uppercase tracking-[0.14em] text-white/35">
+    <div className="py-3 flex items-start justify-between gap-3">
+      <span className="text-[10px] font-black uppercase tracking-[0.13em] text-white/30 shrink-0">
         {label}
       </span>
-      <span className="text-xs font-bold text-white/75 text-right leading-relaxed">
+      <span className="text-xs font-bold text-white/68 text-right leading-relaxed">
         {value}
       </span>
     </div>
   );
 }
 
-function InputField({
+function NumberStepper({
   label,
   placeholder,
   value,
   onChange,
+  optional = false,
 }: {
   label: string;
   placeholder: string;
   value: number;
   onChange: (v: number) => void;
+  optional?: boolean;
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-2">
+      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
         {label}
+        {optional && (
+          <span className="ml-1.5 text-[#212226]/28 normal-case tracking-normal font-normal text-[11px]">
+            (opcional)
+          </span>
+        )}
       </label>
-      <input
-        type="number"
-        min={0}
-        value={value || ""}
-        onChange={(e) => onChange(Number(e.target.value) || 0)}
-        placeholder={placeholder}
-        className="w-full bg-transparent border border-[#212226]/15 rounded-lg px-4 py-3 text-sm outline-none transition-colors focus:border-[#f0552f] placeholder:text-[#212226]/30"
-      />
+      <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] overflow-hidden focus-within:border-[#f0552f] transition-colors">
+        <button
+          type="button"
+          onClick={() => onChange(Math.max(0, value - 1))}
+          className="flex h-full w-11 shrink-0 items-center justify-center border-r border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+        >
+          <MinusIcon className="h-3.5 w-3.5" />
+        </button>
+        <input
+          type="number"
+          min={0}
+          value={value || ""}
+          onChange={(e) => onChange(Number(e.target.value) || 0)}
+          placeholder={placeholder}
+          className="flex-1 bg-transparent px-3 text-sm text-center outline-none placeholder:text-[#212226]/22"
+        />
+        <button
+          type="button"
+          onClick={() => onChange(value + 1)}
+          className="flex h-full w-11 shrink-0 items-center justify-center border-l border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+        >
+          <PlusIcon className="h-3.5 w-3.5" />
+        </button>
+      </div>
     </div>
   );
 }
