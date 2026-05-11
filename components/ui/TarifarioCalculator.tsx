@@ -917,17 +917,6 @@ export default function TarifarioCalculator({
               </div>
             )}
 
-            {avisoContextual && (
-              <div className="border-l-2 border-[#f0552f] pl-4 py-0.5">
-                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-[#f0552f] mb-1.5">
-                  {t("summary.noticeTitle")}
-                </p>
-                <p className="text-[11px] text-white/45 leading-relaxed">
-                  {avisoContextual}
-                </p>
-              </div>
-            )}
-
             <p className="text-[11px] text-white/22 leading-relaxed">
               {t("disclaimer")}
             </p>
@@ -1060,7 +1049,7 @@ function NumberStepper({
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="flex h-full w-11 shrink-0 items-center justify-center border-r border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-r border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
         >
           <MinusIcon className="h-3.5 w-3.5" />
         </button>
@@ -1070,12 +1059,12 @@ function NumberStepper({
           value={value || ""}
           onChange={(e) => onChange(Number(e.target.value) || 0)}
           placeholder={placeholder}
-          className="flex-1 bg-transparent px-3 text-sm text-center outline-none placeholder:text-[#212226]/22"
+          className="flex-1 bg-transparent px-4 text-sm outline-none placeholder:text-[#212226]/22"
         />
         <button
           type="button"
           onClick={() => onChange(value + 1)}
-          className="flex h-full w-11 shrink-0 items-center justify-center border-l border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-l border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
         >
           <PlusIcon className="h-3.5 w-3.5" />
         </button>
