@@ -894,10 +894,10 @@ export default function TarifarioCalculator({
                   }
                 />
               )}
-              {grupo && needsMedio && step >= 4 && (
+              {grupo && needsMedio && (
                 <SummaryRow
                   label={t("summary.medio")}
-                  value={t(`medio.${medio}`)}
+                  value={step >= 4 ? t(`medio.${medio}`) : t("summary.pending")}
                 />
               )}
             </div>
