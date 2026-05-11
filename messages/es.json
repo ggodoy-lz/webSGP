@@ -493,6 +493,7 @@
       "subtotal": "Total acumulado",
       "servicioActual": "Servicio actual",
       "totalFinal": "Total final",
+      "nuevoServicio": "Agregar servicio de gimnasio",
       "agregarAviso": "El cálculo de gimnasios inicia con un servicio 7A. Si el gimnasio ofrece otro servicio, agregalo para acumular las tarifas por uso. Al terminar, el total final suma todos los servicios cargados."
     },
     "gastronomia": {

@@ -92,6 +92,8 @@ export default function TarifarioCalculator({
     grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
       ? grupoConfig.tipos.filter((tp) => GIMNASIO_TIPOS_SECUNDARIO.includes(tp))
       : (grupoConfig?.tipos ?? []);
+  const agregandoServicioGimnasio =
+    step === 1 && grupo === "gimnasios" && gimnasioServicios.length > 0;
 
   // Detecta estrellas implícitas en el nombre del tipo de hotel
   const hotelEstrellasImplicitas: Record<string, CategoriaHotel> = {
@@ -305,42 +307,44 @@ export default function TarifarioCalculator({
           {step === 1 && (
             <motion.div key="s1" {...motionProps}>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
-                01 — {t("step1")}
+                01 — {agregandoServicioGimnasio ? t("gimnasio.nuevoServicio") : t("step1")}
               </p>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
-                {GRUPOS.map((g) => {
-                  const Icon = GRUPO_ICONS[g.id];
-                  const selected = grupo === g.id;
-                  return (
-                    <button
-                      key={g.id}
-                      type="button"
-                      onClick={() => {
-                        setGrupo(g.id);
-                        setTipoLocal("");
-                      }}
-                      className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
-                        selected
-                          ? "border-[#f0552f] bg-[#f0552f]/5"
-                          : "border-[#212226]/10 hover:border-[#212226]/30"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-6 h-6 ${selected ? "text-[#f0552f]" : "text-[#212226]/40"}`}
-                      />
-                      <span
-                        className={`text-xs font-bold ${selected ? "text-[#f0552f]" : "text-[#212226]/70"}`}
+              {!agregandoServicioGimnasio && (
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                  {GRUPOS.map((g) => {
+                    const Icon = GRUPO_ICONS[g.id];
+                    const selected = grupo === g.id;
+                    return (
+                      <button
+                        key={g.id}
+                        type="button"
+                        onClick={() => {
+                          setGrupo(g.id);
+                          setTipoLocal("");
+                        }}
+                        className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
+                          selected
+                            ? "border-[#f0552f] bg-[#f0552f]/5"
+                            : "border-[#212226]/10 hover:border-[#212226]/30"
+                        }`}
                       >
-                        {t(`grupos.${g.id}`)}
-                      </span>
-                      <span className="text-[10px] text-[#212226]/35 leading-tight hidden sm:block">
-                        {t(`gruposDesc.${g.id}`)}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
+                        <Icon
+                          className={`w-6 h-6 ${selected ? "text-[#f0552f]" : "text-[#212226]/40"}`}
+                        />
+                        <span
+                          className={`text-xs font-bold ${selected ? "text-[#f0552f]" : "text-[#212226]/70"}`}
+                        >
+                          {t(`grupos.${g.id}`)}
+                        </span>
+                        <span className="text-[10px] text-[#212226]/35 leading-tight hidden sm:block">
+                          {t(`gruposDesc.${g.id}`)}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
 
               {grupo && grupoConfig && (
                 <motion.div
