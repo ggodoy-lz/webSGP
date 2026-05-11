@@ -852,21 +852,21 @@ export default function TarifarioCalculator({
         </section>
 
         {/* ── Sidebar resumen ─────────────────────────── */}
-        {step < 5 && <aside className="border-t border-[#212226]/10 bg-[#212226] px-6 py-8 text-white lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch">
+        {step < 5 && <aside className="border-t border-[#212226]/10 bg-white px-6 py-8 lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch shadow-[-1px_0_0_0_rgba(33,34,38,0.07)]">
           <div className="space-y-5">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mb-3">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-3">
                 {t("summary.title")}
               </p>
               <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
                 {tieneTarifaVisible ? fmt(tarifaVisible) : "—"}
               </p>
-              <p className="text-xs text-white/38 mt-2 leading-relaxed">
+              <p className="text-xs text-[#212226]/40 mt-2 leading-relaxed">
                 {tieneTarifaVisible ? t("tarifaMensual") : t("summary.empty")}
               </p>
             </div>
 
-            <div className="divide-y divide-white/8 border-y border-white/8">
+            <div className="divide-y divide-[#212226]/6 border-y border-[#212226]/6">
               <SummaryRow
                 label={t("summary.rubro")}
                 value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")}
@@ -898,25 +898,25 @@ export default function TarifarioCalculator({
             </div>
 
             {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
-              <div className="rounded-xl border border-white/10 overflow-hidden">
-                <div className="px-4 py-2.5 border-b border-white/10 bg-white/5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/35">
+              <div className="rounded-xl border border-[#212226]/10 overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
                 {gimnasioServicios.map((s, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 text-xs"
+                    className="flex items-center justify-between px-4 py-2.5 border-b border-[#212226]/5 text-xs"
                   >
-                    <span className="text-white/55">{s.tipo}</span>
-                    <span className="font-black text-white">{fmt(s.tarifa)}</span>
+                    <span className="text-[#212226]/55">{s.tipo}</span>
+                    <span className="font-black text-[#212226]">{fmt(s.tarifa)}</span>
                   </div>
                 ))}
               </div>
             )}
 
-            <p className="text-[11px] text-white/22 leading-relaxed">
+            <p className="text-[11px] text-[#212226]/30 leading-relaxed">
               {t("disclaimer")}
             </p>
           </div>
@@ -1011,10 +1011,10 @@ export default function TarifarioCalculator({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="py-3 flex items-start justify-between gap-3">
-      <span className="text-[10px] font-black uppercase tracking-[0.13em] text-white/30 shrink-0">
+      <span className="text-[10px] font-black uppercase tracking-[0.13em] text-[#212226]/35 shrink-0">
         {label}
       </span>
-      <span className="text-xs font-bold text-white/68 text-right leading-relaxed">
+      <span className="text-xs font-bold text-[#212226]/70 text-right leading-relaxed">
         {value}
       </span>
     </div>
