@@ -884,7 +884,7 @@ export default function TarifarioCalculator({
                 label={t("summary.datos")}
                 value={datosLocal || t("summary.pending")}
               />
-              {grupo && needsHorario && (
+              {(!grupo || needsHorario) && (
                 <SummaryRow
                   label={t("summary.horario")}
                   value={
@@ -894,7 +894,7 @@ export default function TarifarioCalculator({
                   }
                 />
               )}
-              {grupo && needsMedio && (
+              {(!grupo || needsMedio) && (
                 <SummaryRow
                   label={t("summary.medio")}
                   value={step >= 4 ? t(`medio.${medio}`) : t("summary.pending")}
