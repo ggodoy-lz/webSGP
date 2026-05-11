@@ -1,12 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTranslations, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 import { ArrowTopRightOnSquareIcon } from "@heroicons/react/24/outline";
 
 export default function ArtistOfMonth() {
   const t = useTranslations("artistOfMonth");
-  const locale = useLocale();
 
   return (
     <section className="bg-[#212226] py-20 lg:py-24 relative overflow-hidden">

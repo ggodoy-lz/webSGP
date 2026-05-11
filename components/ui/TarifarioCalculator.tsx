@@ -20,7 +20,7 @@ import {
 import {
   GRUPOS,
   DIAS_SEMANA,
-  SHOPPING_TIPOS,
+  GIMNASIO_TIPOS_SECUNDARIO,
   type GrupoId,
   type DiaSemana,
   type Turno,
@@ -85,6 +85,13 @@ export default function TarifarioCalculator({
   const [gimnasioServicios, setGimnasioServicios] = useState<{ tipo: string; tarifa: number }[]>([]);
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
+  const gimnasioTotal =
+    gimnasioServicios.reduce((acc, servicio) => acc + servicio.tarifa, 0) +
+    (grupo === "gimnasios" ? (resultado ?? 0) : 0);
+  const tiposDisponibles =
+    grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
+      ? grupoConfig.tipos.filter((tp) => GIMNASIO_TIPOS_SECUNDARIO.includes(tp))
+      : (grupoConfig?.tipos ?? []);
 
   // Detecta estrellas implícitas en el nombre del tipo de hotel
   const hotelEstrellasImplicitas: Record<string, CategoriaHotel> = {
@@ -141,7 +148,7 @@ export default function TarifarioCalculator({
       camas,
       dias, turnos,
     };
-  }, [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones, categoriaHotel, estaciones, alumnos, ubicacion, maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
+  }, [grupo, tipoLocal, medio, mesas, butacas, metrosCuadrados, habitaciones, categoriaImplicita, categoriaHotel, estaciones, alumnos, ubicacion, maquinas, sesionesPorDia, sillasEspera, camas, dias, turnos]);
 
   const handleCalcular = async () => {
     setLoading(true);
@@ -350,7 +357,7 @@ export default function TarifarioCalculator({
                     className={fieldCls + " cursor-pointer"}
                   >
                     <option value="">{t("fields.tipoLocalPlaceholder")}</option>
-                    {grupoConfig.tipos.map((tp) => (
+                    {tiposDisponibles.map((tp) => (
                       <option key={tp} value={tp}>
                         {tp}
                       </option>
@@ -603,28 +610,36 @@ export default function TarifarioCalculator({
                   {t("tarifaMensual")}
                 </p>
 
-                {/* Desglose multi-servicio gimnasios */}
-                {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
-                  <div className="max-w-sm mx-auto mb-4 text-left border border-[#212226]/10 rounded-lg overflow-hidden">
+                {grupo === "gimnasios" && resultado !== null && (
+                  <div className="max-w-md mx-auto mb-6 text-left border border-[#212226]/10 rounded-lg overflow-hidden">
                     {gimnasioServicios.map((s, i) => (
                       <div key={i} className="flex justify-between items-center px-4 py-2 border-b border-[#212226]/5 text-xs text-[#212226]/60">
                         <span>{s.tipo}</span>
                         <span className="font-bold">{fmt(s.tarifa)}</span>
                       </div>
                     ))}
-                    <div className="flex justify-between items-center px-4 py-2 bg-[#212226]/3 text-xs font-black text-[#212226]/70">
-                      <span>{t("gimnasio.subtotal")}</span>
-                      <span>{fmt(gimnasioServicios.reduce((a, s) => a + s.tarifa, 0) + (resultado ?? 0))}</span>
+                    <div className="flex justify-between items-center px-4 py-2 border-b border-[#212226]/5 text-xs text-[#212226]/60">
+                      <span>{tipoLocal || t("gimnasio.servicioActual")}</span>
+                      <span className="font-bold">{fmt(resultado)}</span>
+                    </div>
+                    <div className="flex justify-between items-center px-4 py-3 bg-[#212226]/5 text-xs font-black text-[#212226]/70">
+                      <span>{t("gimnasio.totalFinal")}</span>
+                      <span>{fmt(gimnasioTotal)}</span>
                     </div>
                   </div>
                 )}
 
                 <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl mb-4">
-                  {fmt(resultado ?? 0)}
+                  {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
                 </p>
                 <p className="text-sm text-[#212226]/45 max-w-md mx-auto mb-8 leading-relaxed">
                   {t("disclaimer")}
                 </p>
+                {grupo === "gimnasios" && (
+                  <p className="text-xs text-[#212226]/50 max-w-md mx-auto mb-6 leading-relaxed">
+                    {t("gimnasio.agregarAviso")}
+                  </p>
+                )}
                 {grupo === "gastronomia" && turnos.includes("noche") && (
                   <div className="border border-[#212226]/15 rounded-lg px-6 py-5 max-w-sm mx-auto mb-6 text-left">
                     <p className="text-xs font-black uppercase tracking-wider text-[#212226]/60 mb-2">
@@ -654,6 +669,7 @@ export default function TarifarioCalculator({
                     <button
                       onClick={() => {
                         setGimnasioServicios(prev => [...prev, { tipo: tipoLocal, tarifa: resultado ?? 0 }]);
+                        setGrupo("gimnasios");
                         setTipoLocal("");
                         setMaquinas(0);
                         setSesionesPorDia(0);

@@ -495,7 +495,10 @@
     },
     "gimnasio": {
       "agregarServicio": "Add another service",
-      "subtotal": "Accumulated total"
+      "subtotal": "Accumulated total",
+      "servicioActual": "Current service",
+      "totalFinal": "Final total",
+      "agregarAviso": "Gym calculations start with a 7A service. If the gym offers another service, add it to accumulate tariffs by usage. When finished, the final total adds all loaded services."
     }
   },
   "common": {

@@ -224,7 +224,7 @@ export const GRUPOS: GrupoConfig[] = [
     tipos: [
       "Musculación", "Funcional", "CrossFit", "Máquinas",
       "Aeróbica", "Spinning", "Aerospinning",
-      "Zumba", "Bailoterapia", "Danzaterapia", "Otro",
+      "Zumba", "Bailoterapia", "Danzaterapia", "Fitdance", "Otro",
     ],
   },
   {
@@ -251,7 +251,7 @@ export const GIMNASIO_TIPOS_NECESARIO = [
   "Aeróbica", "Spinning", "Aerospinning",
 ];
 export const GIMNASIO_TIPOS_INDISPENSABLE = [
-  "Zumba", "Bailoterapia", "Danzaterapia",
+  "Zumba", "Bailoterapia", "Danzaterapia", "Fitdance",
 ];
 
 export const SHOPPING_TIPOS = ["Shopping", "Centro Comercial"];
