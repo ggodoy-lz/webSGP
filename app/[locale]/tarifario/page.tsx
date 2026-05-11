@@ -33,7 +33,7 @@ export default async function TarifarioPage() {
 
       <section className="bg-[#f2e2c4] py-16 lg:py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <div className="max-w-5xl mx-auto">
+          <div className="max-w-screen-xl mx-auto">
             <div className="px-8 lg:px-12 pb-6">
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
                 Calculadora

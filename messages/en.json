@@ -444,6 +444,8 @@
     "fields": {
       "tipoLocal": "Business type",
       "tipoLocalPlaceholder": "Select type",
+      "tipoLocalHelper": "Choose an option to continue. You can filter long lists.",
+      "buscarTipo": "Search type",
       "mesas": "Number of tables",
       "mesasPlaceholder": "E.g.: 15",
       "butacas": "Additional seats (optional)",

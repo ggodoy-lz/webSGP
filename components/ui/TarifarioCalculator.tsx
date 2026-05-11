@@ -66,6 +66,7 @@ export default function TarifarioCalculator({
   const [step, setStep] = useState<Step>(1);
   const [grupo, setGrupo] = useState<GrupoId | null>(null);
   const [tipoLocal, setTipoLocal] = useState("");
+  const [tipoFiltro, setTipoFiltro] = useState("");
   const [medio, setMedio] = useState<MedioDeUso>("parlante");
   const [dias, setDias] = useState<DiaSemana[]>([]);
   const [turnos, setTurnos] = useState<Turno[]>([]);
@@ -97,6 +98,9 @@ export default function TarifarioCalculator({
     grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
       ? grupoConfig.tipos.filter((tp) => GIMNASIO_TIPOS_SECUNDARIO.includes(tp))
       : (grupoConfig?.tipos ?? []);
+  const tiposFiltrados = tiposDisponibles.filter((tp) =>
+    tp.toLowerCase().includes(tipoFiltro.trim().toLowerCase()),
+  );
   const agregandoServicioGimnasio =
     step === 1 && grupo === "gimnasios" && gimnasioServicios.length > 0;
 
@@ -183,6 +187,7 @@ export default function TarifarioCalculator({
     setStep(1);
     setGrupo(null);
     setTipoLocal("");
+    setTipoFiltro("");
     setMedio("parlante");
     setDias([]);
     setTurnos([]);
@@ -346,7 +351,7 @@ export default function TarifarioCalculator({
   };
 
   return (
-    <div className="bg-[#feffff] border-t-4 border-[#212226]">
+    <div className="bg-[#feffff] border-t-4 border-[#212226] shadow-[0_24px_80px_rgba(33,34,38,0.08)]">
       {showOuterHeader && (
         <div className="px-6 lg:px-12 py-8 border-b border-[#212226]/10">
           <div className="max-w-4xl">
@@ -361,7 +366,7 @@ export default function TarifarioCalculator({
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] gap-0">
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px] gap-0 min-h-[680px]">
         <section className="px-6 lg:px-12 py-10">
           <div className="max-w-4xl">
             {step < 5 && stepIndicator}
@@ -386,6 +391,7 @@ export default function TarifarioCalculator({
                         onClick={() => {
                           setGrupo(g.id);
                           setTipoLocal("");
+                          setTipoFiltro("");
                         }}
                         className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
                           selected
@@ -416,21 +422,47 @@ export default function TarifarioCalculator({
                   animate={{ opacity: 1, height: "auto" }}
                   className="overflow-hidden"
                 >
-                  <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-2">
-                    {t("fields.tipoLocal")}
-                  </label>
-                  <select
-                    value={tipoLocal}
-                    onChange={(e) => setTipoLocal(e.target.value)}
-                    className={fieldCls + " cursor-pointer"}
-                  >
-                    <option value="">{t("fields.tipoLocalPlaceholder")}</option>
-                    {tiposDisponibles.map((tp) => (
-                      <option key={tp} value={tp}>
-                        {tp}
-                      </option>
-                    ))}
-                  </select>
+                  <div className="border border-[#212226]/10 bg-[#faf9f7] p-4 sm:p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-4">
+                      <div>
+                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-1">
+                          {t("fields.tipoLocal")}
+                        </label>
+                        <p className="text-xs text-[#212226]/45">
+                          {t("fields.tipoLocalHelper")}
+                        </p>
+                      </div>
+                      {tiposDisponibles.length > 8 && (
+                        <input
+                          type="search"
+                          value={tipoFiltro}
+                          onChange={(e) => setTipoFiltro(e.target.value)}
+                          placeholder={t("fields.buscarTipo")}
+                          className="w-full sm:w-64 bg-white border border-[#212226]/10 px-3 py-2 text-xs outline-none focus:border-[#f0552f] placeholder:text-[#212226]/30"
+                        />
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[310px] overflow-y-auto pr-1">
+                      {tiposFiltrados.map((tp) => {
+                        const selected = tipoLocal === tp;
+                        return (
+                          <button
+                            key={tp}
+                            type="button"
+                            onClick={() => setTipoLocal(tp)}
+                            className={`min-h-11 px-3 py-2 border text-left text-xs font-bold transition-all ${
+                              selected
+                                ? "border-[#f0552f] bg-[#f0552f] text-white"
+                                : "border-[#212226]/10 bg-white text-[#212226]/65 hover:border-[#f0552f]/50 hover:text-[#212226]"
+                            }`}
+                          >
+                            {tp}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </motion.div>
               )}
                 </motion.div>
@@ -739,6 +771,7 @@ export default function TarifarioCalculator({
                         setGimnasioServicios(prev => [...prev, { tipo: tipoLocal, tarifa: resultado ?? 0 }]);
                         setGrupo("gimnasios");
                         setTipoLocal("");
+                        setTipoFiltro("");
                         setMaquinas(0);
                         setSesionesPorDia(0);
                         setMetrosCuadrados(0);

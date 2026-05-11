@@ -444,6 +444,8 @@
     "fields": {
       "tipoLocal": "Tipo de local",
       "tipoLocalPlaceholder": "Seleccioná el tipo",
+      "tipoLocalHelper": "Elegí una opción para continuar. Podés filtrar si la lista es extensa.",
+      "buscarTipo": "Buscar tipo",
       "mesas": "Cantidad de mesas",
       "mesasPlaceholder": "Ej: 15",
       "butacas": "Butacas sueltas (opcional)",
