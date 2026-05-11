@@ -7,6 +7,7 @@ import {
   ArrowRightIcon,
   ArrowLeftIcon,
   ArrowPathIcon,
+  XMarkIcon,
   BuildingStorefrontIcon,
   BuildingOffice2Icon,
   MusicalNoteIcon,
@@ -67,6 +68,8 @@ export default function TarifarioCalculator({
   const [grupo, setGrupo] = useState<GrupoId | null>(null);
   const [tipoLocal, setTipoLocal] = useState("");
   const [tipoFiltro, setTipoFiltro] = useState("");
+  const [grupoModalOpen, setGrupoModalOpen] = useState(false);
+  const [tipoModalOpen, setTipoModalOpen] = useState(false);
   const [medio, setMedio] = useState<MedioDeUso>("parlante");
   const [dias, setDias] = useState<DiaSemana[]>([]);
   const [turnos, setTurnos] = useState<Turno[]>([]);
@@ -389,94 +392,48 @@ export default function TarifarioCalculator({
                     01 — {agregandoServicioGimnasio ? t("gimnasio.nuevoServicio") : t("step1")}
                   </p>
 
-                  <div className="space-y-3">
-                    {!agregandoServicioGimnasio && (
-                      <div className="grid grid-cols-2 gap-1 sm:grid-cols-3 lg:grid-cols-5">
-                        {GRUPOS.map((g) => {
-                          const Icon = GRUPO_ICONS[g.id];
-                          const selected = grupo === g.id;
-                          return (
-                            <button
-                              key={g.id}
-                              type="button"
-                              onClick={() => {
-                                setGrupo(g.id);
-                                setTipoLocal("");
-                                setTipoFiltro("");
-                              }}
-                              className={`group flex min-h-8 items-center gap-2 border px-2 py-1 text-left transition-all ${
-                                selected
-                                  ? "border-[#f0552f] bg-[#f0552f] text-white shadow-[0_12px_30px_rgba(240,85,47,0.16)]"
-                                  : "border-[#212226]/10 bg-[#faf9f7] hover:border-[#f0552f]/50 hover:bg-white"
-                              }`}
-                            >
-                              <Icon
-                                className={`h-4 w-4 shrink-0 ${selected ? "text-white" : "text-[#212226]/35 group-hover:text-[#f0552f]"}`}
-                              />
-                              <span className="min-w-0">
-                                <span className={`block text-[10px] font-black leading-tight ${selected ? "text-white" : "text-[#212226]/75"}`}>
-                                  {t(`grupos.${g.id}`)}
-                                </span>
-                                <span className={`mt-1 block text-[10px] leading-tight sm:hidden ${selected ? "text-white/70" : "text-[#212226]/35"}`}>
-                                  {t(`gruposDesc.${g.id}`)}
-                                </span>
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
-
-                    <div className="border border-[#212226]/10 bg-[#faf9f7] p-2.5">
-                      {grupo && grupoConfig ? (
-                        <>
-                          <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                            <div>
-                              <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/50 mb-1">
-                                {t("fields.tipoLocal")}
-                              </label>
-                              <p className="hidden text-xs text-[#212226]/45 xl:block">
-                                {t("fields.tipoLocalHelper")}
-                              </p>
-                            </div>
-                            {tiposDisponibles.length > 8 && (
-                              <input
-                                type="search"
-                                value={tipoFiltro}
-                                onChange={(e) => setTipoFiltro(e.target.value)}
-                                placeholder={t("fields.buscarTipo")}
-                                className="h-8 w-full bg-white border border-[#212226]/10 px-3 text-xs outline-none focus:border-[#f0552f] placeholder:text-[#212226]/30 sm:w-44"
-                              />
-                            )}
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-1 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-                            {tiposFiltrados.map((tp) => {
-                              const selected = tipoLocal === tp;
-                              return (
-                                <button
-                                  key={tp}
-                                  type="button"
-                                  onClick={() => setTipoLocal(tp)}
-                                  className={`min-h-7 border px-2 py-1 text-left text-[10px] font-bold transition-all ${
-                                    selected
-                                      ? "border-[#212226] bg-[#212226] text-white"
-                                      : "border-[#212226]/10 bg-white text-[#212226]/65 hover:border-[#f0552f] hover:text-[#212226]"
-                                  }`}
-                                >
-                                  {tp}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex h-full min-h-[110px] items-center justify-center border border-dashed border-[#212226]/15 bg-white/60 px-6 text-center">
-                          <p className="max-w-xs text-sm font-bold leading-relaxed text-[#212226]/45">
-                            {t("summary.empty")}
-                          </p>
-                        </div>
+                  <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                    <div className="border border-[#212226]/10 bg-[#faf9f7] p-6">
+                      <p className="mb-1 text-[10px] font-black uppercase tracking-wider text-[#212226]/50">
+                        {t("summary.rubro")}
+                      </p>
+                      <p className="font-display text-3xl font-black leading-none text-[#212226]">
+                        {grupo ? t(`grupos.${grupo}`) : t("fields.sinRubro")}
+                      </p>
+                      <p className="mt-3 min-h-9 text-xs leading-relaxed text-[#212226]/45">
+                        {grupo ? t(`gruposDesc.${grupo}`) : t("summary.empty")}
+                      </p>
+                      {!agregandoServicioGimnasio && (
+                        <button
+                          type="button"
+                          onClick={() => setGrupoModalOpen(true)}
+                          className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#f0552f]"
+                        >
+                          {grupo ? t("fields.cambiarRubro") : t("fields.seleccionarRubro")}
+                          <ArrowRightIcon className="h-4 w-4" />
+                        </button>
                       )}
+                    </div>
+
+                    <div className="border border-[#212226]/10 bg-[#faf9f7] p-6">
+                      <p className="mb-1 text-[10px] font-black uppercase tracking-wider text-[#212226]/50">
+                        {t("fields.tipoLocal")}
+                      </p>
+                      <p className="font-display text-3xl font-black leading-none text-[#212226]">
+                        {tipoLocal || t("fields.sinTipo")}
+                      </p>
+                      <p className="mt-3 min-h-9 text-xs leading-relaxed text-[#212226]/45">
+                        {grupo ? t("fields.tipoLocalHelper") : t("fields.seleccionarRubroPrimero")}
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setTipoModalOpen(true)}
+                        disabled={!grupo}
+                        className="mt-6 inline-flex min-h-12 items-center justify-center gap-3 bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#f0552f] disabled:bg-[#212226]/25"
+                      >
+                        {tipoLocal ? t("fields.cambiarTipo") : t("fields.seleccionarTipo")}
+                        <ArrowRightIcon className="h-4 w-4" />
+                      </button>
                     </div>
                   </div>
                 </motion.div>
@@ -910,6 +867,167 @@ export default function TarifarioCalculator({
           </div>
         </aside>
       </div>
+
+      <AnimatePresence>
+        {grupoModalOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-[#212226]/60 px-4 py-6 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t("fields.seleccionarRubro")}
+              className="w-full max-w-4xl border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.22)]"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-start justify-between gap-6 border-b border-[#212226]/10 px-6 py-5">
+                <div>
+                  <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f]">
+                    01
+                  </p>
+                  <h4 className="font-display text-3xl font-black leading-none text-[#212226]">
+                    {t("fields.seleccionarRubro")}
+                  </h4>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#212226]/45">
+                    {t("summary.empty")}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setGrupoModalOpen(false)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#212226]/10 text-[#212226]/55 transition-colors hover:border-[#f0552f] hover:text-[#f0552f]"
+                  aria-label="Cerrar"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 px-6 py-5 sm:grid-cols-2 lg:grid-cols-3">
+                {GRUPOS.map((g) => {
+                  const Icon = GRUPO_ICONS[g.id];
+                  const selected = grupo === g.id;
+                  return (
+                    <button
+                      key={g.id}
+                      type="button"
+                      onClick={() => {
+                        setGrupo(g.id);
+                        setTipoLocal("");
+                        setTipoFiltro("");
+                        setGrupoModalOpen(false);
+                        setTipoModalOpen(true);
+                      }}
+                      className={`group flex min-h-[92px] items-start gap-4 border p-4 text-left transition-all ${
+                        selected
+                          ? "border-[#f0552f] bg-[#f0552f] text-white shadow-[0_18px_40px_rgba(240,85,47,0.16)]"
+                          : "border-[#212226]/10 bg-[#faf9f7] hover:border-[#f0552f]/50 hover:bg-white"
+                      }`}
+                    >
+                      <Icon
+                        className={`mt-0.5 h-6 w-6 shrink-0 ${selected ? "text-white" : "text-[#212226]/35 group-hover:text-[#f0552f]"}`}
+                      />
+                      <span>
+                        <span className={`block text-sm font-black leading-tight ${selected ? "text-white" : "text-[#212226]/75"}`}>
+                          {t(`grupos.${g.id}`)}
+                        </span>
+                        <span className={`mt-2 block text-[11px] leading-snug ${selected ? "text-white/72" : "text-[#212226]/38"}`}>
+                          {t(`gruposDesc.${g.id}`)}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {tipoModalOpen && grupo && grupoConfig && (
+          <motion.div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#212226]/60 px-4 py-6 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label={t("fields.tipoLocal")}
+              className="w-full max-w-4xl border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.22)]"
+              initial={{ opacity: 0, y: 24, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 24, scale: 0.98 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="flex items-start justify-between gap-6 border-b border-[#212226]/10 px-6 py-5">
+                <div>
+                  <p className="mb-2 text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f]">
+                    {t(`grupos.${grupo}`)}
+                  </p>
+                  <h4 className="font-display text-3xl font-black leading-none text-[#212226]">
+                    {t("fields.tipoLocal")}
+                  </h4>
+                  <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#212226]/45">
+                    {t("fields.tipoLocalHelper")}
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setTipoModalOpen(false)}
+                  className="flex h-10 w-10 shrink-0 items-center justify-center border border-[#212226]/10 text-[#212226]/55 transition-colors hover:border-[#f0552f] hover:text-[#f0552f]"
+                  aria-label="Cerrar"
+                >
+                  <XMarkIcon className="h-5 w-5" />
+                </button>
+              </div>
+
+              <div className="px-6 py-5">
+                {tiposDisponibles.length > 8 && (
+                  <input
+                    type="search"
+                    value={tipoFiltro}
+                    onChange={(e) => setTipoFiltro(e.target.value)}
+                    placeholder={t("fields.buscarTipo")}
+                    className="mb-4 h-12 w-full border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none transition-colors placeholder:text-[#212226]/30 focus:border-[#f0552f]"
+                    autoFocus
+                  />
+                )}
+
+                <div className="max-h-[52vh] overflow-y-auto pr-1">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                    {tiposFiltrados.map((tp) => {
+                      const selected = tipoLocal === tp;
+                      return (
+                        <button
+                          key={tp}
+                          type="button"
+                          onClick={() => {
+                            setTipoLocal(tp);
+                            setTipoModalOpen(false);
+                          }}
+                          className={`min-h-14 border px-4 py-3 text-left text-sm font-bold transition-all ${
+                            selected
+                              ? "border-[#212226] bg-[#212226] text-white"
+                              : "border-[#212226]/10 bg-white text-[#212226]/68 hover:border-[#f0552f] hover:text-[#212226]"
+                          }`}
+                        >
+                          {tp}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
