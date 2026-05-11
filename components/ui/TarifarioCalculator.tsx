@@ -10,6 +10,7 @@ import {
   CheckIcon,
   PlusIcon,
   MinusIcon,
+  ChevronDownIcon,
   SpeakerWaveIcon,
   ComputerDesktopIcon,
   BuildingStorefrontIcon,
@@ -408,19 +409,23 @@ export default function TarifarioCalculator({
                   </div>
                 </div>
 
-                {/* Tipo seleccionado — chip debajo de la grilla */}
-                {tipoLocal && (
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-black uppercase tracking-[0.18em] text-[#212226]/35">
-                      {t("fields.tipoLocal")}:
-                    </span>
+                {/* Tipo de local — sección separada */}
+                {grupo && (
+                  <div className="space-y-3">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                      02 — {t("fields.tipoLocal")}
+                    </p>
                     <button
                       type="button"
                       onClick={() => setTipoModalOpen(true)}
-                      className="inline-flex items-center gap-2 rounded-xl border border-[#f0552f] bg-[#f0552f]/6 px-3 py-1.5 text-sm font-bold text-[#f0552f] hover:bg-[#f0552f]/12 transition-colors"
+                      className={`w-full flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-sm font-bold transition-all ${
+                        tipoLocal
+                          ? "border-[#f0552f] bg-[#f0552f]/5 text-[#f0552f] hover:bg-[#f0552f]/10"
+                          : "border-[#212226]/12 bg-[#faf9f7] text-[#212226]/40 hover:border-[#f0552f]/40 hover:text-[#f0552f]/70"
+                      }`}
                     >
-                      {tipoLocal}
-                      <span className="text-[10px] text-[#f0552f]/60 font-normal">✎</span>
+                      <span>{tipoLocal || t("fields.seleccionarTipo")}</span>
+                      <ChevronDownIcon className="w-4 h-4 shrink-0 opacity-60" />
                     </button>
                   </div>
                 )}
