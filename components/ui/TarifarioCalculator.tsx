@@ -313,36 +313,6 @@ export default function TarifarioCalculator({
     return "";
   })();
 
-  const stepIndicator = (
-    <div className="flex flex-wrap items-center gap-2 mb-8">
-      {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
-        <div key={s} className="flex items-center gap-2">
-          <div
-            className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
-              step >= s
-                ? "bg-[#f0552f] text-white"
-                : "bg-[#212226]/10 text-[#212226]/40"
-            }`}
-          >
-            {s}
-          </div>
-          {s < totalSteps && (
-            <div
-              className={`w-8 h-px ${step > s ? "bg-[#f0552f]" : "bg-[#212226]/15"}`}
-            />
-          )}
-        </div>
-      ))}
-      <span className="lg:ml-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#212226]/40">
-        {step === 1 && t("step1")}
-        {step === 2 && t("step2")}
-        {step === 3 && t("step3")}
-        {step === 4 && t("step4")}
-        {step === 5 && t("resultado")}
-      </span>
-    </div>
-  );
-
   const motionProps = {
     initial: { opacity: 0, x: 20 },
     animate: { opacity: 1, x: 0 },
@@ -350,11 +320,18 @@ export default function TarifarioCalculator({
     transition: { duration: 0.25 },
   };
 
+  const stepLabels = [
+    t("step1"),
+    t("step2"),
+    t("step3"),
+    t("step4"),
+  ].slice(0, totalSteps);
+
   return (
-    <div className="bg-[#feffff] border-t-4 border-[#212226] shadow-[0_24px_80px_rgba(33,34,38,0.08)]">
+    <div className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]">
       {showOuterHeader && (
-        <div className="px-6 lg:px-12 py-8 border-b border-[#212226]/10">
-          <div className="max-w-4xl">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] border-b border-[#212226]/10">
+          <div className="px-6 lg:px-10 py-8">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
               Calculadora
             </p>
@@ -363,13 +340,57 @@ export default function TarifarioCalculator({
             </h3>
             <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
           </div>
+          <div className="hidden lg:flex items-end justify-between gap-4 bg-[#212226] px-8 py-8 text-white">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35 mb-2">
+                {t("summary.title")}
+              </p>
+              <p className="font-display text-4xl font-black text-[#f0552f] leading-none">
+                {tieneTarifaVisible ? fmt(tarifaVisible) : "--"}
+              </p>
+            </div>
+            <div className="h-10 w-[3px] bg-[#f0552f]" />
+          </div>
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_400px] gap-0 min-h-[680px]">
-        <section className="px-6 lg:px-12 py-10">
-          <div className="max-w-4xl">
-            {step < 5 && stepIndicator}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px]">
+        <section className="px-5 sm:px-6 lg:px-10 py-8 lg:py-10">
+          <div className="max-w-5xl">
+            {step < 5 && (
+              <div className="mb-8">
+                <div className="flex flex-wrap gap-2">
+                  {stepLabels.map((label, index) => {
+                    const s = index + 1;
+                    const active = step === s;
+                    const done = step > s;
+                    return (
+                      <div
+                        key={label}
+                        className={`flex min-w-[140px] flex-1 items-center gap-3 border px-4 py-3 transition-colors ${
+                          active
+                            ? "border-[#f0552f] bg-[#f0552f]/5"
+                            : done
+                              ? "border-[#212226] bg-[#212226] text-white"
+                              : "border-[#212226]/10 bg-[#faf9f7]"
+                        }`}
+                      >
+                        <span
+                          className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-black ${
+                            active || done ? "bg-[#f0552f] text-white" : "bg-[#212226]/10 text-[#212226]/45"
+                          }`}
+                        >
+                          {s}
+                        </span>
+                        <span className={`text-[10px] font-black uppercase tracking-[0.16em] ${active ? "text-[#f0552f]" : done ? "text-white/70" : "text-[#212226]/40"}`}>
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             <AnimatePresence mode="wait">
               {/* ── STEP 1: Grupo + Tipo ──────────────────── */}
@@ -380,7 +401,7 @@ export default function TarifarioCalculator({
                   </p>
 
               {!agregandoServicioGimnasio && (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 mb-6">
                   {GRUPOS.map((g) => {
                     const Icon = GRUPO_ICONS[g.id];
                     const selected = grupo === g.id;
@@ -393,22 +414,24 @@ export default function TarifarioCalculator({
                           setTipoLocal("");
                           setTipoFiltro("");
                         }}
-                        className={`flex flex-col items-center gap-2 p-4 rounded-lg border text-center transition-all ${
+                        className={`group flex min-h-[104px] items-start gap-4 border p-4 text-left transition-all ${
                           selected
-                            ? "border-[#f0552f] bg-[#f0552f]/5"
-                            : "border-[#212226]/10 hover:border-[#212226]/30"
+                            ? "border-[#f0552f] bg-[#f0552f] text-white shadow-[0_12px_30px_rgba(240,85,47,0.18)]"
+                            : "border-[#212226]/10 bg-[#faf9f7] hover:border-[#f0552f]/50 hover:bg-white"
                         }`}
                       >
                         <Icon
-                          className={`w-6 h-6 ${selected ? "text-[#f0552f]" : "text-[#212226]/40"}`}
+                          className={`mt-0.5 h-6 w-6 shrink-0 ${selected ? "text-white" : "text-[#212226]/35 group-hover:text-[#f0552f]"}`}
                         />
-                        <span
-                          className={`text-xs font-bold ${selected ? "text-[#f0552f]" : "text-[#212226]/70"}`}
-                        >
-                          {t(`grupos.${g.id}`)}
-                        </span>
-                        <span className="text-[10px] text-[#212226]/35 leading-tight hidden sm:block">
-                          {t(`gruposDesc.${g.id}`)}
+                        <span className="min-w-0">
+                          <span
+                            className={`block text-sm font-black leading-tight ${selected ? "text-white" : "text-[#212226]/75"}`}
+                          >
+                            {t(`grupos.${g.id}`)}
+                          </span>
+                          <span className={`mt-2 block text-[11px] leading-snug ${selected ? "text-white/70" : "text-[#212226]/38"}`}>
+                            {t(`gruposDesc.${g.id}`)}
+                          </span>
                         </span>
                       </button>
                     );
@@ -438,12 +461,12 @@ export default function TarifarioCalculator({
                           value={tipoFiltro}
                           onChange={(e) => setTipoFiltro(e.target.value)}
                           placeholder={t("fields.buscarTipo")}
-                          className="w-full sm:w-64 bg-white border border-[#212226]/10 px-3 py-2 text-xs outline-none focus:border-[#f0552f] placeholder:text-[#212226]/30"
+                          className="h-11 w-full bg-white border border-[#212226]/10 px-4 text-sm outline-none focus:border-[#f0552f] placeholder:text-[#212226]/30 sm:w-72"
                         />
                       )}
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[310px] overflow-y-auto pr-1">
+                    <div className="grid max-h-[290px] grid-cols-1 gap-2 overflow-y-auto pr-1 sm:grid-cols-2 xl:grid-cols-3">
                       {tiposFiltrados.map((tp) => {
                         const selected = tipoLocal === tp;
                         return (
@@ -451,10 +474,10 @@ export default function TarifarioCalculator({
                             key={tp}
                             type="button"
                             onClick={() => setTipoLocal(tp)}
-                            className={`min-h-11 px-3 py-2 border text-left text-xs font-bold transition-all ${
+                            className={`min-h-12 border px-4 py-3 text-left text-sm font-bold transition-all ${
                               selected
-                                ? "border-[#f0552f] bg-[#f0552f] text-white"
-                                : "border-[#212226]/10 bg-white text-[#212226]/65 hover:border-[#f0552f]/50 hover:text-[#212226]"
+                                ? "border-[#212226] bg-[#212226] text-white"
+                                : "border-[#212226]/10 bg-white text-[#212226]/65 hover:border-[#f0552f] hover:text-[#212226]"
                             }`}
                           >
                             {tp}
@@ -800,11 +823,11 @@ export default function TarifarioCalculator({
 
             {/* ── Navigation ─────────────────────────────── */}
             {step < 5 && (
-              <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#212226]/10">
+              <div className="mt-8 flex items-center justify-between border-t border-[#212226]/10 pt-6">
                 {step > 1 ? (
                   <button
                     onClick={handleBack}
-                    className="inline-flex items-center gap-2 text-xs font-bold text-[#212226]/50 hover:text-[#212226] transition-colors"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-[#212226]/50 transition-colors hover:text-[#212226]"
                   >
                     <ArrowLeftIcon className="w-4 h-4" />
                     {t("anterior")}
@@ -816,7 +839,7 @@ export default function TarifarioCalculator({
                 <button
                   onClick={handleNext}
                   disabled={!canNext || loading}
-                  className="inline-flex items-center gap-2 bg-[#212226] hover:bg-[#f0552f] disabled:opacity-30 disabled:hover:bg-[#212226] text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
+                  className="inline-flex h-13 min-w-[170px] items-center justify-center gap-3 bg-[#212226] px-7 text-xs font-black uppercase tracking-[0.15em] text-white transition-colors duration-300 hover:bg-[#f0552f] disabled:bg-[#212226]/25"
                 >
                   {loading ? (
                     "Calculando..."
@@ -834,21 +857,21 @@ export default function TarifarioCalculator({
           </div>
         </section>
 
-        <aside className="border-t xl:border-t-0 xl:border-l border-[#212226]/10 bg-[#f5f2ec]/70 px-6 lg:px-8 py-8 xl:sticky xl:top-0 xl:self-start">
+        <aside className="border-t border-[#212226]/10 bg-[#212226] px-6 py-8 text-white lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch">
           <div className="space-y-6">
             <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-2">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/35 mb-2">
                 {t("summary.title")}
               </p>
               <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
                 {tieneTarifaVisible ? fmt(tarifaVisible) : "—"}
               </p>
-              <p className="text-xs text-[#212226]/45 mt-3 leading-relaxed">
+              <p className="text-xs text-white/45 mt-3 leading-relaxed">
                 {tieneTarifaVisible ? t("tarifaMensual") : t("summary.empty")}
               </p>
             </div>
 
-            <div className="divide-y divide-[#212226]/10 border-y border-[#212226]/10">
+            <div className="divide-y divide-white/10 border-y border-white/10">
               <SummaryRow label={t("summary.rubro")} value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")} />
               <SummaryRow label={t("summary.tipo")} value={tipoLocal || t("summary.pending")} />
               <SummaryRow label={t("summary.datos")} value={datosLocal || t("summary.pending")} />
@@ -864,33 +887,33 @@ export default function TarifarioCalculator({
             </div>
 
             {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
-              <div className="border border-[#212226]/10 bg-white/55">
-                <div className="px-4 py-3 border-b border-[#212226]/10">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45">
+              <div className="border border-white/10 bg-white/5">
+                <div className="px-4 py-3 border-b border-white/10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-white/40">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
                 {gimnasioServicios.map((servicio, index) => (
-                  <div key={`${servicio.tipo}-${index}`} className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#212226]/5 text-xs">
-                    <span className="font-bold text-[#212226]/65">{servicio.tipo}</span>
-                    <span className="font-black text-[#212226]">{fmt(servicio.tarifa)}</span>
+                  <div key={`${servicio.tipo}-${index}`} className="flex items-center justify-between gap-3 px-4 py-3 border-b border-white/5 text-xs">
+                    <span className="font-bold text-white/65">{servicio.tipo}</span>
+                    <span className="font-black text-white">{fmt(servicio.tarifa)}</span>
                   </div>
                 ))}
               </div>
             )}
 
             {avisoContextual && (
-              <div className="border-l-4 border-[#f0552f] bg-white/65 px-4 py-4">
+              <div className="border-l-4 border-[#f0552f] bg-white/8 px-4 py-4">
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#f0552f] mb-2">
                   {t("summary.noticeTitle")}
                 </p>
-                <p className="text-xs text-[#212226]/60 leading-relaxed">
+                <p className="text-xs text-white/60 leading-relaxed">
                   {avisoContextual}
                 </p>
               </div>
             )}
 
-            <p className="text-[11px] text-[#212226]/40 leading-relaxed">
+            <p className="text-[11px] text-white/35 leading-relaxed">
               {t("disclaimer")}
             </p>
           </div>
@@ -903,10 +926,10 @@ export default function TarifarioCalculator({
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="py-3 flex items-start justify-between gap-4">
-      <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/40">
+      <span className="text-[10px] font-black uppercase tracking-[0.14em] text-white/35">
         {label}
       </span>
-      <span className="text-xs font-bold text-[#212226]/70 text-right leading-relaxed">
+      <span className="text-xs font-bold text-white/75 text-right leading-relaxed">
         {value}
       </span>
     </div>
