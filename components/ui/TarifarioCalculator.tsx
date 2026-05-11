@@ -894,7 +894,7 @@ export default function TarifarioCalculator({
                   }
                 />
               )}
-              {grupo && needsMedio && (
+              {grupo && needsMedio && step >= 4 && (
                 <SummaryRow
                   label={t("summary.medio")}
                   value={t(`medio.${medio}`)}
@@ -921,7 +921,7 @@ export default function TarifarioCalculator({
               </div>
             )}
 
-            <p className="text-[11px] text-[#212226]/30 leading-relaxed">
+            <p className="text-xs text-[#212226]/40 leading-relaxed">
               {t("disclaimer")}
             </p>
           </div>
