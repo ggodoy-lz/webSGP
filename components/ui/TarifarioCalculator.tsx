@@ -93,7 +93,8 @@ export default function TarifarioCalculator({
 
   const [resultado, setResultado] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
-  const [gimnasioServicios, setGimnasioServicios] = useState<{ tipo: string; tarifa: number }[]>([]);
+  const [gimnasioServicios, setGimnasioServicios] = useState<{ tipo: string; tarifa: number; detalle: string }[]>([]);
+  const [expandedServicio, setExpandedServicio] = useState<number | null>(null);
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
   const gimnasioTotal =
@@ -191,7 +192,7 @@ export default function TarifarioCalculator({
     setAlumnos(0); setUbicacion("capital");
     setMaquinas(0); setSesionesPorDia(0);
     setSillasEspera(0); setCamas(0);
-    setResultado(null); setGimnasioServicios([]);
+    setResultado(null); setGimnasioServicios([]); setExpandedServicio(null);
   };
 
   const canNext = (() => {
@@ -713,16 +714,31 @@ export default function TarifarioCalculator({
                     {/* Desglose gimnasio (si aplica) */}
                     {grupo === "gimnasios" && resultado !== null && gimnasioServicios.length > 0 && (
                       <>
-                        {gimnasioServicios.map((s, i) => (
-                          <div key={i} className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/6 bg-[#faf9f7]">
-                            <span className="text-sm text-[#212226]/55">{s.tipo}</span>
-                            <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
+                        {[...gimnasioServicios, { tipo: tipoLocal || t("gimnasio.servicioActual"), tarifa: resultado ?? 0, detalle: [
+                          maquinas > 0 ? `${maquinas} máq./est.` : null,
+                          metrosCuadrados > 0 ? `${metrosCuadrados} m²` : null,
+                          sesionesPorDia > 0 ? `${sesionesPorDia} ses./día` : null,
+                          dias.length > 0 ? `${dias.length} días` : null,
+                        ].filter(Boolean).join(" · ") }].map((s, i) => (
+                          <div key={i} className="border-b border-[#212226]/6">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedServicio(expandedServicio === i ? null : i)}
+                              className="w-full flex items-center justify-between px-5 py-3 bg-[#faf9f7] hover:bg-[#f5f4f1] transition-colors"
+                            >
+                              <span className="text-sm text-[#212226]/60">{s.tipo}</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
+                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/35 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
+                              </div>
+                            </button>
+                            {expandedServicio === i && s.detalle && (
+                              <div className="px-5 py-3 bg-white border-t border-[#212226]/4">
+                                <p className="text-xs text-[#212226]/45">{s.detalle}</p>
+                              </div>
+                            )}
                           </div>
                         ))}
-                        <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/6 bg-[#faf9f7]">
-                          <span className="text-sm text-[#212226]/55">{tipoLocal || t("gimnasio.servicioActual")}</span>
-                          <span className="text-sm font-black text-[#212226]/75">{fmt(resultado)}</span>
-                        </div>
                         <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/10 bg-[#f0552f]/5">
                           <span className="text-sm font-black text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
                           <span className="text-sm font-black text-[#f0552f]">{fmt(gimnasioTotal)}</span>
@@ -790,7 +806,16 @@ export default function TarifarioCalculator({
                       onClick={() => {
                         setGimnasioServicios((prev) => [
                           ...prev,
-                          { tipo: tipoLocal, tarifa: resultado ?? 0 },
+                          {
+                            tipo: tipoLocal,
+                            tarifa: resultado ?? 0,
+                            detalle: [
+                              maquinas > 0 ? `${maquinas} máq./est.` : null,
+                              metrosCuadrados > 0 ? `${metrosCuadrados} m²` : null,
+                              sesionesPorDia > 0 ? `${sesionesPorDia} ses./día` : null,
+                              dias.length > 0 ? `${dias.length} días` : null,
+                            ].filter(Boolean).join(" · "),
+                          },
                         ]);
                         setGrupo("gimnasios");
                         setTipoLocal("");
