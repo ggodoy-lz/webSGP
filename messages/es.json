@@ -404,6 +404,21 @@
     "solicitar": "Solicitar cotización formal",
     "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
     "tarifaMensual": "Tarifa mensual estimada",
+    "summary": {
+      "title": "Resumen de cálculo",
+      "empty": "Completá los datos para obtener la tarifa estimada.",
+      "pending": "Pendiente",
+      "rubro": "Rubro",
+      "tipo": "Tipo",
+      "datos": "Datos",
+      "horario": "Horario",
+      "medio": "Medio",
+      "diasSeleccionados": "días seleccionados",
+      "noticeTitle": "Aviso",
+      "noticeGastronomiaNoche": "Al seleccionar turno noche, si el local funciona con baile o como boliche corresponde calcular una licencia adicional del grupo de entretenimiento.",
+      "notice30Dias": "Al seleccionar los 7 días de la semana se aplica el criterio mensual de 30 días fijos.",
+      "noticeOficinas": "Para oficinas se aplica la tarifa mínima de Gs. 294.000 cuando el cálculo no supera ese valor."
+    },
     "grupos": {
       "gastronomia": "Gastronomía",
       "comercial": "Comercial / Retail",

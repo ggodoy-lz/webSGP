@@ -53,6 +53,9 @@ const fmt = (n: number) =>
 
 type Step = 1 | 2 | 3 | 4 | 5;
 
+const compactNumber = (n: number) =>
+  n > 0 ? new Intl.NumberFormat("es-PY").format(n) : "";
+
 export default function TarifarioCalculator({
   showOuterHeader = true,
 }: {
@@ -88,6 +91,8 @@ export default function TarifarioCalculator({
   const gimnasioTotal =
     gimnasioServicios.reduce((acc, servicio) => acc + servicio.tarifa, 0) +
     (grupo === "gimnasios" ? (resultado ?? 0) : 0);
+  const tarifaVisible = grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0);
+  const tieneTarifaVisible = resultado !== null || gimnasioServicios.length > 0;
   const tiposDisponibles =
     grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
       ? grupoConfig.tipos.filter((tp) => GIMNASIO_TIPOS_SECUNDARIO.includes(tp))
@@ -104,6 +109,9 @@ export default function TarifarioCalculator({
     "Hotel 5 Estrellas": 5,
   };
   const categoriaImplicita = hotelEstrellasImplicitas[tipoLocal] ?? null;
+  const subtipoGimnasio = grupo === "gimnasios" && tipoLocal
+    ? getGimnasioSubtipo(tipoLocal)
+    : null;
 
   // Hoteles usan fórmula lineal: no necesitan días, horas ni medio
   const needsHorario = grupo !== "academias" && grupo !== "hoteles";
@@ -248,8 +256,60 @@ export default function TarifarioCalculator({
   const fieldCls =
     "w-full bg-transparent border border-[#212226]/15 rounded-lg px-4 py-3 text-sm outline-none transition-colors focus:border-[#f0552f] placeholder:text-[#212226]/30";
 
+  const datosLocal = (() => {
+    if (grupo === "gastronomia") {
+      const values = [
+        mesas > 0 ? `${compactNumber(mesas)} ${t("fields.mesas").toLowerCase()}` : "",
+        butacas > 0 ? `${compactNumber(butacas)} ${t("fields.butacas").toLowerCase()}` : "",
+      ].filter(Boolean);
+      return values.join(" / ");
+    }
+    if (grupo === "comercial" || grupo === "entretenimiento") {
+      return metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m2` : "";
+    }
+    if (grupo === "hoteles") {
+      return habitaciones > 0 ? `${compactNumber(habitaciones)} ${t("fields.habitaciones").toLowerCase()}` : "";
+    }
+    if (grupo === "estetica") {
+      return estaciones > 0 ? `${compactNumber(estaciones)} ${t("fields.estaciones").toLowerCase()}` : "";
+    }
+    if (grupo === "academias") {
+      return alumnos > 0 ? `${compactNumber(alumnos)} ${t("fields.alumnos").toLowerCase()}` : "";
+    }
+    if (grupo === "gimnasios") {
+      const base = subtipoGimnasio === "indispensable"
+        ? (metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m2` : "")
+        : (maquinas > 0 ? `${compactNumber(maquinas)} ${t("fields.maquinas").toLowerCase()}` : "");
+      const sesiones = sesionesPorDia > 0 ? `${compactNumber(sesionesPorDia)} ${t("fields.sesiones").toLowerCase()}` : "";
+      return [base, sesiones].filter(Boolean).join(" / ");
+    }
+    if (grupo === "oficinas") {
+      return sillasEspera > 0 ? `${compactNumber(sillasEspera)} ${t("fields.sillasEspera").toLowerCase()}` : "";
+    }
+    if (grupo === "motel") {
+      return camas > 0 ? `${compactNumber(camas)} ${t("fields.camas").toLowerCase()}` : "";
+    }
+    return "";
+  })();
+
+  const avisoContextual = (() => {
+    if (grupo === "gastronomia" && turnos.includes("noche")) {
+      return t("summary.noticeGastronomiaNoche");
+    }
+    if (grupo === "oficinas") {
+      return t("summary.noticeOficinas");
+    }
+    if ((grupo === "comercial" || grupo === "entretenimiento") && dias.length === 7) {
+      return t("summary.notice30Dias");
+    }
+    if (grupo === "gimnasios") {
+      return t("gimnasio.agregarAviso");
+    }
+    return "";
+  })();
+
   const stepIndicator = (
-    <div className="flex items-center gap-2 mb-8">
+    <div className="flex flex-wrap items-center gap-2 mb-8">
       {Array.from({ length: totalSteps }, (_, i) => i + 1).map((s) => (
         <div key={s} className="flex items-center gap-2">
           <div
@@ -268,7 +328,7 @@ export default function TarifarioCalculator({
           )}
         </div>
       ))}
-      <span className="ml-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#212226]/40">
+      <span className="lg:ml-3 text-[10px] font-bold uppercase tracking-[0.15em] text-[#212226]/40">
         {step === 1 && t("step1")}
         {step === 2 && t("step2")}
         {step === 3 && t("step3")}
@@ -288,27 +348,31 @@ export default function TarifarioCalculator({
   return (
     <div className="bg-[#feffff] border-t-4 border-[#212226]">
       {showOuterHeader && (
-        <div className="px-8 lg:px-12 py-8 border-b border-[#212226]/10">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
-            Calculadora
-          </p>
-          <h3 className="font-display font-black text-[#212226] text-3xl">
-            {t("title")}
-          </h3>
-          <p className="text-sm text-[#212226]/40 mt-1">{t("subtitle")}</p>
+        <div className="px-6 lg:px-12 py-8 border-b border-[#212226]/10">
+          <div className="max-w-4xl">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+              Calculadora
+            </p>
+            <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
+              {t("title")}
+            </h3>
+            <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
+          </div>
         </div>
       )}
 
-      <div className="px-8 lg:px-12 py-10">
-        {step < 5 && stepIndicator}
+      <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_380px] gap-0">
+        <section className="px-6 lg:px-12 py-10">
+          <div className="max-w-4xl">
+            {step < 5 && stepIndicator}
 
-        <AnimatePresence mode="wait">
-          {/* ── STEP 1: Grupo + Tipo ──────────────────── */}
-          {step === 1 && (
-            <motion.div key="s1" {...motionProps}>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
-                01 — {agregandoServicioGimnasio ? t("gimnasio.nuevoServicio") : t("step1")}
-              </p>
+            <AnimatePresence mode="wait">
+              {/* ── STEP 1: Grupo + Tipo ──────────────────── */}
+              {step === 1 && (
+                <motion.div key="s1" {...motionProps}>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-6">
+                    01 — {agregandoServicioGimnasio ? t("gimnasio.nuevoServicio") : t("step1")}
+                  </p>
 
               {!agregandoServicioGimnasio && (
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
@@ -369,8 +433,8 @@ export default function TarifarioCalculator({
                   </select>
                 </motion.div>
               )}
-            </motion.div>
-          )}
+                </motion.div>
+              )}
 
           {/* ── STEP 2: Datos del local ──────────────── */}
           {step === 2 && (
@@ -699,42 +763,119 @@ export default function TarifarioCalculator({
               </div>
             </motion.div>
           )}
-        </AnimatePresence>
+            </AnimatePresence>
 
-        {/* ── Navigation ─────────────────────────────── */}
-        {step < 5 && (
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#212226]/10">
-            {step > 1 ? (
-              <button
-                onClick={handleBack}
-                className="inline-flex items-center gap-2 text-xs font-bold text-[#212226]/50 hover:text-[#212226] transition-colors"
-              >
-                <ArrowLeftIcon className="w-4 h-4" />
-                {t("anterior")}
-              </button>
-            ) : (
-              <div />
+            {/* ── Navigation ─────────────────────────────── */}
+            {step < 5 && (
+              <div className="flex items-center justify-between mt-10 pt-6 border-t border-[#212226]/10">
+                {step > 1 ? (
+                  <button
+                    onClick={handleBack}
+                    className="inline-flex items-center gap-2 text-xs font-bold text-[#212226]/50 hover:text-[#212226] transition-colors"
+                  >
+                    <ArrowLeftIcon className="w-4 h-4" />
+                    {t("anterior")}
+                  </button>
+                ) : (
+                  <div />
+                )}
+
+                <button
+                  onClick={handleNext}
+                  disabled={!canNext || loading}
+                  className="inline-flex items-center gap-2 bg-[#212226] hover:bg-[#f0552f] disabled:opacity-30 disabled:hover:bg-[#212226] text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
+                >
+                  {loading ? (
+                    "Calculando..."
+                  ) : step === totalSteps ? (
+                    <>{t("calcular")}</>
+                  ) : (
+                    <>
+                      {t("siguiente")}
+                      <ArrowRightIcon className="w-4 h-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <aside className="border-t xl:border-t-0 xl:border-l border-[#212226]/10 bg-[#f5f2ec]/70 px-6 lg:px-8 py-8 xl:sticky xl:top-0 xl:self-start">
+          <div className="space-y-6">
+            <div>
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/40 mb-2">
+                {t("summary.title")}
+              </p>
+              <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
+                {tieneTarifaVisible ? fmt(tarifaVisible) : "—"}
+              </p>
+              <p className="text-xs text-[#212226]/45 mt-3 leading-relaxed">
+                {tieneTarifaVisible ? t("tarifaMensual") : t("summary.empty")}
+              </p>
+            </div>
+
+            <div className="divide-y divide-[#212226]/10 border-y border-[#212226]/10">
+              <SummaryRow label={t("summary.rubro")} value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")} />
+              <SummaryRow label={t("summary.tipo")} value={tipoLocal || t("summary.pending")} />
+              <SummaryRow label={t("summary.datos")} value={datosLocal || t("summary.pending")} />
+              {grupo && needsHorario && (
+                <SummaryRow
+                  label={t("summary.horario")}
+                  value={dias.length > 0 ? `${dias.length} ${t("summary.diasSeleccionados")}` : t("summary.pending")}
+                />
+              )}
+              {grupo && needsMedio && (
+                <SummaryRow label={t("summary.medio")} value={t(`medio.${medio}`)} />
+              )}
+            </div>
+
+            {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
+              <div className="border border-[#212226]/10 bg-white/55">
+                <div className="px-4 py-3 border-b border-[#212226]/10">
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45">
+                    {t("gimnasio.subtotal")}
+                  </p>
+                </div>
+                {gimnasioServicios.map((servicio, index) => (
+                  <div key={`${servicio.tipo}-${index}`} className="flex items-center justify-between gap-3 px-4 py-3 border-b border-[#212226]/5 text-xs">
+                    <span className="font-bold text-[#212226]/65">{servicio.tipo}</span>
+                    <span className="font-black text-[#212226]">{fmt(servicio.tarifa)}</span>
+                  </div>
+                ))}
+              </div>
             )}
 
-            <button
-              onClick={handleNext}
-              disabled={!canNext || loading}
-              className="inline-flex items-center gap-2 bg-[#212226] hover:bg-[#f0552f] disabled:opacity-30 disabled:hover:bg-[#212226] text-white text-xs font-black uppercase tracking-[0.15em] px-7 py-4 transition-colors duration-300"
-            >
-              {loading ? (
-                "Calculando..."
-              ) : step === totalSteps ? (
-                <>{t("calcular")}</>
-              ) : (
-                <>
-                  {t("siguiente")}
-                  <ArrowRightIcon className="w-4 h-4" />
-                </>
-              )}
-            </button>
+            {avisoContextual && (
+              <div className="border-l-4 border-[#f0552f] bg-white/65 px-4 py-4">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#f0552f] mb-2">
+                  {t("summary.noticeTitle")}
+                </p>
+                <p className="text-xs text-[#212226]/60 leading-relaxed">
+                  {avisoContextual}
+                </p>
+              </div>
+            )}
+
+            <p className="text-[11px] text-[#212226]/40 leading-relaxed">
+              {t("disclaimer")}
+            </p>
           </div>
-        )}
+        </aside>
       </div>
+    </div>
+  );
+}
+
+function SummaryRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="py-3 flex items-start justify-between gap-4">
+      <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/40">
+        {label}
+      </span>
+      <span className="text-xs font-bold text-[#212226]/70 text-right leading-relaxed">
+        {value}
+      </span>
     </div>
   );
 }

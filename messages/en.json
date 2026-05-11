@@ -404,6 +404,21 @@
     "solicitar": "Request formal quote",
     "disclaimer": "This is an estimated value. SGP will confirm the final tariff after verifying the declared data.",
     "tarifaMensual": "Estimated monthly tariff",
+    "summary": {
+      "title": "Calculation summary",
+      "empty": "Fill in the details to get the estimated tariff.",
+      "pending": "Pending",
+      "rubro": "Category",
+      "tipo": "Type",
+      "datos": "Details",
+      "horario": "Schedule",
+      "medio": "Medium",
+      "diasSeleccionados": "selected days",
+      "noticeTitle": "Notice",
+      "noticeGastronomiaNoche": "When night shift is selected, if the venue operates with dancing or as a club, an additional entertainment license should be calculated.",
+      "notice30Dias": "When all 7 days of the week are selected, the monthly criterion uses 30 fixed days.",
+      "noticeOficinas": "For offices, the minimum tariff of Gs. 294,000 applies when the calculation does not exceed that amount."
+    },
     "grupos": {
       "gastronomia": "Gastronomy",
       "comercial": "Commercial / Retail",
