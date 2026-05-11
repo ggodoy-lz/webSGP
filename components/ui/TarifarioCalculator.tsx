@@ -298,7 +298,7 @@ export default function TarifarioCalculator({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className={`grid grid-cols-1 ${step < 5 ? "lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]" : ""}`}>
         {/* ── Main content ───────────────────────────── */}
         <section className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
 
@@ -355,7 +355,7 @@ export default function TarifarioCalculator({
                       ? t("gimnasio.nuevoServicio")
                       : "01 — " + t("summary.rubro")}
                   </p>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
                     {GRUPOS.map((g) => {
                       const Icon = GRUPO_ICONS[g.id];
                       const selected = grupo === g.id;
@@ -687,7 +687,7 @@ export default function TarifarioCalculator({
 
             {/* ── STEP 5: Resultado ────────────────────── */}
             {step === 5 && (
-              <motion.div key="s5" {...motionProps}>
+              <motion.div key="s5" {...motionProps} className="max-w-2xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
                   {t("resultado")}
                 </p>
@@ -831,7 +831,7 @@ export default function TarifarioCalculator({
         </section>
 
         {/* ── Sidebar resumen ─────────────────────────── */}
-        <aside className="border-t border-[#212226]/10 bg-[#212226] px-6 py-8 text-white lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch">
+        {step < 5 && <aside className="border-t border-[#212226]/10 bg-[#212226] px-6 py-8 text-white lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch">
           <div className="space-y-5">
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/30 mb-3">
@@ -910,7 +910,7 @@ export default function TarifarioCalculator({
               {t("disclaimer")}
             </p>
           </div>
-        </aside>
+        </aside>}
       </div>
 
       {/* ── Modal tipo de local ─────────────────────── */}
