@@ -961,7 +961,8 @@ export default function TarifarioCalculator({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => { if (tipoLocal) setTipoModalOpen(false); }}
+            onClick={() => setTipoModalOpen(false)}
+            onKeyDown={(e) => { if (e.key === "Escape") setTipoModalOpen(false); }}
           >
             <motion.div
               role="dialog"
@@ -982,7 +983,6 @@ export default function TarifarioCalculator({
                     {t("fields.tipoLocal")}
                   </h4>
                 </div>
-                {tipoLocal && (
                   <button
                     type="button"
                     onClick={() => setTipoModalOpen(false)}
@@ -991,7 +991,6 @@ export default function TarifarioCalculator({
                   >
                     <span className="text-lg leading-none">×</span>
                   </button>
-                )}
               </div>
 
               <div className="px-6 py-5">
