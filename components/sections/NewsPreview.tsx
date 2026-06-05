@@ -82,7 +82,7 @@ export default function NewsPreview() {
               className="min-w-[280px] sm:min-w-[360px] lg:min-w-[420px] snap-start"
             >
               <Link
-                href={`/${locale}/noticias/${article.slug}`}
+                href={`/${locale}/noticias`}
                 className="group relative block min-h-[360px] p-7 overflow-hidden bg-[#212226] text-white"
               >
                 <div
