@@ -88,7 +88,6 @@ export default function Footer() {
               <div className="flex gap-2 mt-6">
                 {[
                   { name: "IFPI", href: "https://www.ifpi.org/" },
-                  { name: "WIPO", href: "https://www.wipo.int/portal/es/index.html" },
                 ].map((org) => (
                   <a
                     key={org.name}

@@ -3,13 +3,19 @@ import { useTranslations, useLocale } from "next-intl";
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import Button from "@/components/ui/Button";
+import Portals from "@/components/sections/Portals";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("sobreNosotros");
   return { title: t("hero.title"), description: t("hero.subtitle") };
 }
 
-const depts = ["repertorio","comercial","legal","admin"] as const;
+const depts = [
+  { key: "repertorio", whatsapp: "595982725536" },
+  { key: "comercial", whatsapp: "595981968005" },
+  { key: "isrc", whatsapp: "595982725536" },
+  { key: "admin", whatsapp: "595982725536" },
+] as const;
 const deptColors = ["#f0552f","#4666a6","#f2b33d","#f0552f"];
 
 export default function SobreNosotrosPage() {
@@ -34,10 +40,9 @@ export default function SobreNosotrosPage() {
               <div className="bg-[#f2e2c4] p-8">
                 <h3 className="font-display font-black text-[#212226] text-xl mb-3">{t("ifpiWipo.title")}</h3>
                 <p className="text-sm text-[#212226]/60 leading-relaxed mb-6">{t("ifpiWipo.description")}</p>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-1 gap-2">
                   {[
                     { n: "IFPI", c: "#f0552f", href: "https://www.ifpi.org/" },
-                    { n: "WIPO", c: "#4666a6", href: "https://www.wipo.int/portal/es/index.html" },
                   ].map(({ n, c, href }) => (
                     <a
                       key={n}
@@ -56,6 +61,8 @@ export default function SobreNosotrosPage() {
           </div>
         </div>
       </section>
+
+      <Portals />
 
       {/* Marco Legal */}
       <section className="bg-[#212226] py-20">
@@ -82,12 +89,23 @@ export default function SobreNosotrosPage() {
       {/* Equipo */}
       <section className="bg-[#f2e2c4] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-12">{t("equipo.title")}</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {depts.map((dept, i) => (
-              <div key={dept} className="bg-[#feffff] p-8 border-l-4 hover:-translate-y-1 transition-transform" style={{borderColor:deptColors[i]}}>
-                <span className="font-display font-black text-[#212226] text-lg leading-tight">{t(`equipo.departamentos.${dept}`)}</span>
-              </div>
+              <a
+                key={dept.key}
+                href={`https://wa.me/${dept.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-[#feffff] p-8 border-l-4 hover:-translate-y-1 transition-transform group"
+                style={{borderColor:deptColors[i]}}
+              >
+                <span className="font-display font-black text-[#212226] text-lg leading-tight group-hover:text-[#f0552f] transition-colors">
+                  {t(`equipo.departamentos.${dept.key}`)}
+                </span>
+                <span className="block mt-4 text-[10px] font-black uppercase tracking-[0.18em] text-[#212226]/35 group-hover:text-[#4666a6]">
+                  WhatsApp
+                </span>
+              </a>
             ))}
           </div>
         </div>

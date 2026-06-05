@@ -12,8 +12,8 @@
     "language": "ES"
   },
   "hero": {
-    "tagline": "Protecting your phonographic rights",
-    "subtitle": "SGP represents national and international phonographic producers throughout Paraguay and Paraguayan producers worldwide through our agreements with IFPI and WIPO.",
+    "tagline": "We Are Music",
+    "subtitle": "SGP represents Paraguayan and international phonographic producers and self-managed artists through our global agreements.",
     "ctaPago": "Get paid",
     "ctaLicencia": "Get a licence",
     "scroll": "Learn more"
@@ -21,12 +21,12 @@
   "twoCards": {
     "pago": {
       "title": "Get paid",
-      "description": "If you make music, you deserve to get paid every time it's played. We collect royalties in Paraguay and around the world through our agreements with IFPI and WIPO.",
+      "description": "If you produce music, you have the right to collect whenever your work is used. We collect royalties in Paraguay and around the world through our global agreements.",
       "cta": "More about royalties"
     },
     "licencia": {
       "title": "Get a licence",
-      "description": "If you use recorded music in your business, radio, TV or online service, you need an SGP licence. Protect your activity and support creators.",
+      "description": "If you use recorded music in your business, radio, TV or online service, you need to obtain an SGP licence. Protect your activity and support creators.",
       "cta": "More about licensing"
     }
   },
@@ -55,19 +55,19 @@
   },
   "partners": {
     "title": "We work on behalf of",
-    "subtitle": "We represent the leading labels and producers who trust SGP to manage their rights in Paraguay and worldwide."
+    "subtitle": "We represent major labels, producers and self-managed artists who trust SGP."
   },
   "newsPreview": {
-    "title": "Latest news",
-    "subtitle": "Stay informed about the phonographic industry",
+    "title": "News",
+    "subtitle": "Artists, ranking, industry and IFPI updates",
     "cta": "View all news",
     "readMore": "Read more"
   },
   "awardsPreview": {
-    "title": "Recognition",
-    "subtitle": "Streaming Awards and Propya Awards",
+    "title": "Awards",
+    "subtitle": "Propya Awards and SGP Awards",
     "cta": "View awards",
-    "streaming": "Streaming Awards",
+    "streaming": "SGP Awards",
     "propya": "Propya Awards"
   },
   "artistOfMonth": {
@@ -88,7 +88,7 @@
     "tooltip": "Contact via WhatsApp"
   },
   "footer": {
-    "description": "Society of Phonographic Producers Management of Paraguay. Member of IFPI and WIPO.",
+    "description": "Collective management society for phonographic producers of Paraguay.",
     "links": {
       "title": "Links",
       "licencias": "Licenses",
@@ -221,7 +221,7 @@
     },
     "convenios": {
       "title": "International reach",
-      "subtitle": "Thanks to our agreements with IFPI and WIPO, your rights are protected worldwide."
+      "subtitle": "Through our global agreements, your rights are represented in Paraguay and around the world."
     },
     "cta": {
       "title": "Want to register?",
@@ -283,8 +283,8 @@
       "description": "SGP is a private entity dedicated to the collective management of phonographic producers' rights in Paraguay. We represent national and international producers, ensuring they receive fair compensation for the use of their works."
     },
     "ifpiWipo": {
-      "title": "Members of IFPI and WIPO",
-      "description": "Through our agreements with the International Federation of the Phonographic Industry (IFPI) and the World Intellectual Property Organization (WIPO), Paraguayan producers have their rights protected in more than 70 countries."
+      "title": "Global agreements",
+      "description": "SGP works with international allies to represent Paraguayan producers and international repertoires through its global agreements."
     },
     "marcoLegal": {
       "title": "Legal framework",
@@ -296,10 +296,10 @@
     "equipo": {
       "title": "Our team",
       "departamentos": {
-        "repertorio": "Repertoire and Distribution Department",
-        "comercial": "Commercial Department",
-        "legal": "Legal Department",
-        "admin": "Administration"
+        "repertorio": "Repertoire and Distribution",
+        "comercial": "Licensing and Commercial",
+        "isrc": "ISRC Agency",
+        "admin": "Administration and Finance"
       }
     }
   },
@@ -322,8 +322,8 @@
   },
   "galardones": {
     "hero": {
-      "title": "Awards & Recognition",
-      "subtitle": "Celebrating the success of Paraguayan phonographic producers"
+      "title": "Awards",
+      "subtitle": "Propya Awards and SGP Awards celebrating the impact of Paraguayan music"
     },
     "streaming": {
       "title": "Streaming Awards",

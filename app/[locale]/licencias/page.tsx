@@ -103,6 +103,17 @@ export default function LicenciasPage() {
                   </div>
                 ))}
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                <div className="border border-white/10 p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35 mb-2">Licencia mensual</p>
+                  <p className="font-display font-black text-[#f2e2c4] text-2xl">Gs. $$</p>
+                </div>
+                <div className="border border-[#f2b33d]/40 p-4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f2b33d] mb-2">Licencia anual</p>
+                  <p className="font-display font-black text-[#f2e2c4] text-2xl">Gs. $$$</p>
+                  <p className="text-xs text-white/45 mt-1">Incluye 2 meses gratis</p>
+                </div>
+              </div>
               <a href="https://www.pagopar.com" target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-[#f2e2c4] hover:bg-[#f0552f] text-[#212226] hover:text-white font-black uppercase text-xs tracking-widest px-8 py-4 transition-colors">
                 {t("pagopar.cta")} <ArrowTopRightOnSquareIcon className="w-4 h-4" />
@@ -111,6 +122,19 @@ export default function LicenciasPage() {
             <div className="border border-white/10 p-12 text-center">
               <p className="font-display font-black text-[#f2e2c4] text-5xl mb-3">PAGOPAR</p>
               <p className="text-white/20 text-xs uppercase tracking-widest mb-6">Pagos seguros en Paraguay</p>
+              <div className="mb-8 bg-white/5 p-5 text-left">
+                <p className="font-display font-black text-white text-xl mb-3">Comprobante de licencia</p>
+                <p className="text-sm text-white/50 leading-relaxed mb-4">
+                  El comprobante descargable incluye los datos declarados del formulario, el plan seleccionado y los Terminos & Condiciones como declaracion jurada.
+                </p>
+                <a
+                  href={"data:text/plain;charset=utf-8," + encodeURIComponent("Certificado de licencia SGP\n\nDatos del solicitante: completar desde el formulario de pago.\nPlan: mensual o anual.\n\nTerminos & Condiciones: el solicitante declara bajo fe de juramento que los datos ingresados son correctos y que utilizara la licencia conforme a las condiciones de SGP.")}
+                  download="certificado-licencia-sgp.txt"
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#f2b33d] hover:text-white transition-colors"
+                >
+                  Descargar modelo <DocumentTextIcon className="w-4 h-4" />
+                </a>
+              </div>
               <div className="flex flex-wrap justify-center gap-2">
                 {["Visa","Mastercard","Tigo Money","Personal"].map(m => (
                   <span key={m} className="text-xs text-white/30 border border-white/10 px-3 py-1.5 hover:text-[#f2e2c4] hover:border-[#f2e2c4]/30 transition-all cursor-default">{m}</span>

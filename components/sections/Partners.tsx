@@ -4,17 +4,13 @@ import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { useTranslations } from "next-intl";
 
 const partners = [
-  { name: "IFPI", color: "#f0552f" },
-  { name: "WIPO", color: "#4666a6" },
   { name: "Universal Music Group", color: "#f2b33d" },
   { name: "Sony Music Entertainment", color: "#f0552f" },
   { name: "Warner Music Group", color: "#4666a6" },
-  { name: "Spotify", color: "#f2b33d" },
-  { name: "Apple Music", color: "#f0552f" },
-  { name: "YouTube Music", color: "#4666a6" },
-  { name: "Amazon Music", color: "#f2b33d" },
-  { name: "Deezer", color: "#f0552f" },
-  { name: "TIDAL", color: "#4666a6" },
+  { name: "Productores Independientes", color: "#f2b33d" },
+  { name: "Sellos Nacionales", color: "#f0552f" },
+  { name: "Artistas Autogestionados", color: "#4666a6" },
+  { name: "Catalogos Internacionales", color: "#f2b33d" },
 ];
 
 const wrap = (min: number, max: number, v: number) => {
@@ -42,10 +38,8 @@ function Marquee({ speed = 50 }: { speed?: number }) {
             style={{ width: ITEM_W }}
           >
             <span
-              className="font-display font-black text-sm uppercase tracking-widest text-[#212226]/30 transition-colors cursor-default px-4 text-center"
-              style={{ ["--hover-color" as string]: p.color }}
-              onMouseEnter={(e) => { (e.target as HTMLElement).style.color = p.color; }}
-              onMouseLeave={(e) => { (e.target as HTMLElement).style.color = ""; }}
+              className="font-display font-black text-sm uppercase tracking-widest transition-colors cursor-default px-4 text-center hover:text-[#212226]/35"
+              style={{ color: p.color }}
             >
               {p.name}
             </span>
@@ -62,12 +56,11 @@ export default function Partners() {
   return (
     <section className="bg-[#f2e2c4] py-16">
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10 mb-10">
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col lg:flex-row lg:items-end gap-4 lg:gap-8">
           <h2 className="font-display font-black text-3xl text-[#212226] shrink-0">
             {t("title")}
           </h2>
-          <div className="flex-1 h-px bg-[#212226]/12" />
-          <p className="text-[10px] font-black uppercase tracking-[0.15em] text-[#212226]/40 text-right max-w-[120px] shrink-0">
+          <p className="text-sm font-medium text-[#212226]/55 leading-relaxed max-w-3xl">
             {t("subtitle")}
           </p>
         </div>

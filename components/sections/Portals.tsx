@@ -16,7 +16,7 @@ export default function Portals() {
   const locale = useLocale();
 
   return (
-    <section className="bg-[#feffff] py-20 lg:py-28">
+    <section id="servicios" className="bg-[#feffff] py-20 lg:py-28">
       <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
 
         {/* Header */}

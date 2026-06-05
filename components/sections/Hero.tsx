@@ -64,9 +64,12 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
         >
           <div className="h-px w-10 bg-[#f0552f]" />
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-[#212226]/50">
-            Paraguay · IFPI · WIPO
-          </span>
+          <Link
+            href={`/${locale}/isrc`}
+            className="text-[10px] font-black uppercase tracking-[0.25em] text-[#212226]/50 hover:text-[#f0552f] transition-colors"
+          >
+            Agencia ISRC
+          </Link>
           <div className="h-px w-10 bg-[#f0552f]" />
         </motion.div>
 
@@ -81,24 +84,9 @@ export default function Hero() {
           SGP
         </motion.h1>
 
-        {/* Full name */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.55 }}
-          className="mb-8"
-        >
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#212226]/45 mb-1">
-            Sociedad de Gestión de
-          </p>
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#212226]/45">
-            Productores Fonográficos del Paraguay
-          </p>
-        </motion.div>
-
         {/* Tagline */}
         <motion.p
-          className="text-lg lg:text-xl font-medium text-[#212226] leading-snug max-w-lg mb-4"
+          className="text-2xl lg:text-3xl font-display font-black text-[#212226] leading-snug max-w-lg mb-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.65 }}

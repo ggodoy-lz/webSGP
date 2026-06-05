@@ -7,13 +7,13 @@
     "isrc": "Código ISRC",
     "sobreNosotros": "Sobre Nosotros",
     "noticias": "Noticias",
-    "galardones": "Galardones",
+    "galardones": "Premios",
     "contacto": "Contacto",
     "language": "EN"
   },
   "hero": {
-    "tagline": "Protegemos tus derechos fonográficos",
-    "subtitle": "SGP representa a productores fonográficos nacionales e internacionales en todo el territorio paraguayo y a productores paraguayos en el mundo.",
+    "tagline": "Somos Música",
+    "subtitle": "SGP representa a productores fonográficos y artistas autogestionados paraguayos e internacionales a través de nuestros convenios globales.",
     "ctaPago": "Recibí tu pago",
     "ctaLicencia": "Obtené una licencia",
     "scroll": "Conocé más"
@@ -21,12 +21,12 @@
   "twoCards": {
     "pago": {
       "title": "Recibí tu pago",
-      "description": "Si producís música, tenés derecho a cobrar cada vez que se utiliza tu obra. Recaudamos regalías en Paraguay y en todo el mundo a través de nuestros convenios con IFPI y WIPO.",
+      "description": "Si producís música, tenés derecho a cobrar cada vez que se utiliza tu obra. Recaudamos regalías en Paraguay y en el mundo gracias a nuestros convenios globales.",
       "cta": "Más sobre regalías"
     },
     "licencia": {
       "title": "Obtené una licencia",
-      "description": "Si utilizás música grabada en tu negocio, radio, TV o servicio online, necesitás una licencia SGP. Protegé tu actividad y apoyá a los creadores.",
+      "description": "Si utilizás música grabada en tu negocio, radio, TV o servicio online, necesitás obtener una licencia de SGP. Protegé tu actividad y apoyá a los creadores.",
       "cta": "Más sobre licencias"
     }
   },
@@ -55,19 +55,19 @@
   },
   "partners": {
     "title": "Trabajamos en nombre de",
-    "subtitle": "Representamos a los principales sellos y productores que confían en SGP para gestionar sus derechos en Paraguay y el mundo."
+    "subtitle": "Representamos a los principales sellos, productores y artistas autogestionados que confían en SGP."
   },
   "newsPreview": {
-    "title": "Últimas noticias",
-    "subtitle": "Mantente informado sobre la industria fonográfica",
+    "title": "Noticias",
+    "subtitle": "Artistas, ranking, industria y novedades IFPI",
     "cta": "Ver todas las noticias",
     "readMore": "Leer más"
   },
   "awardsPreview": {
-    "title": "Reconocimientos",
-    "subtitle": "Galardones de Streaming y Propya Awards",
+    "title": "Premios",
+    "subtitle": "Propya Awards y Galardones SGP",
     "cta": "Ver galardones",
-    "streaming": "Galardones de Streaming",
+    "streaming": "Galardones SGP",
     "propya": "Propya Awards"
   },
   "artistOfMonth": {
@@ -88,7 +88,7 @@
     "tooltip": "Contactar por WhatsApp"
   },
   "footer": {
-    "description": "Sociedad de Gestión de Productores Fonográficos del Paraguay. Miembro de IFPI y WIPO.",
+    "description": "Sociedad de Gestión de Productores Fonográficos del Paraguay.",
     "links": {
       "title": "Enlaces",
       "licencias": "Licencias",
@@ -221,7 +221,7 @@
     },
     "convenios": {
       "title": "Alcance internacional",
-      "subtitle": "Gracias a nuestros convenios con IFPI y WIPO, tus derechos están protegidos en todo el mundo."
+      "subtitle": "Gracias a nuestros convenios globales, tus derechos están representados en Paraguay y el mundo."
     },
     "cta": {
       "title": "¿Querés registrarte?",
@@ -283,8 +283,8 @@
       "description": "SGP es una entidad privada dedicada a la gestión colectiva de los derechos de los productores fonográficos en Paraguay. Representamos a productores nacionales e internacionales, asegurando que reciban la compensación justa por el uso de sus obras."
     },
     "ifpiWipo": {
-      "title": "Miembros de IFPI y WIPO",
-      "description": "A través de nuestros convenios con la Federación Internacional de la Industria Fonográfica (IFPI) y la Organización Mundial de la Propiedad Intelectual (WIPO), los productores paraguayos tienen sus derechos protegidos en más de 70 países."
+      "title": "Convenios globales",
+      "description": "SGP trabaja con aliados internacionales para representar a productores paraguayos y repertorios internacionales en el marco de sus convenios globales."
     },
     "marcoLegal": {
       "title": "Marco legal",
@@ -296,10 +296,10 @@
     "equipo": {
       "title": "Nuestro equipo",
       "departamentos": {
-        "repertorio": "Departamento de Repertorio y Distribución",
-        "comercial": "Departamento Comercial",
-        "legal": "Departamento Legal",
-        "admin": "Administración"
+        "repertorio": "Repertorio y Distribución",
+        "comercial": "Licencias y Comercial",
+        "isrc": "Agencia ISRC",
+        "admin": "Administración y Finanzas"
       }
     }
   },
@@ -322,8 +322,8 @@
   },
   "galardones": {
     "hero": {
-      "title": "Galardones y Reconocimientos",
-      "subtitle": "Celebramos el éxito de los productores fonográficos paraguayos"
+      "title": "Premios",
+      "subtitle": "Propya Awards y Galardones SGP para celebrar el impacto de la música paraguaya"
     },
     "streaming": {
       "title": "Galardones de Streaming",
