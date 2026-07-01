@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import type { Metadata } from "next";
-import { CheckIcon, ArrowTopRightOnSquareIcon, DocumentTextIcon, CalculatorIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { CheckIcon, ArrowTopRightOnSquareIcon, ArrowRightIcon, DocumentTextIcon, CalculatorIcon } from "@heroicons/react/24/outline";
 import PageHero from "@/components/ui/PageHero";
 import TarifarioPageLink from "@/components/ui/TarifarioPageLink";
 
@@ -13,8 +14,17 @@ export async function generateMetadata(): Promise<Metadata> {
 const licTypes = ["radio","comercio","digital","eventos"] as const;
 const licColors = ["#f0552f","#4666a6","#f2b33d","#f0552f"];
 
+// Cada tipo de licencia enlaza a su calculadora (eventos aún no tiene).
+const licCalculadora: Record<(typeof licTypes)[number], string | null> = {
+  radio: "radiodifusion",
+  comercio: "locales",
+  digital: "internet",
+  eventos: null,
+};
+
 export default function LicenciasPage() {
   const t = useTranslations("licencias");
+  const locale = useLocale();
 
   return (
     <>
@@ -40,21 +50,48 @@ export default function LicenciasPage() {
             {t("types.title")}
           </h2>
           <div className="border-t border-[#212226]/10">
-            {licTypes.map((key, i) => (
-              <div key={key} className="group flex flex-col md:flex-row md:items-start gap-4 py-8 border-b border-[#212226]/10 hover:pl-3 transition-all duration-200">
-                <span className="font-display font-black text-sm w-8 shrink-0" style={{ color: licColors[i] }}>
-                  {String(i+1).padStart(2,"0")}
-                </span>
-                <div>
-                  <h3 className="font-display font-black text-[#212226] text-xl mb-2">
-                    {t(`types.${key}.title`)}
-                  </h3>
-                  <p className="text-sm text-[#212226]/55 leading-relaxed max-w-xl">
-                    {t(`types.${key}.description`)}
-                  </p>
+            {licTypes.map((key, i) => {
+              const calc = licCalculadora[key];
+              const inner = (
+                <>
+                  <span className="font-display font-black text-sm w-8 shrink-0" style={{ color: licColors[i] }}>
+                    {String(i+1).padStart(2,"0")}
+                  </span>
+                  <div className="flex-1">
+                    <h3 className="font-display font-black text-[#212226] text-xl mb-2 flex items-center gap-3">
+                      {t(`types.${key}.title`)}
+                      {!calc && (
+                        <span className="rounded-full bg-[#212226]/8 px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[#212226]/40">
+                          {t("proximamente")}
+                        </span>
+                      )}
+                    </h3>
+                    <p className="text-sm text-[#212226]/55 leading-relaxed max-w-xl">
+                      {t(`types.${key}.description`)}
+                    </p>
+                    {calc && (
+                      <span className="mt-3 inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35 group-hover:text-[#f0552f] transition-colors">
+                        {t("calcularTarifa")}
+                        <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+                      </span>
+                    )}
+                  </div>
+                </>
+              );
+              return calc ? (
+                <Link
+                  key={key}
+                  href={`/${locale}/tarifario?licencia=${calc}`}
+                  className="group flex flex-col md:flex-row md:items-start gap-4 py-8 border-b border-[#212226]/10 hover:pl-3 transition-all duration-200"
+                >
+                  {inner}
+                </Link>
+              ) : (
+                <div key={key} className="group flex flex-col md:flex-row md:items-start gap-4 py-8 border-b border-[#212226]/10">
+                  {inner}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

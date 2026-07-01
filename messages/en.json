@@ -125,20 +125,20 @@
     "types": {
       "title": "Licence types",
       "radio": {
-        "title": "Radio & TV",
-        "description": "For radio and television broadcasters that transmit recorded music."
+        "title": "Broadcasting",
+        "description": "For AM and FM radio stations, open television channels and cable television operators that broadcast recorded music in their programming."
       },
       "comercio": {
-        "title": "Shops & venues",
-        "description": "For businesses, bars, restaurants and public spaces that play music."
+        "title": "Permanent Venues",
+        "description": "For businesses and public establishments that play recorded music as part of their daily activity: bars, restaurants, stores, gyms, hotels, malls and any venue with regular operation."
       },
       "digital": {
-        "title": "Digital platforms",
-        "description": "For streaming services, apps and online platforms."
+        "title": "Internet Licenses",
+        "description": "For services that transmit music over the internet: radio and TV Simulcasting, online radio and TV Webcasting, website background music and music services for commercial venues."
       },
       "eventos": {
         "title": "Events",
-        "description": "For live events, festivals and shows with recorded music."
+        "description": "For organizers of occasional events that use recorded music: family celebrations, business and corporate events, shows, concerts, dances, festivals, fairs and any occasional activity with an audience."
       }
     },
     "calculator": {
@@ -191,7 +191,9 @@
       "cta": "Pay with Pagopar",
       "descuento": "10% discount when paying online",
       "recurrente": "Enable recurring payments and never miss a renewal"
-    }
+    },
+    "proximamente": "Coming soon",
+    "calcularTarifa": "Calculate tariff"
   },
   "regalias": {
     "hero": {
@@ -537,5 +539,158 @@
       "description": "The page you're looking for doesn't exist.",
       "cta": "Back to home"
     }
+  },
+  "tarifarioHub": {
+    "tag": "Calculator",
+    "title": "Tariff Calculator",
+    "subtitle": "Select the license type that matches your activity",
+    "proximamente": "Coming soon",
+    "cambiar": "Change license type",
+    "calcular": "Calculate tariff",
+    "tipos": {
+      "radiodifusion": {
+        "title": "Broadcasting",
+        "desc": "For AM and FM radio stations, open television channels and cable television operators that broadcast recorded music in their programming."
+      },
+      "locales": {
+        "title": "Permanent Venues",
+        "desc": "For businesses and public establishments that play recorded music as part of their daily activity: bars, restaurants, stores, gyms, hotels, malls and any venue with regular operation."
+      },
+      "internet": {
+        "title": "Internet Licenses",
+        "desc": "For services that transmit music over the internet: radio and TV Simulcasting, online radio and TV Webcasting, website background music and music services for commercial venues."
+      },
+      "eventos": {
+        "title": "Events",
+        "desc": "For organizers of occasional events that use recorded music: family celebrations, business and corporate events, shows, concerts, dances, festivals, fairs and any occasional activity with an audience."
+      }
+    }
+  },
+  "radiodifusion": {
+    "tag": "Calculator · Broadcasting",
+    "title": "Broadcasting",
+    "subtitle": "Estimate the monthly tariff for radio, TV and cable based on your revenue and music usage",
+    "steps": {
+      "medio": "Media type",
+      "zona": "Zone",
+      "categoria": "Music category",
+      "ingresos": "Revenue"
+    },
+    "medios": {
+      "radio": "AM / FM Radio",
+      "radioDesc": "Open and closed radio stations",
+      "tv_abierta": "Open TV",
+      "tv_abiertaDesc": "Open-signal television channels",
+      "tv_cable": "Cable TV / OTT",
+      "tv_cableDesc": "Cable, closed signals, streaming and on-demand"
+    },
+    "zona": {
+      "capital": "Capital",
+      "capitalDesc": "Asunción and Greater Asunción",
+      "interior": "Interior",
+      "interiorDesc": "All other departments and cities in the country"
+    },
+    "categorias": {
+      "titulo": "What percentage of your programming is music?",
+      "especial": "Special Category",
+      "especialDesc": "More than 90% music",
+      "a": "Category A",
+      "aDesc": "Between 76% and 90% music",
+      "b": "Category B",
+      "bDesc": "Between 51% and 75% music",
+      "c": "Category C",
+      "cDesc": "Between 30% and 50% music",
+      "d": "Category D",
+      "dDesc": "Less than 30% music"
+    },
+    "fields": {
+      "ingresos": "Monthly revenue",
+      "ingresosHelp": "Revenue from advertising and/or subscriber fees. If you have no revenue, leave it at 0 and the minimum tariff for your category will apply.",
+      "prontoPago": "Early payment",
+      "prontoPagoDesc": "Paying within 15 days of the following month gives you an additional 10% discount"
+    },
+    "summary": {
+      "title": "Calculation summary",
+      "empty": "Complete the details to get the estimated tariff.",
+      "pending": "Pending",
+      "medio": "Media",
+      "zona": "Zone",
+      "categoria": "Category",
+      "ingresos": "Revenue",
+      "sinIngresos": "No revenue"
+    },
+    "resultado": "Result",
+    "tarifaMensual": "Estimated monthly tariff",
+    "aplicaMinimo": "The minimum tariff for your category applies",
+    "descuentoProntoPago": "Early payment discount (10%)",
+    "notaSimulcasting": "Do you also stream online? Simulcasting requires an additional license, independent from traditional radio or TV.",
+    "nuevaConsulta": "New calculation",
+    "atras": "Back",
+    "siguiente": "Next",
+    "calcular": "Calculate",
+    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data."
+  },
+  "internetLic": {
+    "tag": "Calculator · Internet",
+    "title": "Internet Licenses",
+    "subtitle": "Simulcasting, Webcasting, website background music and venue music services",
+    "steps": {
+      "servicio": "Service type",
+      "datos": "Service details"
+    },
+    "servicios": {
+      "simulcasting": "Simulcasting",
+      "simulcastingDesc": "Radio or TV also transmitted over the internet, alongside the traditional signal",
+      "webcasting": "Webcasting",
+      "webcastingDesc": "Radio or TV exclusively online, with no traditional base signal",
+      "ambientacion": "Website Music",
+      "ambientacionDesc": "Website background music with non-interactive playback",
+      "musicalizacion": "Venue Music Services",
+      "musicalizacionDesc": "Background music services for commercial venues"
+    },
+    "fields": {
+      "visitas": "Monthly visits",
+      "visitasHelp": "Number of monthly visits to the service URL",
+      "ingresos": "Gross monthly revenue",
+      "ingresosSimulcasting": "URL advertising revenue",
+      "ingresosHelp": "If you have no revenue, leave it at 0 and the corresponding minimum will apply.",
+      "fonogramas": "Phonograms transmitted per month",
+      "usuarios": "Users / subscribers",
+      "bocas": "Endpoints / locations",
+      "bocasHelp": "Total number of venues or locations where the service is provided"
+    },
+    "summary": {
+      "title": "Calculation summary",
+      "empty": "Complete the details to get the estimated tariff.",
+      "pending": "Pending",
+      "servicio": "Service",
+      "visitas": "Visits",
+      "ingresos": "Revenue",
+      "sinIngresos": "No revenue",
+      "fonogramas": "Phonograms",
+      "usuarios": "Users",
+      "bocas": "Endpoints"
+    },
+    "componentes": {
+      "publicidad": "0.8% on advertising",
+      "minimoVisitas": "Minimum by visits",
+      "tarifaA": "20% of gross revenue",
+      "tarifaB": "Gs. 1 per phonogram",
+      "tarifaC": "Gs. 10 per user",
+      "ingresos": "10% of gross revenue",
+      "bocas": "0.5 UDA per endpoint",
+      "minimoUda": "Guaranteed minimum (50 UDA)"
+    },
+    "seAplicaMayor": "The highest applies",
+    "cotizacion": "BCP exchange rate",
+    "cotizacionNota": "USD amounts are settled at the BCP exchange rate of the last business day of the month prior to the music usage.",
+    "resultado": "Result",
+    "tarifaMensual": "Estimated monthly tariff",
+    "notaSimulcasting": "Simulcasting does not replace the traditional radio or TV license: it is an additional, independent license. A station broadcasting over the air and online needs both.",
+    "nuevaConsulta": "New calculation",
+    "atras": "Back",
+    "siguiente": "Next",
+    "calcular": "Calculate",
+    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data."
   }
 }

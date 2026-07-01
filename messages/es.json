@@ -125,20 +125,20 @@
     "types": {
       "title": "Tipos de licencia",
       "radio": {
-        "title": "Radio y TV",
-        "description": "Para emisoras de radio y televisión que transmiten música grabada."
+        "title": "Radiodifusión",
+        "description": "Para emisoras de radio AM y FM, canales de televisión abierta y operadoras de televisión por cable que transmiten música grabada en su programación."
       },
       "comercio": {
-        "title": "Comercios y locales",
-        "description": "Para negocios, bares, restaurantes y espacios públicos que reproducen música."
+        "title": "Locales Permanentes",
+        "description": "Para comercios y establecimientos públicos que reproducen música grabada como parte de su actividad diaria: bares, restaurantes, tiendas, gimnasios, hoteles, shoppings y todo local con funcionamiento regular."
       },
       "digital": {
-        "title": "Plataformas digitales",
-        "description": "Para servicios de streaming, aplicaciones y plataformas online."
+        "title": "Licencias para Internet",
+        "description": "Para servicios que transmiten música a través de internet: Simulcasting de radio y televisión, Webcasting de radio y televisión Online, ambientación musical de sitios web y servicios de musicalización para locales comerciales."
       },
       "eventos": {
         "title": "Eventos",
-        "description": "Para eventos en vivo, festivales y espectáculos con música grabada."
+        "description": "Para organizadores de eventos ocasionales que utilizan música grabada: celebraciones familiares, eventos empresariales y corporativos, espectáculos, recitales, bailes, festivales, ferias y todo tipo de actividad eventual con público asistente."
       }
     },
     "calculator": {
@@ -191,7 +191,9 @@
       "cta": "Pagar con Pagopar",
       "descuento": "10% de descuento pagando online",
       "recurrente": "Activá pagos recurrentes y nunca olvides renovar"
-    }
+    },
+    "proximamente": "Próximamente",
+    "calcularTarifa": "Calcular tarifa"
   },
   "regalias": {
     "hero": {
@@ -537,5 +539,158 @@
       "description": "La página que buscás no existe.",
       "cta": "Volver al inicio"
     }
+  },
+  "tarifarioHub": {
+    "tag": "Calculadora",
+    "title": "Calculadora de Tarifas",
+    "subtitle": "Seleccioná el tipo de licencia que corresponde a tu actividad",
+    "proximamente": "Próximamente",
+    "cambiar": "Cambiar tipo de licencia",
+    "calcular": "Calcular tarifa",
+    "tipos": {
+      "radiodifusion": {
+        "title": "Radiodifusión",
+        "desc": "Para emisoras de radio AM y FM, canales de televisión abierta y operadoras de televisión por cable que transmiten música grabada en su programación."
+      },
+      "locales": {
+        "title": "Locales Permanentes",
+        "desc": "Para comercios y establecimientos públicos que reproducen música grabada como parte de su actividad diaria: bares, restaurantes, tiendas, gimnasios, hoteles, shoppings y todo local con funcionamiento regular."
+      },
+      "internet": {
+        "title": "Licencias para Internet",
+        "desc": "Para servicios que transmiten música a través de internet: Simulcasting de radio y televisión, Webcasting de radio y televisión Online, ambientación musical de sitios web y servicios de musicalización para locales comerciales."
+      },
+      "eventos": {
+        "title": "Eventos",
+        "desc": "Para organizadores de eventos ocasionales que utilizan música grabada: celebraciones familiares, eventos empresariales y corporativos, espectáculos, recitales, bailes, festivales, ferias y todo tipo de actividad eventual con público asistente."
+      }
+    }
+  },
+  "radiodifusion": {
+    "tag": "Calculadora · Radiodifusión",
+    "title": "Radiodifusión",
+    "subtitle": "Estimá la tarifa mensual para radios, TV y cable según tus ingresos y uso de música",
+    "steps": {
+      "medio": "Tipo de medio",
+      "zona": "Zona",
+      "categoria": "Categoría musical",
+      "ingresos": "Ingresos"
+    },
+    "medios": {
+      "radio": "Radio AM / FM",
+      "radioDesc": "Radioemisoras abiertas y cerradas",
+      "tv_abierta": "TV Abierta",
+      "tv_abiertaDesc": "Canales de televisión de señal abierta",
+      "tv_cable": "TV Cable / OTT",
+      "tv_cableDesc": "Cable, señales cerradas, streaming y on demand"
+    },
+    "zona": {
+      "capital": "Capital",
+      "capitalDesc": "Asunción y Gran Asunción",
+      "interior": "Interior",
+      "interiorDesc": "Todos los demás departamentos y ciudades del país"
+    },
+    "categorias": {
+      "titulo": "¿Qué porcentaje de tu programación es música?",
+      "especial": "Categoría Especial",
+      "especialDesc": "Más del 90% de música",
+      "a": "Categoría A",
+      "aDesc": "Entre 76% y 90% de música",
+      "b": "Categoría B",
+      "bDesc": "Entre 51% y 75% de música",
+      "c": "Categoría C",
+      "cDesc": "Entre 30% y 50% de música",
+      "d": "Categoría D",
+      "dDesc": "Menos del 30% de música"
+    },
+    "fields": {
+      "ingresos": "Ingresos mensuales",
+      "ingresosHelp": "Ingresos por publicidad y/o cuotas de abonados. Si no tenés ingresos, dejá en 0 y se aplicará la tarifa mínima de tu categoría.",
+      "prontoPago": "Pronto pago",
+      "prontoPagoDesc": "Pagando dentro de los 15 días del mes siguiente obtenés un 10% de descuento adicional"
+    },
+    "summary": {
+      "title": "Resumen de cálculo",
+      "empty": "Completá los datos para obtener la tarifa estimada.",
+      "pending": "Pendiente",
+      "medio": "Medio",
+      "zona": "Zona",
+      "categoria": "Categoría",
+      "ingresos": "Ingresos",
+      "sinIngresos": "Sin ingresos"
+    },
+    "resultado": "Resultado",
+    "tarifaMensual": "Tarifa mensual estimada",
+    "aplicaMinimo": "Se aplica la tarifa mínima de tu categoría",
+    "descuentoProntoPago": "Descuento pronto pago (10%)",
+    "notaSimulcasting": "¿Transmitís también por internet? El Simulcasting requiere una licencia adicional e independiente a la de radio o TV tradicional.",
+    "nuevaConsulta": "Nueva consulta",
+    "atras": "Atrás",
+    "siguiente": "Siguiente",
+    "calcular": "Calcular",
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados."
+  },
+  "internetLic": {
+    "tag": "Calculadora · Internet",
+    "title": "Licencias para Internet",
+    "subtitle": "Simulcasting, Webcasting, ambientación de sitios web y musicalización de locales",
+    "steps": {
+      "servicio": "Tipo de servicio",
+      "datos": "Datos del servicio"
+    },
+    "servicios": {
+      "simulcasting": "Simulcasting",
+      "simulcastingDesc": "Radio o TV transmitida también por internet, en paralelo a la señal tradicional",
+      "webcasting": "Webcasting",
+      "webcastingDesc": "Radio o TV exclusivamente online, sin señal tradicional de base",
+      "ambientacion": "Ambientación Web",
+      "ambientacionDesc": "Musicalización de sitios web con reproducción no interactiva",
+      "musicalizacion": "Musicalización de Locales",
+      "musicalizacionDesc": "Servicios de música funcional para locales comerciales (background music)"
+    },
+    "fields": {
+      "visitas": "Visitas mensuales",
+      "visitasHelp": "Cantidad de visitas mensuales a la URL del servicio",
+      "ingresos": "Ingresos brutos mensuales",
+      "ingresosSimulcasting": "Ingresos por publicidad en las URLs",
+      "ingresosHelp": "Si no tenés ingresos, dejá en 0 y se aplicará el mínimo correspondiente.",
+      "fonogramas": "Fonogramas transmitidos al mes",
+      "usuarios": "Usuarios / suscriptores",
+      "bocas": "Bocas / domicilios",
+      "bocasHelp": "Cantidad total de locales o domicilios donde se presta el servicio"
+    },
+    "summary": {
+      "title": "Resumen de cálculo",
+      "empty": "Completá los datos para obtener la tarifa estimada.",
+      "pending": "Pendiente",
+      "servicio": "Servicio",
+      "visitas": "Visitas",
+      "ingresos": "Ingresos",
+      "sinIngresos": "Sin ingresos",
+      "fonogramas": "Fonogramas",
+      "usuarios": "Usuarios",
+      "bocas": "Bocas"
+    },
+    "componentes": {
+      "publicidad": "0,8% sobre publicidad",
+      "minimoVisitas": "Mínimo por visitas",
+      "tarifaA": "20% de ingresos brutos",
+      "tarifaB": "Gs. 1 por fonograma",
+      "tarifaC": "Gs. 10 por usuario",
+      "ingresos": "10% de ingresos brutos",
+      "bocas": "0,5 UDA por boca",
+      "minimoUda": "Mínimo garantizado (50 UDA)"
+    },
+    "seAplicaMayor": "Se aplica el mayor",
+    "cotizacion": "Cotización BCP",
+    "cotizacionNota": "Los montos en USD se liquidan al tipo de cambio del BCP del último día hábil del mes anterior a la utilización de la música.",
+    "resultado": "Resultado",
+    "tarifaMensual": "Tarifa mensual estimada",
+    "notaSimulcasting": "El Simulcasting no reemplaza la licencia de radio o TV tradicional: es una licencia adicional e independiente. Una emisora que transmite por aire y por internet necesita ambas.",
+    "nuevaConsulta": "Nueva consulta",
+    "atras": "Atrás",
+    "siguiente": "Siguiente",
+    "calcular": "Calcular",
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados."
   }
 }
