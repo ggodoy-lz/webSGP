@@ -29,6 +29,13 @@ const fmt = (n: number) =>
 
 const fmtNum = (n: number) => new Intl.NumberFormat("es-PY").format(n);
 
+// Cotización BCP exacta, con los decimales tal cual los publica el banco.
+const fmtTC = (n: number) =>
+  new Intl.NumberFormat("es-PY", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n);
+
 const SERVICIO_ICONS: Record<InternetServicio, React.ElementType> = {
   simulcasting: SignalIcon,
   webcasting: WifiIcon,
@@ -365,7 +372,7 @@ export default function InternetCalculator({
                     </p>
                     {resultado.minimoUSD !== null && (
                       <p className="text-xs text-[#212226]/45 mb-3">
-                        {t("cotizacion")}: Gs. {fmtNum(Math.round(cotizacion.usd))} / USD
+                        {t("cotizacion")}: Gs. {fmtTC(cotizacion.usd)} / USD
                       </p>
                     )}
                     <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
@@ -504,7 +511,7 @@ export default function InternetCalculator({
               </div>
 
               <p className="text-[11px] text-[#212226]/35 leading-relaxed">
-                {t("cotizacion")}: Gs. {fmtNum(Math.round(cotizacion.usd))} / USD
+                {t("cotizacion")}: Gs. {fmtTC(cotizacion.usd)} / USD
               </p>
 
               <p className="text-xs text-[#212226]/40 leading-relaxed">
