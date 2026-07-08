@@ -42,18 +42,17 @@ export const TABLA_VISITAS_USD: RangoVisitas[] = [
   { desde: 100_001, hasta: 150_000, usd: 1_000 },
 ];
 
-// Más de 150.000 visitas: USD 1.000 + USD 1.700 por cada 150.000 adicionales.
+// Más de 150.000 visitas: USD 1.700 por mes por cada tramo de 150.000.
+// 150.001–300.000 = USD 1.700; 300.001–450.000 = USD 3.400; y así sucesivamente.
 export const VISITAS_BASE_EXTRA = 150_000;
-export const VISITAS_USD_BASE_EXTRA = 1_000;
 export const VISITAS_USD_POR_BLOQUE_EXTRA = 1_700;
 
 export function minimoUSDPorVisitas(visitas: number): number {
   const v = Math.max(0, visitas);
   const rango = TABLA_VISITAS_USD.find((r) => v >= r.desde && v <= r.hasta);
   if (rango) return rango.usd;
-  // Más de 150.000: bloques adicionales de 150.000
   const bloques = Math.ceil((v - VISITAS_BASE_EXTRA) / VISITAS_BASE_EXTRA);
-  return VISITAS_USD_BASE_EXTRA + bloques * VISITAS_USD_POR_BLOQUE_EXTRA;
+  return bloques * VISITAS_USD_POR_BLOQUE_EXTRA;
 }
 
 // ── Simulcasting (RTG 8.4) ─────────────────────────────────────────────────

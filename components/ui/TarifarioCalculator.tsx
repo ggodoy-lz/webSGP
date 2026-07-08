@@ -95,13 +95,23 @@ export default function TarifarioCalculator({
   const [loading, setLoading] = useState(false);
   const [gimnasioServicios, setGimnasioServicios] = useState<{ tipo: string; tarifa: number; detalle: string }[]>([]);
   const [expandedServicio, setExpandedServicio] = useState<number | null>(null);
+  // Licencia base de Bar cuando se extiende a Bar con Baile: se acumula al
+  // resultado de entretenimiento igual que los servicios de gimnasio.
+  const [barBaseServicio, setBarBaseServicio] = useState<{ tipo: string; tarifa: number; detalle: string } | null>(null);
 
   const grupoConfig = grupo ? GRUPOS.find((g) => g.id === grupo) : null;
   const gimnasioTotal =
     gimnasioServicios.reduce((acc, s) => acc + s.tarifa, 0) +
     (grupo === "gimnasios" ? (resultado ?? 0) : 0);
-  const tarifaVisible = grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0);
-  const tieneTarifaVisible = resultado !== null || gimnasioServicios.length > 0;
+  const barTotal = (barBaseServicio?.tarifa ?? 0) + (resultado ?? 0);
+  const tarifaVisible =
+    grupo === "gimnasios"
+      ? gimnasioTotal
+      : barBaseServicio
+        ? barTotal
+        : (resultado ?? 0);
+  const tieneTarifaVisible =
+    resultado !== null || gimnasioServicios.length > 0 || !!barBaseServicio;
 
   const tiposDisponibles =
     grupo === "gimnasios" && grupoConfig && gimnasioServicios.length === 0
@@ -193,6 +203,7 @@ export default function TarifarioCalculator({
     setMaquinas(0); setSesionesPorDia(0);
     setSillasEspera(0); setCamas(0);
     setResultado(null); setGimnasioServicios([]); setExpandedServicio(null);
+    setBarBaseServicio(null);
   };
 
   const canNext = (() => {
@@ -699,7 +710,7 @@ export default function TarifarioCalculator({
                   {/* Izquierda: precio */}
                   <div className="shrink-0 mb-6 lg:mb-0">
                     <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
-                      {fmt(grupo === "gimnasios" ? gimnasioTotal : (resultado ?? 0))}
+                      {fmt(tarifaVisible)}
                     </p>
                     <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
                       {t("tarifaMensual")}
@@ -745,6 +756,38 @@ export default function TarifarioCalculator({
                         </div>
                       </>
                     )}
+                    {/* Desglose bar + bar con baile (si aplica) */}
+                    {barBaseServicio && resultado !== null && (
+                      <>
+                        {[
+                          barBaseServicio,
+                          { tipo: tipoLocal, tarifa: resultado, detalle: datosLocal },
+                        ].map((s, i) => (
+                          <div key={i} className="border-b border-[#212226]/6">
+                            <button
+                              type="button"
+                              onClick={() => setExpandedServicio(expandedServicio === i ? null : i)}
+                              className="w-full flex items-center justify-between px-5 py-3 bg-[#faf9f7] hover:bg-[#f5f4f1] transition-colors"
+                            >
+                              <span className="text-sm text-[#212226]/60">{s.tipo}</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
+                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/35 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
+                              </div>
+                            </button>
+                            {expandedServicio === i && s.detalle && (
+                              <div className="px-5 py-3 bg-white border-t border-[#212226]/4">
+                                <p className="text-xs text-[#212226]/45">{s.detalle}</p>
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/10 bg-[#f0552f]/5">
+                          <span className="text-sm font-black text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
+                          <span className="text-sm font-black text-[#f0552f]">{fmt(barTotal)}</span>
+                        </div>
+                      </>
+                    )}
                     {/* Filas de resumen */}
                     {[
                       { label: t("summary.rubro"), value: grupo ? t(`grupos.${grupo}`) : null },
@@ -785,8 +828,16 @@ export default function TarifarioCalculator({
                     </p>
                     <button
                       onClick={() => {
+                        // Conserva la licencia del bar como base y suma la de
+                        // Bar con Baile encima (acumulación, no reemplazo).
+                        const base = {
+                          tipo: tipoLocal,
+                          tarifa: resultado ?? 0,
+                          detalle: datosLocal,
+                        };
                         handleReset();
                         setTimeout(() => {
+                          setBarBaseServicio(base);
                           setGrupo("entretenimiento");
                           setTipoLocal("Bar con Baile");
                           setStep(2);
@@ -943,6 +994,20 @@ export default function TarifarioCalculator({
                     <span className="font-black text-[#212226]">{fmt(s.tarifa)}</span>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {barBaseServicio && (
+              <div className="rounded-xl border border-[#212226]/10 overflow-hidden">
+                <div className="px-4 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
+                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
+                    {t("gimnasio.subtotal")}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#212226]/5 text-xs">
+                  <span className="text-[#212226]/55">{barBaseServicio.tipo}</span>
+                  <span className="font-black text-[#212226]">{fmt(barBaseServicio.tarifa)}</span>
+                </div>
               </div>
             )}
 

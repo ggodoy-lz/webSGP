@@ -52,7 +52,6 @@ export default function RadiodifusionCalculator({
   const [zona, setZona] = useState<Zona | null>(null);
   const [categoria, setCategoria] = useState<RadioCategoria | null>(null);
   const [ingresos, setIngresos] = useState(0);
-  const [prontoPago, setProntoPago] = useState(false);
   const [stepIdx, setStepIdx] = useState(0);
   const [resultado, setResultado] = useState<RadiodifusionResult | null>(null);
 
@@ -84,7 +83,9 @@ export default function RadiodifusionCalculator({
           zona: usaZona ? (zona ?? "capital") : "capital",
           categoria,
           ingresos,
-          prontoPago,
+          // El 10% de pronto pago no se aplica acá: solo se menciona en el
+          // resultado y se aplicará al confirmar el pago en la pasarela.
+          prontoPago: false,
         }),
       );
     }
@@ -98,7 +99,6 @@ export default function RadiodifusionCalculator({
     setZona(null);
     setCategoria(null);
     setIngresos(0);
-    setProntoPago(false);
     setResultado(null);
     setStepIdx(0);
   };
@@ -368,35 +368,6 @@ export default function RadiodifusionCalculator({
                     help={t("fields.ingresosHelp")}
                   />
                 </div>
-                <button
-                  type="button"
-                  onClick={() => setProntoPago(!prontoPago)}
-                  className={`flex w-full max-w-md items-start gap-4 rounded-xl border px-5 py-4 text-left transition-all ${
-                    prontoPago
-                      ? "border-[#f0552f] bg-[#f0552f]/5 shadow-[0_0_0_1px_#f0552f]"
-                      : "border-[#212226]/8 bg-[#faf9f7] hover:border-[#f0552f]/35 hover:bg-white"
-                  }`}
-                >
-                  <span
-                    className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 transition-all ${
-                      prontoPago
-                        ? "border-[#f0552f] bg-[#f0552f]"
-                        : "border-[#212226]/15"
-                    }`}
-                  >
-                    {prontoPago && <CheckIcon className="h-3 w-3 text-white" />}
-                  </span>
-                  <span>
-                    <span
-                      className={`block text-sm font-black ${prontoPago ? "text-[#f0552f]" : "text-[#212226]"}`}
-                    >
-                      {t("fields.prontoPago")}
-                    </span>
-                    <span className="mt-0.5 block text-xs leading-relaxed text-[#212226]/45">
-                      {t("fields.prontoPagoDesc")}
-                    </span>
-                  </span>
-                </button>
               </motion.div>
             )}
 
@@ -433,16 +404,6 @@ export default function RadiodifusionCalculator({
                         </span>
                       </div>
                     )}
-                    {resultado.descuentoProntoPago > 0 && (
-                      <div className="flex items-center justify-between gap-6 px-5 py-3.5 border-b border-[#212226]/6 bg-[#faf9f7]">
-                        <span className="text-xs font-bold text-[#212226]/55">
-                          {t("descuentoProntoPago")}
-                        </span>
-                        <span className="text-sm font-black text-[#212226]/75">
-                          −{fmt(resultado.descuentoProntoPago)}
-                        </span>
-                      </div>
-                    )}
                     {summaryRows.map((row, i, arr) => (
                       <div
                         key={row.label}
@@ -457,6 +418,16 @@ export default function RadiodifusionCalculator({
                       </div>
                     ))}
                   </div>
+                </div>
+
+                {/* Beneficio pronto pago (solo mención; se aplica en la pasarela) */}
+                <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4 max-w-md mb-4">
+                  <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
+                    {t("prontoPagoTitle")}
+                  </p>
+                  <p className="text-xs text-[#212226]/52 leading-relaxed">
+                    {t("notaProntoPago")}
+                  </p>
                 </div>
 
                 {/* Aviso simulcasting */}

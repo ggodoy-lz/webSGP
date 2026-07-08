@@ -525,8 +525,8 @@
     },
     "gastronomia": {
       "baileTitle": "¿Tus clientes bailan en algún horario o día de la semana?",
-      "baileDesc": "Si en algún momento de la noche el local se convierte en \"boliche\", la música está clasificada como indispensable y requiere una licencia adicional.",
-      "baileBtn": "Calcular tarifa de baile"
+      "baileDesc": "Si en algún momento de la noche el local se convierte en \"boliche\", la música está clasificada como indispensable y requiere una licencia adicional que se suma a la ya calculada.",
+      "baileBtn": "Agregar licencia de baile"
     }
   },
   "common": {
@@ -628,7 +628,9 @@
     "atras": "Atrás",
     "siguiente": "Siguiente",
     "calcular": "Calcular",
-    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados."
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
+    "prontoPagoTitle": "Beneficio por pronto pago",
+    "notaProntoPago": "Podés beneficiarte con un 10% de descuento abonando antes del día 15 de cada mes la licencia correspondiente al mes inmediatamente anterior. El descuento se aplica al confirmar e iniciar el proceso de pago."
   },
   "internetLic": {
     "tag": "Calculadora · Internet",

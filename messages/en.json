@@ -517,8 +517,8 @@
     },
     "gastronomia": {
       "baileTitle": "Do your customers dance at any time or day of the week?",
-      "baileDesc": "If at any point during the night the venue becomes a dance club, music is classified as indispensable and requires an additional license.",
-      "baileBtn": "Calculate dance tariff"
+      "baileDesc": "If at any point during the night the venue becomes a dance club, music is classified as indispensable and requires an additional license that is added on top of the one already calculated.",
+      "baileBtn": "Add dance license"
     },
     "gimnasio": {
       "agregarServicio": "Add another service",
@@ -628,7 +628,9 @@
     "atras": "Back",
     "siguiente": "Next",
     "calcular": "Calculate",
-    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data."
+    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
+    "prontoPagoTitle": "Early payment benefit",
+    "notaProntoPago": "You can benefit from a 10% discount by paying the license for the immediately preceding month before the 15th of each month. The discount is applied when confirming and starting the payment process."
   },
   "internetLic": {
     "tag": "Calculator · Internet",
