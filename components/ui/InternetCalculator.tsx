@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
-  CheckIcon,
   SignalIcon,
   WifiIcon,
   GlobeAltIcon,
@@ -19,6 +18,7 @@ import {
 import { calcularInternet, type InternetResult } from "@/lib/internet-engine";
 import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 import PanelResumen from "@/components/ui/PanelResumen";
+import IndicadorPasos from "@/components/ui/IndicadorPasos";
 import { useStepScroll } from "@/lib/use-step-scroll";
 import type { CotizacionUSD } from "@/lib/bcp-cotizacion";
 
@@ -206,49 +206,13 @@ export default function InternetCalculator({
       >
         {/* ── Main ──────────────────────────────────── */}
         <section className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-          {/* Step indicator */}
           {paso < 3 && (
-            <div className="flex items-center mb-8">
-              {stepLabels.map((label, idx) => {
-                const active = paso === idx + 1;
-                const done = paso > idx + 1;
-                return (
-                  <div key={label} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div
-                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-black transition-all ${
-                          active
-                            ? "bg-[#f0552f] text-white shadow-[0_0_0_3px_rgba(240,85,47,0.15)]"
-                            : done
-                              ? "bg-[#212226] text-white"
-                              : "bg-[#212226]/10 text-[#212226]/30"
-                        }`}
-                      >
-                        {done ? <CheckIcon className="h-3.5 w-3.5" /> : idx + 1}
-                      </div>
-                      <span
-                        className={`hidden sm:block text-[11px] font-bold transition-colors ${
-                          active
-                            ? "text-[#212226]"
-                            : done
-                              ? "text-[#212226]/50"
-                              : "text-[#212226]/25"
-                        }`}
-                      >
-                        {label}
-                      </span>
-                    </div>
-                    {idx < stepLabels.length - 1 && (
-                      <div
-                        className={`flex-1 mx-3 h-px transition-colors ${
-                          paso > idx + 1 ? "bg-[#212226]/30" : "bg-[#212226]/8"
-                        }`}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <IndicadorPasos
+              labels={stepLabels}
+              actual={paso - 1}
+              onIr={(i) => setPaso((i + 1) as Paso)}
+              volverA={t("volverA")}
+            />
           )}
 
           <AnimatePresence mode="wait">
@@ -395,6 +359,9 @@ export default function InternetCalculator({
                   resetLabel={t("nuevaConsulta")}
                   labelCalculo={t("seAplicaMayor")}
                   labelDatos={t("datosDeclarados")}
+                    labelImprimir={t("imprimir")}
+                    labelCompartir={t("compartir")}
+                    labelCopiado={t("copiado")}
                 />
               </motion.div>
             )}

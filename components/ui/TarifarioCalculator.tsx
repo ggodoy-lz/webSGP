@@ -36,6 +36,7 @@ import {
 import { getGimnasioSubtipo } from "@/lib/tarifario-config";
 import type { TarifarioInput } from "@/lib/tarifario-engine";
 import PanelResumen from "@/components/ui/PanelResumen";
+import IndicadorPasos from "@/components/ui/IndicadorPasos";
 import { useStepScroll } from "@/lib/use-step-scroll";
 
 const TURNOS: Turno[] = ["manana", "mediodia", "tarde", "noche"];
@@ -342,46 +343,13 @@ export default function TarifarioCalculator({
         {/* ── Main content ───────────────────────────── */}
         <section className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
 
-          {/* Step indicator */}
           {step < 5 && (
-            <div className="flex items-center mb-8">
-              {stepLabels.map((label, idx) => {
-                const s = idx + 1;
-                const active = step === s;
-                const done = step > s;
-                return (
-                  <div key={label} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div
-                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-black transition-all ${
-                          active
-                            ? "bg-[#f0552f] text-white shadow-[0_0_0_3px_rgba(240,85,47,0.15)]"
-                            : done
-                            ? "bg-[#212226] text-white"
-                            : "bg-[#212226]/10 text-[#212226]/30"
-                        }`}
-                      >
-                        {done ? <CheckIcon className="h-3.5 w-3.5" /> : s}
-                      </div>
-                      <span
-                        className={`hidden sm:block text-[11px] font-bold transition-colors ${
-                          active ? "text-[#212226]" : done ? "text-[#212226]/50" : "text-[#212226]/25"
-                        }`}
-                      >
-                        {label}
-                      </span>
-                    </div>
-                    {idx < stepLabels.length - 1 && (
-                      <div
-                        className={`flex-1 mx-3 h-px transition-colors ${
-                          step > idx + 1 ? "bg-[#212226]/30" : "bg-[#212226]/8"
-                        }`}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <IndicadorPasos
+              labels={stepLabels}
+              actual={step - 1}
+              onIr={(i) => setStep((i + 1) as Step)}
+              volverA={t("volverA")}
+            />
           )}
 
           <AnimatePresence mode="wait">

@@ -27,6 +27,7 @@ import {
 import { calcularEventos, type EventosResultado } from "@/lib/eventos-engine";
 import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 import PanelResumen from "@/components/ui/PanelResumen";
+import IndicadorPasos from "@/components/ui/IndicadorPasos";
 import { useStepScroll } from "@/lib/use-step-scroll";
 
 const fmt = (n: number) =>
@@ -275,45 +276,13 @@ export default function EventosCalculator({
         className={`grid grid-cols-1 ${paso < 3 ? "lg:grid-cols-[minmax(0,1fr)_300px] xl:grid-cols-[minmax(0,1fr)_320px]" : ""}`}
       >
         <section className="px-5 py-6 sm:px-8 lg:px-10 lg:py-8">
-          {/* Step indicator */}
           {paso < 3 && (
-            <div className="flex items-center mb-8">
-              {stepLabels.map((label, idx) => {
-                const active = paso === idx + 1;
-                const done = paso > idx + 1;
-                return (
-                  <div key={label} className="flex items-center flex-1 last:flex-none">
-                    <div className="flex items-center gap-2 shrink-0">
-                      <div
-                        className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-black transition-all ${
-                          active
-                            ? "bg-[#f0552f] text-white shadow-[0_0_0_3px_rgba(240,85,47,0.15)]"
-                            : done
-                              ? "bg-[#212226] text-white"
-                              : "bg-[#212226]/10 text-[#212226]/30"
-                        }`}
-                      >
-                        {done ? <CheckIcon className="h-3.5 w-3.5" /> : idx + 1}
-                      </div>
-                      <span
-                        className={`hidden sm:block text-[11px] font-bold transition-colors ${
-                          active ? "text-[#212226]" : done ? "text-[#212226]/50" : "text-[#212226]/25"
-                        }`}
-                      >
-                        {label}
-                      </span>
-                    </div>
-                    {idx < stepLabels.length - 1 && (
-                      <div
-                        className={`flex-1 mx-3 h-px transition-colors ${
-                          paso > idx + 1 ? "bg-[#212226]/30" : "bg-[#212226]/8"
-                        }`}
-                      />
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+            <IndicadorPasos
+              labels={stepLabels}
+              actual={paso - 1}
+              onIr={(i) => setPaso((i + 1) as 1 | 2 | 3)}
+              volverA={t("volverA")}
+            />
           )}
 
           <AnimatePresence mode="wait">
@@ -650,6 +619,9 @@ export default function EventosCalculator({
                     resetLabel={t("nuevaConsulta")}
                     labelCalculo={t("desglose")}
                     labelDatos={t("datosDeclarados")}
+                    labelImprimir={t("imprimir")}
+                    labelCompartir={t("compartir")}
+                    labelCopiado={t("copiado")}
                   />
                 )}
               </motion.div>
@@ -749,18 +721,30 @@ function Selector({
   valor: string;
   onChange: (v: string) => void;
 }) {
+  const idLabel = `sel-${label.replace(/\W+/g, "-").toLowerCase()}`;
   return (
     <div className="space-y-2.5 max-w-2xl">
-      <p className="text-[10px] font-black uppercase tracking-wider text-[#212226]/45">{label}</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <p
+        id={idLabel}
+        className="text-[10px] font-black uppercase tracking-wider text-[#212226]/45"
+      >
+        {label}
+      </p>
+      <div
+        role="radiogroup"
+        aria-labelledby={idLabel}
+        className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+      >
         {opciones.map((o) => {
           const selected = valor === o.id;
           return (
             <button
               key={o.id}
               type="button"
+              role="radio"
+              aria-checked={selected}
               onClick={() => onChange(o.id)}
-              className={`rounded-xl border px-5 py-4 text-left transition-all ${
+              className={`rounded-xl border px-5 py-4 text-left transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#f0552f] ${
                 selected
                   ? "border-[#f0552f] bg-[#f0552f]/5 shadow-[0_0_0_1px_#f0552f]"
                   : "border-[#212226]/8 bg-[#faf9f7] hover:border-[#f0552f]/35 hover:bg-white"

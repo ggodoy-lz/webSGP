@@ -6,6 +6,9 @@ import {
   ChevronDownIcon,
   InformationCircleIcon,
   PhoneIcon,
+  PrinterIcon,
+  ShareIcon,
+  CheckIcon,
 } from "@heroicons/react/24/outline";
 
 export interface FilaResultado {
@@ -40,6 +43,9 @@ export default function ResultadoTarifa({
   resetLabel,
   labelCalculo,
   labelDatos,
+  labelImprimir,
+  labelCompartir,
+  labelCopiado,
 }: {
   monto: number;
   etiqueta: string;
@@ -52,8 +58,12 @@ export default function ResultadoTarifa({
   resetLabel: string;
   labelCalculo: string;
   labelDatos: string;
+  labelImprimir: string;
+  labelCompartir: string;
+  labelCopiado: string;
 }) {
   const [abierto, setAbierto] = useState(false);
+  const [copiado, setCopiado] = useState(false);
   const fmt = (n: number) =>
     new Intl.NumberFormat("es-PY", {
       style: "currency",
@@ -61,9 +71,37 @@ export default function ResultadoTarifa({
       minimumFractionDigits: 0,
     }).format(n);
 
+  const compartir = async () => {
+    const texto = [
+      subtitulo ? `${subtitulo} — ${etiqueta}` : etiqueta,
+      fmt(monto),
+      typeof window !== "undefined" ? window.location.href : "",
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    // navigator.share solo existe en contexto seguro y sobre todo en mobile.
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ text: texto });
+        return;
+      } catch {
+        // El usuario canceló el diálogo: no es un error que deba reportarse.
+        return;
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(texto);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 2000);
+    } catch {
+      // Sin portapapeles disponible no hay alternativa razonable.
+    }
+  };
+
   return (
     <div className="mx-auto w-full max-w-xl">
-      <div className="overflow-hidden rounded-3xl border border-[#212226]/10 bg-white shadow-[0_20px_60px_-20px_rgba(33,34,38,0.18)]">
+      <div className="print-comprobante overflow-hidden rounded-3xl border border-[#212226]/10 bg-white shadow-[0_20px_60px_-20px_rgba(33,34,38,0.18)]">
         <div className="h-1.5 bg-[#f0552f]" />
 
         {/* Monto — centro visual */}
@@ -102,36 +140,39 @@ export default function ResultadoTarifa({
             <button
               type="button"
               onClick={() => setAbierto(!abierto)}
+              aria-expanded={abierto}
               className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-[#faf9f7] sm:px-10"
             >
               <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45">
                 {labelCalculo}
               </span>
               <ChevronDownIcon
-                className={`h-4 w-4 shrink-0 text-[#212226]/35 transition-transform ${abierto ? "rotate-180" : ""}`}
+                className={`no-print h-4 w-4 shrink-0 text-[#212226]/35 transition-transform ${abierto ? "rotate-180" : ""}`}
               />
             </button>
-            {abierto && (
-              <div className="space-y-2.5 border-t border-[#212226]/6 px-6 py-4 sm:px-10">
-                {calculo.map((c) => (
-                  <div
-                    key={c.label}
-                    className="flex items-baseline justify-between gap-6"
+            {/* Oculto con CSS, no desmontado: así la impresión puede
+                desplegarlo aunque el usuario lo tenga cerrado. */}
+            <div
+              className={`${abierto ? "block" : "hidden"} print-expandir space-y-2.5 border-t border-[#212226]/6 px-6 py-4 sm:px-10`}
+            >
+              {calculo.map((c) => (
+                <div
+                  key={c.label}
+                  className="flex items-baseline justify-between gap-6"
+                >
+                  <span
+                    className={`text-sm ${c.destacado ? "font-bold text-[#212226]/70" : "text-[#212226]/50"}`}
                   >
-                    <span
-                      className={`text-sm ${c.destacado ? "font-bold text-[#212226]/70" : "text-[#212226]/50"}`}
-                    >
-                      {c.label}
-                    </span>
-                    <span
-                      className={`shrink-0 text-right text-sm font-bold ${c.destacado ? "text-[#f0552f]" : "text-[#212226]/60"}`}
-                    >
-                      {c.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
+                    {c.label}
+                  </span>
+                  <span
+                    className={`shrink-0 text-right text-sm font-bold ${c.destacado ? "text-[#f0552f]" : "text-[#212226]/60"}`}
+                  >
+                    {c.value}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -173,7 +214,7 @@ export default function ResultadoTarifa({
         {disclaimer}
       </p>
 
-      <div className="mt-6 flex justify-center">
+      <div className="no-print mt-6 flex flex-wrap items-center justify-center gap-3">
         <button
           type="button"
           onClick={onReset}
@@ -181,6 +222,26 @@ export default function ResultadoTarifa({
         >
           <ArrowPathIcon className="h-3.5 w-3.5" />
           {resetLabel}
+        </button>
+        <button
+          type="button"
+          onClick={() => window.print()}
+          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/60 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
+        >
+          <PrinterIcon className="h-3.5 w-3.5" />
+          {labelImprimir}
+        </button>
+        <button
+          type="button"
+          onClick={compartir}
+          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/60 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
+        >
+          {copiado ? (
+            <CheckIcon className="h-3.5 w-3.5 text-[#f0552f]" />
+          ) : (
+            <ShareIcon className="h-3.5 w-3.5" />
+          )}
+          {copiado ? labelCopiado : labelCompartir}
         </button>
       </div>
     </div>

@@ -117,3 +117,53 @@ h1, h2, h3, h4, h5, h6 {
 .clip-chevron {
   clip-path: polygon(0 0, 100% 0, 100% 90%, 50% 100%, 0 90%);
 }
+
+/* ─────────────────────────────────────────────
+   Impresión — comprobante de tarifa
+   Al imprimir el resultado de una calculadora solo debe salir el
+   comprobante: se ocultan header, footer, botones flotantes y los
+   controles propios de la tarjeta.
+   ───────────────────────────────────────────── */
+@media print {
+  header,
+  footer,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  /* La tarjeta ocupa la hoja, sin sombras ni bordes redondeados */
+  .print-comprobante {
+    max-width: none !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* El desglose plegable se imprime siempre desplegado */
+  .print-expandir {
+    display: block !important;
+  }
+
+  a[href]::after {
+    content: "";
+  }
+}
+
+/* Foco visible: navegando con teclado hay que ver dónde se está parado.
+   :focus-visible no se dispara al hacer click con mouse, así que no ensucia
+   la interacción con puntero. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="radio"]:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
