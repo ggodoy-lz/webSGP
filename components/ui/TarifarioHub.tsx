@@ -70,13 +70,13 @@ export default function TarifarioHub({
           className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]"
         >
           <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+            <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#c53d1b] mb-2">
               {t("tag")}
             </p>
             <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
               {t("title")}
             </h3>
-            <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">
+            <p className="text-sm text-[#212226]/65 mt-2 leading-relaxed">
               {t("subtitle")}
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function TarifarioHub({
                   }`}
                 >
                   {!lic.disponible && (
-                    <span className="absolute right-5 top-5 rounded-full bg-[#212226]/8 px-3 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[#212226]/40">
+                    <span className="absolute right-5 top-5 rounded-full bg-[#212226]/8 px-3 py-1 text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/65">
                       {t("proximamente")}
                     </span>
                   )}
@@ -107,14 +107,14 @@ export default function TarifarioHub({
                     <span
                       className={`flex h-12 w-12 items-center justify-center rounded-xl transition-colors ${
                         lic.disponible
-                          ? "bg-[#212226]/8 text-[#212226]/45 group-hover:bg-[#f0552f] group-hover:text-white"
-                          : "bg-[#212226]/6 text-[#212226]/25"
+                          ? "bg-[#212226]/8 text-[#212226]/65 group-hover:bg-[#f0552f] group-hover:text-white"
+                          : "bg-[#212226]/6 text-[#212226]/30"
                       }`}
                     >
                       <Icon className="h-6 w-6" />
                     </span>
                     <span
-                      className={`font-display font-black text-sm ${lic.disponible ? "text-[#f0552f]" : "text-[#212226]/25"}`}
+                      className={`font-display font-black text-sm ${lic.disponible ? "text-[#c53d1b]" : "text-[#212226]/30"}`}
                     >
                       {String(i + 1).padStart(2, "0")}
                     </span>
@@ -122,21 +122,21 @@ export default function TarifarioHub({
                   <div className="flex-1">
                     <h4
                       className={`font-display font-black text-xl mb-2 ${
-                        lic.disponible ? "text-[#212226]" : "text-[#212226]/35"
+                        lic.disponible ? "text-[#212226]" : "text-[#212226]/40"
                       }`}
                     >
                       {t(`tipos.${lic.id}.title`)}
                     </h4>
                     <p
                       className={`text-xs leading-relaxed ${
-                        lic.disponible ? "text-[#212226]/50" : "text-[#212226]/28"
+                        lic.disponible ? "text-[#212226]/65" : "text-[#212226]/35"
                       }`}
                     >
                       {t(`tipos.${lic.id}.desc`)}
                     </p>
                   </div>
                   {lic.disponible && (
-                    <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35 group-hover:text-[#f0552f] transition-colors">
+                    <span className="inline-flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65 group-hover:text-[#f0552f] transition-colors">
                       {t("calcular")}
                       <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                     </span>
@@ -158,7 +158,7 @@ export default function TarifarioHub({
           <button
             type="button"
             onClick={volver}
-            className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/50 hover:text-[#f0552f] transition-colors"
+            className="mb-4 inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/65 hover:text-[#f0552f] transition-colors"
           >
             <ArrowLeftIcon className="h-3.5 w-3.5" />
             {t("cambiar")}

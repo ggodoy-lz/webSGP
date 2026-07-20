@@ -106,26 +106,26 @@ export default function ResultadoTarifa({
 
         {/* Monto — centro visual */}
         <div className="px-6 pt-9 pb-8 text-center sm:px-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#212226]/35">
+          <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#212226]/65">
             {etiqueta}
           </p>
           <p className="mt-3 font-display text-5xl font-black leading-none text-[#f0552f] sm:text-6xl">
             {fmt(monto)}
           </p>
           {subtitulo && (
-            <p className="mt-3 text-sm font-bold text-[#212226]/60">{subtitulo}</p>
+            <p className="mt-3 text-sm font-bold text-[#212226]/65">{subtitulo}</p>
           )}
         </div>
 
         {/* Datos declarados */}
         <div className="border-t border-[#212226]/8 bg-[#faf9f7] px-6 py-5 sm:px-10">
-          <p className="mb-3 text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
+          <p className="mb-3 text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65">
             {labelDatos}
           </p>
           <dl className="space-y-2.5">
             {datos.map((d) => (
               <div key={d.label} className="flex items-baseline justify-between gap-6">
-                <dt className="text-sm text-[#212226]/50">{d.label}</dt>
+                <dt className="text-sm text-[#212226]/65">{d.label}</dt>
                 <dd className="text-right text-sm font-bold text-[#212226]/80">
                   {d.value}
                 </dd>
@@ -143,11 +143,11 @@ export default function ResultadoTarifa({
               aria-expanded={abierto}
               className="flex w-full items-center justify-between gap-4 px-6 py-4 text-left transition-colors hover:bg-[#faf9f7] sm:px-10"
             >
-              <span className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45">
+              <span className="text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65">
                 {labelCalculo}
               </span>
               <ChevronDownIcon
-                className={`no-print h-4 w-4 shrink-0 text-[#212226]/35 transition-transform ${abierto ? "rotate-180" : ""}`}
+                className={`no-print h-4 w-4 shrink-0 text-[#212226]/65 transition-transform ${abierto ? "rotate-180" : ""}`}
               />
             </button>
             {/* Oculto con CSS, no desmontado: así la impresión puede
@@ -161,12 +161,12 @@ export default function ResultadoTarifa({
                   className="flex items-baseline justify-between gap-6"
                 >
                   <span
-                    className={`text-sm ${c.destacado ? "font-bold text-[#212226]/70" : "text-[#212226]/50"}`}
+                    className={`text-sm ${c.destacado ? "font-bold text-[#212226]/70" : "text-[#212226]/65"}`}
                   >
                     {c.label}
                   </span>
                   <span
-                    className={`shrink-0 text-right text-sm font-bold ${c.destacado ? "text-[#f0552f]" : "text-[#212226]/60"}`}
+                    className={`shrink-0 text-right text-sm font-bold ${c.destacado ? "text-[#f0552f]" : "text-[#212226]/65"}`}
                   >
                     {c.value}
                   </span>
@@ -186,7 +186,7 @@ export default function ResultadoTarifa({
                   ? "text-[#b57f14]"
                   : a.tono === "contacto"
                     ? "text-[#f0552f]"
-                    : "text-[#212226]/40";
+                    : "text-[#212226]/65";
               return (
                 <div key={i} className="flex gap-3 px-6 py-4 sm:px-10">
                   <Icon className={`mt-0.5 h-4 w-4 shrink-0 ${color}`} />
@@ -194,7 +194,7 @@ export default function ResultadoTarifa({
                     {a.titulo && (
                       <p className={`text-xs font-black ${color} mb-1`}>{a.titulo}</p>
                     )}
-                    <p className="text-xs leading-relaxed text-[#212226]/55">
+                    <p className="text-xs leading-relaxed text-[#212226]/65">
                       {a.texto}
                     </p>
                     {a.extra && (
@@ -210,7 +210,7 @@ export default function ResultadoTarifa({
         )}
       </div>
 
-      <p className="mt-5 text-center text-xs leading-relaxed text-[#212226]/35">
+      <p className="mt-5 text-center text-xs leading-relaxed text-[#212226]/65">
         {disclaimer}
       </p>
 
@@ -226,7 +226,7 @@ export default function ResultadoTarifa({
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/60 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/65 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
         >
           <PrinterIcon className="h-3.5 w-3.5" />
           {labelImprimir}
@@ -234,7 +234,7 @@ export default function ResultadoTarifa({
         <button
           type="button"
           onClick={compartir}
-          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/60 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
+          className="inline-flex items-center gap-2 rounded-xl border border-[#212226]/12 px-5 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/65 transition-all hover:border-[#f0552f] hover:text-[#f0552f]"
         >
           {copiado ? (
             <CheckIcon className="h-3.5 w-3.5 text-[#f0552f]" />

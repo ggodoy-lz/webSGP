@@ -262,13 +262,13 @@ export default function EventosCalculator({
     >
       {showOuterHeader && (
         <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#c53d1b] mb-2">
             {t("tag")}
           </p>
           <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
             {t("title")}
           </h3>
-          <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
+          <p className="text-sm text-[#212226]/65 mt-2 leading-relaxed">{t("subtitle")}</p>
         </div>
       )}
 
@@ -290,7 +290,7 @@ export default function EventosCalculator({
             {paso === 1 && (
               <motion.div key="s1" {...motionProps} className="space-y-7">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-4">
+                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-4">
                     01 — {t("steps.categoria")}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -315,7 +315,7 @@ export default function EventosCalculator({
                             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
                               selected
                                 ? "bg-[#f0552f] text-white"
-                                : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                                : "bg-[#212226]/8 text-[#212226]/65 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
                             }`}
                           >
                             <Icon className="h-4.5 w-4.5" />
@@ -326,7 +326,7 @@ export default function EventosCalculator({
                             >
                               {t(`grupos.${g}`)}
                             </span>
-                            <span className="mt-0.5 block text-[11px] leading-relaxed text-[#212226]/45">
+                            <span className="mt-0.5 block text-[11px] leading-relaxed text-[#212226]/65">
                               {t(`grupos.${g}Desc`)}
                             </span>
                           </span>
@@ -338,7 +338,7 @@ export default function EventosCalculator({
 
                 {grupo && (
                   <div className="space-y-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65">
                       02 — {t("steps.tipo")}
                     </p>
                     <div className="flex flex-wrap gap-2">
@@ -362,9 +362,9 @@ export default function EventosCalculator({
                     </div>
                     {tipo && (
                       <div className="max-w-md pt-1">
-                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-2">
                           {t("fields.otroTipo")}
-                          <span className="ml-1.5 font-normal normal-case tracking-normal text-[11px] text-[#212226]/28">
+                          <span className="ml-1.5 font-normal normal-case tracking-normal text-[11px] text-[#212226]/65">
                             ({t("opcional")})
                           </span>
                         </label>
@@ -372,7 +372,7 @@ export default function EventosCalculator({
                           value={otroTipo}
                           onChange={(e) => setOtroTipo(e.target.value)}
                           placeholder={t("fields.otroTipoPlaceholder")}
-                          className="h-12 w-full rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none transition-colors placeholder:text-[#212226]/22 focus:border-[#f0552f]"
+                          className="h-12 w-full rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none transition-colors placeholder:text-[#212226]/65 focus:border-[#f0552f]"
                         />
                       </div>
                     )}
@@ -384,7 +384,7 @@ export default function EventosCalculator({
             {/* ── Paso 2: datos ── */}
             {paso === 2 && (
               <motion.div key="s2" {...motionProps} className="space-y-6">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65">
                   03 — {t("steps.datos")}
                 </p>
 
@@ -440,10 +440,10 @@ export default function EventosCalculator({
 
                     {campos.circo && (
                       <div className="space-y-3 max-w-2xl">
-                        <p className="text-[10px] font-black uppercase tracking-wider text-[#212226]/45">
+                        <p className="text-[11px] font-black uppercase tracking-wider text-[#212226]/65">
                           {t("fields.usos")}
                         </p>
-                        <p className="text-xs text-[#212226]/45 -mt-1">{t("fields.usosHelp")}</p>
+                        <p className="text-xs text-[#212226]/65 -mt-1">{t("fields.usosHelp")}</p>
                         <div className="space-y-2.5">
                           {usosDisponibles.map((u) => {
                             const selected = usos.includes(u);
@@ -482,7 +482,7 @@ export default function EventosCalculator({
                                   >
                                     {t(`usos.${u}`)}
                                   </span>
-                                  <span className="mt-0.5 block text-xs leading-relaxed text-[#212226]/45">
+                                  <span className="mt-0.5 block text-xs leading-relaxed text-[#212226]/65">
                                     {t(`usos.${u}Desc`)}
                                   </span>
                                 </span>
@@ -513,7 +513,7 @@ export default function EventosCalculator({
                               prefix="Gs."
                             />
                             {personas > 0 && precioEntrada > 0 && (
-                              <p className="text-xs text-[#212226]/45">
+                              <p className="text-xs text-[#212226]/65">
                                 {t("fields.ingresoTotal")}:{" "}
                                 <strong className="text-[#212226]/70">
                                   {fmt(precioEntrada * personas)}
@@ -635,7 +635,7 @@ export default function EventosCalculator({
                 <button
                   type="button"
                   onClick={() => setPaso((p) => Math.max(p - 1, 1) as 1 | 2 | 3)}
-                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/45 hover:text-[#f0552f] transition-colors"
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/65 hover:text-[#f0552f] transition-colors"
                 >
                   <ArrowLeftIcon className="h-3.5 w-3.5" />
                   {t("atras")}
@@ -645,9 +645,9 @@ export default function EventosCalculator({
               )}
               <div className="flex items-center gap-4">
                 {faltantes.length > 0 && (
-                  <p className="text-right text-xs text-[#212226]/45">
+                  <p className="text-right text-xs text-[#212226]/65">
                     {t("completa")}{" "}
-                    <span className="font-bold text-[#212226]/60">
+                    <span className="font-bold text-[#212226]/65">
                       {faltantes.join(" · ")}
                     </span>
                   </p>
@@ -699,10 +699,10 @@ function AvisoEjecutivo({
       <div className="flex items-start gap-3">
         <PhoneIcon className="mt-0.5 h-4 w-4 shrink-0 text-[#f0552f]" />
         <div>
-          <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
+          <p className="text-[11px] font-black uppercase tracking-wider text-[#c53d1b] mb-1.5">
             {t("avisos.titulo")}
           </p>
-          <p className="text-xs text-[#212226]/55 leading-relaxed mb-2">{texto}</p>
+          <p className="text-xs text-[#212226]/65 leading-relaxed mb-2">{texto}</p>
           <p className="text-xs font-bold text-[#212226]/70">{TELEFONOS}</p>
         </div>
       </div>
@@ -726,7 +726,7 @@ function Selector({
     <div className="space-y-2.5 max-w-2xl">
       <p
         id={idLabel}
-        className="text-[10px] font-black uppercase tracking-wider text-[#212226]/45"
+        className="text-[11px] font-black uppercase tracking-wider text-[#212226]/65"
       >
         {label}
       </p>
@@ -756,7 +756,7 @@ function Selector({
                 {o.label}
               </span>
               {o.desc && (
-                <span className="mt-0.5 block text-xs leading-relaxed text-[#212226]/45">
+                <span className="mt-0.5 block text-xs leading-relaxed text-[#212226]/65">
                   {o.desc}
                 </span>
               )}
@@ -784,20 +784,20 @@ function NumInput({
   const display = value > 0 ? new Intl.NumberFormat("es-PY").format(value) : "";
   return (
     <div>
-      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+      <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-2">
         {label}
       </label>
       <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] overflow-hidden transition-colors focus-within:border-[#f0552f]">
-        {prefix && <span className="pl-4 text-sm font-bold text-[#212226]/40">{prefix}</span>}
+        {prefix && <span className="pl-4 text-sm font-bold text-[#212226]/65">{prefix}</span>}
         <input
           inputMode="numeric"
           value={display}
           onChange={(e) => onChange(Number(e.target.value.replace(/\D/g, "")) || 0)}
           placeholder="0"
-          className={`flex-1 bg-transparent text-sm outline-none placeholder:text-[#212226]/22 ${prefix ? "px-3" : "px-4"}`}
+          className={`flex-1 bg-transparent text-sm outline-none placeholder:text-[#212226]/65 ${prefix ? "px-3" : "px-4"}`}
         />
       </div>
-      {help && <p className="mt-2 text-[11px] leading-relaxed text-[#212226]/35">{help}</p>}
+      {help && <p className="mt-2 text-[11px] leading-relaxed text-[#212226]/65">{help}</p>}
     </div>
   );
 }

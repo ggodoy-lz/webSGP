@@ -38,7 +38,7 @@ export default function IndicadorPasos({
                 <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#212226] text-[11px] font-black text-white transition-colors group-hover:bg-[#f0552f]">
                   <CheckIcon className="h-3.5 w-3.5" />
                 </span>
-                <span className="hidden text-[11px] font-bold text-[#212226]/50 transition-colors group-hover:text-[#f0552f] sm:block">
+                <span className="hidden text-[11px] font-bold text-[#212226]/65 transition-colors group-hover:text-[#f0552f] sm:block">
                   {label}
                 </span>
               </button>
@@ -49,14 +49,16 @@ export default function IndicadorPasos({
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-[11px] font-black transition-all ${
                     activo
                       ? "bg-[#f0552f] text-white shadow-[0_0_0_3px_rgba(240,85,47,0.15)]"
-                      : "bg-[#212226]/10 text-[#212226]/30"
+                      : "bg-[#212226]/10 text-[#212226]/65"
                   }`}
                 >
                   {idx + 1}
                 </span>
                 <span
                   className={`hidden text-[11px] font-bold transition-colors sm:block ${
-                    activo ? "text-[#212226]" : "text-[#212226]/25"
+                    // El paso pendiente es un estado inactivo: se mantiene más
+                    // tenue que el activo, pero legible.
+                    activo ? "text-[#212226]" : "text-[#212226]/55"
                   }`}
                 >
                   {label}

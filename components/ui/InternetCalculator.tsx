@@ -189,13 +189,13 @@ export default function InternetCalculator({
     >
       {showOuterHeader && (
         <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#c53d1b] mb-2">
             {t("tag")}
           </p>
           <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
             {t("title")}
           </h3>
-          <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">
+          <p className="text-sm text-[#212226]/65 mt-2 leading-relaxed">
             {t("subtitle")}
           </p>
         </div>
@@ -219,7 +219,7 @@ export default function InternetCalculator({
             {/* ── Servicio ──────────────────────────── */}
             {paso === 1 && (
               <motion.div key="s1" {...motionProps} className="space-y-4">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-4">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-4">
                   01 — {t("steps.servicio")}
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -241,7 +241,7 @@ export default function InternetCalculator({
                           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-colors ${
                             selected
                               ? "bg-[#f0552f] text-white"
-                              : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                              : "bg-[#212226]/8 text-[#212226]/65 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
                           }`}
                         >
                           <Icon className="h-5 w-5" />
@@ -252,7 +252,7 @@ export default function InternetCalculator({
                           >
                             {t(`servicios.${s}`)}
                           </span>
-                          <span className="mt-1 block text-xs leading-relaxed text-[#212226]/45">
+                          <span className="mt-1 block text-xs leading-relaxed text-[#212226]/65">
                             {t(`servicios.${s}Desc`)}
                           </span>
                         </span>
@@ -273,7 +273,7 @@ export default function InternetCalculator({
             {/* ── Datos ─────────────────────────────── */}
             {paso === 2 && servicio && (
               <motion.div key="s2" {...motionProps} className="space-y-5">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-4">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-4">
                   02 — {t("steps.datos")}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
@@ -374,7 +374,7 @@ export default function InternetCalculator({
                 <button
                   type="button"
                   onClick={handleBack}
-                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/45 hover:text-[#f0552f] transition-colors"
+                  className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-[0.14em] text-[#212226]/65 hover:text-[#f0552f] transition-colors"
                 >
                   <ArrowLeftIcon className="h-3.5 w-3.5" />
                   {t("atras")}
@@ -384,9 +384,9 @@ export default function InternetCalculator({
               )}
               <div className="flex items-center gap-4">
                 {faltantes.length > 0 && (
-                  <p className="text-right text-xs text-[#212226]/45">
+                  <p className="text-right text-xs text-[#212226]/65">
                     {t("completa")}{" "}
-                    <span className="font-bold text-[#212226]/60">
+                    <span className="font-bold text-[#212226]/65">
                       {faltantes.join(" · ")}
                     </span>
                   </p>
@@ -414,7 +414,7 @@ export default function InternetCalculator({
             filas={summaryRows}
             disclaimer={t("disclaimer")}
           >
-            <p className="text-[11px] leading-relaxed text-[#212226]/35">
+            <p className="text-[11px] leading-relaxed text-[#212226]/65">
               {t("cotizacion")}: Gs. {fmtTC(cotizacion.usd)} / USD
             </p>
           </PanelResumen>
@@ -444,12 +444,12 @@ function NumInput({
   const display = value > 0 ? new Intl.NumberFormat("es-PY").format(value) : "";
   return (
     <div>
-      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+      <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-2">
         {label}
       </label>
       <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] overflow-hidden focus-within:border-[#f0552f] transition-colors">
         {prefix && (
-          <span className="pl-4 text-sm font-bold text-[#212226]/40">{prefix}</span>
+          <span className="pl-4 text-sm font-bold text-[#212226]/65">{prefix}</span>
         )}
         <input
           inputMode="numeric"
@@ -458,11 +458,11 @@ function NumInput({
             onChange(Number(e.target.value.replace(/\D/g, "")) || 0)
           }
           placeholder={placeholder}
-          className={`flex-1 bg-transparent text-sm outline-none placeholder:text-[#212226]/22 ${prefix ? "px-3" : "px-4"}`}
+          className={`flex-1 bg-transparent text-sm outline-none placeholder:text-[#212226]/65 ${prefix ? "px-3" : "px-4"}`}
         />
       </div>
       {help && (
-        <p className="text-[11px] text-[#212226]/35 mt-2 leading-relaxed">
+        <p className="text-[11px] text-[#212226]/65 mt-2 leading-relaxed">
           {help}
         </p>
       )}

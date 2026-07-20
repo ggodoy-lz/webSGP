@@ -329,13 +329,13 @@ export default function TarifarioCalculator({
     >
       {showOuterHeader && (
         <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
+          <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#c53d1b] mb-2">
             Calculadora
           </p>
           <h3 className="font-display font-black text-[#212226] text-3xl lg:text-4xl leading-none">
             {t("title")}
           </h3>
-          <p className="text-sm text-[#212226]/50 mt-2 leading-relaxed">{t("subtitle")}</p>
+          <p className="text-sm text-[#212226]/65 mt-2 leading-relaxed">{t("subtitle")}</p>
         </div>
       )}
 
@@ -358,7 +358,7 @@ export default function TarifarioCalculator({
             {step === 1 && (
               <motion.div key="s1" {...motionProps} className="space-y-7">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-4">
+                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-4">
                     {agregandoServicioGimnasio
                       ? t("gimnasio.nuevoServicio")
                       : "01 — " + t("summary.rubro")}
@@ -389,7 +389,7 @@ export default function TarifarioCalculator({
                             className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-all ${
                               selected
                                 ? "bg-[#f0552f] text-white"
-                                : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                                : "bg-[#212226]/8 text-[#212226]/65 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
                             }`}
                           >
                             <Icon className="h-4.5 w-4.5 h-[18px] w-[18px]" />
@@ -404,7 +404,7 @@ export default function TarifarioCalculator({
                             </span>
                             <span
                               className={`mt-1 block text-[11px] leading-snug ${
-                                selected ? "text-[#f0552f]/55" : "text-[#212226]/32"
+                                selected ? "text-[#f0552f]/55" : "text-[#212226]/65"
                               }`}
                             >
                               {t(`gruposDesc.${g.id}`)}
@@ -419,7 +419,7 @@ export default function TarifarioCalculator({
                 {/* Tipo de local — sección separada */}
                 {grupo && (
                   <div className="space-y-3">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                    <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65">
                       02 — {t("fields.tipoLocal")}
                     </p>
                     <button
@@ -428,7 +428,7 @@ export default function TarifarioCalculator({
                       className={`w-full flex items-center justify-between gap-3 rounded-xl border px-4 py-3.5 text-sm font-bold transition-all ${
                         tipoLocal
                           ? "border-[#f0552f] bg-[#f0552f]/5 text-[#f0552f] hover:bg-[#f0552f]/10"
-                          : "border-[#212226]/12 bg-[#faf9f7] text-[#212226]/40 hover:border-[#f0552f]/40 hover:text-[#f0552f]/70"
+                          : "border-[#212226]/12 bg-[#faf9f7] text-[#212226]/65 hover:border-[#f0552f]/40 hover:text-[#f0552f]/70"
                       }`}
                     >
                       <span>{tipoLocal || t("fields.seleccionarTipo")}</span>
@@ -442,7 +442,7 @@ export default function TarifarioCalculator({
             {/* ── STEP 2: Datos del local ──────────────── */}
             {step === 2 && (
               <motion.div key="s2" {...motionProps}>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-6">
                   02 — {t("step2")}
                 </p>
 
@@ -483,10 +483,10 @@ export default function TarifarioCalculator({
                         onChange={setHabitaciones}
                       />
                       <div>
-                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-2">
                           {t("fields.categoriaHotel")}
                         </label>
-                        <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm text-[#212226]/55">
+                        <div className="flex h-12 items-center rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm text-[#212226]/65">
                           {categoriaImplicita
                             ? t(`hotel.estrellas${categoriaImplicita}`)
                             : t("hotel.sinCategoria")}
@@ -507,7 +507,7 @@ export default function TarifarioCalculator({
                   {grupo === "academias" && (
                     <>
                       <div className="md:col-span-2">
-                        <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-3">
+                        <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-3">
                           {t("academia.ubicacion")}
                         </label>
                         <div className="flex gap-3">
@@ -519,7 +519,7 @@ export default function TarifarioCalculator({
                               className={`flex-1 rounded-xl border py-3 px-4 text-sm font-bold transition-all ${
                                 ubicacion === u
                                   ? "border-[#f0552f] bg-[#f0552f]/7 text-[#f0552f]"
-                                  : "border-[#212226]/10 text-[#212226]/55 hover:border-[#212226]/22"
+                                  : "border-[#212226]/10 text-[#212226]/65 hover:border-[#212226]/22"
                               }`}
                             >
                               {t(`academia.${u}`)}
@@ -588,12 +588,12 @@ export default function TarifarioCalculator({
             {/* ── STEP 3: Días y horarios ──────────────── */}
             {step === 3 && (
               <motion.div key="s3" {...motionProps} className="space-y-8">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65">
                   03 — {t("step3")}
                 </p>
 
                 <div>
-                  <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-3">
+                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65 mb-3">
                     {t("dias.label")}
                   </label>
                   <div className="flex flex-wrap gap-2">
@@ -605,7 +605,7 @@ export default function TarifarioCalculator({
                         className={`min-w-[52px] rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${
                           dias.includes(d)
                             ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
-                            : "border-[#212226]/10 text-[#212226]/50 hover:border-[#f0552f]/30 hover:text-[#212226]"
+                            : "border-[#212226]/10 text-[#212226]/65 hover:border-[#f0552f]/30 hover:text-[#212226]"
                         }`}
                       >
                         {t(`dias.${d}`)}
@@ -616,7 +616,7 @@ export default function TarifarioCalculator({
 
                 {grupo === "gastronomia" && (
                   <div>
-                    <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-3">
+                    <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65 mb-3">
                       {t("turnos.label")}
                     </label>
                     <div className="flex flex-wrap gap-2">
@@ -628,7 +628,7 @@ export default function TarifarioCalculator({
                           className={`rounded-xl border px-5 py-2.5 text-sm font-bold transition-all ${
                             turnos.includes(tr)
                               ? "border-[#4666a6] bg-[#4666a6] text-white shadow-sm"
-                              : "border-[#212226]/10 text-[#212226]/50 hover:border-[#4666a6]/35 hover:text-[#212226]"
+                              : "border-[#212226]/10 text-[#212226]/65 hover:border-[#4666a6]/35 hover:text-[#212226]"
                           }`}
                         >
                           {t(`turnos.${tr}`)}
@@ -643,11 +643,11 @@ export default function TarifarioCalculator({
             {/* ── STEP 4: Medio de uso ─────────────────── */}
             {step === 4 && (
               <motion.div key="s4" {...motionProps}>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-6">
                   04 — {t("step4")}
                 </p>
 
-                <label className="block text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/45 mb-4">
+                <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65 mb-4">
                   {t("medio.label")}
                 </label>
 
@@ -670,7 +670,7 @@ export default function TarifarioCalculator({
                           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-all ${
                             selected
                               ? "bg-[#f0552f] text-white"
-                              : "bg-[#212226]/8 text-[#212226]/40 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
+                              : "bg-[#212226]/8 text-[#212226]/65 group-hover:bg-[#f0552f]/10 group-hover:text-[#f0552f]"
                           }`}
                         >
                           <Icon className="h-5 w-5" />
@@ -695,7 +695,7 @@ export default function TarifarioCalculator({
             {/* ── STEP 5: Resultado ────────────────────── */}
             {step === 5 && (
               <motion.div key="s5" {...motionProps}>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
+                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65 mb-6">
                   {t("resultado")}
                 </p>
 
@@ -707,10 +707,10 @@ export default function TarifarioCalculator({
                     <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
                       {fmt(tarifaVisible)}
                     </p>
-                    <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
+                    <p className="text-sm font-semibold text-[#212226]/65 mt-2 mb-4">
                       {t("tarifaMensual")}
                     </p>
-                    <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
+                    <p className="text-xs text-[#212226]/65 max-w-xs leading-relaxed">
                       {t("disclaimer")}
                     </p>
                   </div>
@@ -732,21 +732,21 @@ export default function TarifarioCalculator({
                               onClick={() => setExpandedServicio(expandedServicio === i ? null : i)}
                               className="w-full flex items-center justify-between px-5 py-3 bg-[#faf9f7] hover:bg-[#f5f4f1] transition-colors"
                             >
-                              <span className="text-sm text-[#212226]/60">{s.tipo}</span>
+                              <span className="text-sm text-[#212226]/65">{s.tipo}</span>
                               <div className="flex items-center gap-3">
                                 <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
-                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/35 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
+                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/65 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
                               </div>
                             </button>
                             {expandedServicio === i && s.detalle && (
                               <div className="px-5 py-3 bg-white border-t border-[#212226]/4">
-                                <p className="text-xs text-[#212226]/45">{s.detalle}</p>
+                                <p className="text-xs text-[#212226]/65">{s.detalle}</p>
                               </div>
                             )}
                           </div>
                         ))}
                         <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/10 bg-[#f0552f]/5">
-                          <span className="text-sm font-black text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
+                          <span className="text-sm font-black text-[#212226]/65">{t("gimnasio.totalFinal")}</span>
                           <span className="text-sm font-black text-[#f0552f]">{fmt(gimnasioTotal)}</span>
                         </div>
                       </>
@@ -764,21 +764,21 @@ export default function TarifarioCalculator({
                               onClick={() => setExpandedServicio(expandedServicio === i ? null : i)}
                               className="w-full flex items-center justify-between px-5 py-3 bg-[#faf9f7] hover:bg-[#f5f4f1] transition-colors"
                             >
-                              <span className="text-sm text-[#212226]/60">{s.tipo}</span>
+                              <span className="text-sm text-[#212226]/65">{s.tipo}</span>
                               <div className="flex items-center gap-3">
                                 <span className="text-sm font-black text-[#212226]/75">{fmt(s.tarifa)}</span>
-                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/35 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
+                                <ChevronDownIcon className={`w-3.5 h-3.5 text-[#212226]/65 transition-transform ${expandedServicio === i ? "rotate-180" : ""}`} />
                               </div>
                             </button>
                             {expandedServicio === i && s.detalle && (
                               <div className="px-5 py-3 bg-white border-t border-[#212226]/4">
-                                <p className="text-xs text-[#212226]/45">{s.detalle}</p>
+                                <p className="text-xs text-[#212226]/65">{s.detalle}</p>
                               </div>
                             )}
                           </div>
                         ))}
                         <div className="flex items-center justify-between px-5 py-3 border-b border-[#212226]/10 bg-[#f0552f]/5">
-                          <span className="text-sm font-black text-[#212226]/60">{t("gimnasio.totalFinal")}</span>
+                          <span className="text-sm font-black text-[#212226]/65">{t("gimnasio.totalFinal")}</span>
                           <span className="text-sm font-black text-[#f0552f]">{fmt(barTotal)}</span>
                         </div>
                       </>
@@ -801,7 +801,7 @@ export default function TarifarioCalculator({
                           key={item.label}
                           className={`flex items-center justify-between gap-6 px-5 py-3.5 ${i < arr.length - 1 ? "border-b border-[#212226]/6" : ""}`}
                         >
-                          <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 shrink-0">
+                          <span className="text-[11px] font-black uppercase tracking-[0.14em] text-[#212226]/65 shrink-0">
                             {item.label}
                           </span>
                           <span className="text-sm font-bold text-[#212226]/75 text-right">
@@ -815,7 +815,7 @@ export default function TarifarioCalculator({
                 {/* Aviso baile */}
                 {grupo === "gastronomia" && turnos.includes("noche") && (
                   <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4 max-w-sm mb-6">
-                    <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
+                    <p className="text-[11px] font-black uppercase tracking-wider text-[#c53d1b] mb-1.5">
                       {t("gastronomia.baileTitle")}
                     </p>
                     <p className="text-xs text-[#212226]/52 leading-relaxed mb-3">
@@ -838,7 +838,7 @@ export default function TarifarioCalculator({
                           setStep(2);
                         }, 50);
                       }}
-                      className="text-xs font-black text-[#f0552f] hover:underline uppercase tracking-wider"
+                      className="text-xs font-black text-[#c53d1b] hover:underline uppercase tracking-wider"
                     >
                       {t("gastronomia.baileBtn")} →
                     </button>
@@ -898,7 +898,7 @@ export default function TarifarioCalculator({
               {step > 1 ? (
                 <button
                   onClick={handleBack}
-                  className="inline-flex items-center gap-2 text-sm font-bold text-[#212226]/40 hover:text-[#212226] transition-colors"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#212226]/65 hover:text-[#212226] transition-colors"
                 >
                   <ArrowLeftIcon className="w-4 h-4" />
                   {t("anterior")}
@@ -909,9 +909,9 @@ export default function TarifarioCalculator({
 
               <div className="flex items-center gap-4">
                 {faltantes.length > 0 && (
-                  <p className="text-right text-xs text-[#212226]/45">
+                  <p className="text-right text-xs text-[#212226]/65">
                     {t("completa")}{" "}
-                    <span className="font-bold text-[#212226]/60">
+                    <span className="font-bold text-[#212226]/65">
                       {faltantes.join(" · ")}
                     </span>
                   </p>
@@ -976,7 +976,7 @@ export default function TarifarioCalculator({
             {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
               <div className="overflow-hidden rounded-xl border border-[#212226]/10">
                 <div className="border-b border-[#212226]/8 bg-[#212226]/4 px-4 py-2.5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
@@ -985,7 +985,7 @@ export default function TarifarioCalculator({
                     key={i}
                     className="flex items-center justify-between border-b border-[#212226]/5 px-4 py-2.5 text-xs"
                   >
-                    <span className="text-[#212226]/55">{s.tipo}</span>
+                    <span className="text-[#212226]/65">{s.tipo}</span>
                     <span className="font-black text-[#212226]">{fmt(s.tarifa)}</span>
                   </div>
                 ))}
@@ -995,12 +995,12 @@ export default function TarifarioCalculator({
             {barBaseServicio && (
               <div className="overflow-hidden rounded-xl border border-[#212226]/10">
                 <div className="border-b border-[#212226]/8 bg-[#212226]/4 px-4 py-2.5">
-                  <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-[#212226]/65">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
                 <div className="flex items-center justify-between border-b border-[#212226]/5 px-4 py-2.5 text-xs">
-                  <span className="text-[#212226]/55">{barBaseServicio.tipo}</span>
+                  <span className="text-[#212226]/65">{barBaseServicio.tipo}</span>
                   <span className="font-black text-[#212226]">
                     {fmt(barBaseServicio.tarifa)}
                   </span>
@@ -1033,7 +1033,7 @@ export default function TarifarioCalculator({
             >
               <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-[#212226]/8">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-1">
+                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-[#c53d1b] mb-1">
                     {t(`grupos.${grupo}`)}
                   </p>
                   <h4 className="font-display text-2xl font-black leading-none text-[#212226]">
@@ -1043,7 +1043,7 @@ export default function TarifarioCalculator({
                   <button
                     type="button"
                     onClick={() => setTipoModalOpen(false)}
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#212226]/10 text-[#212226]/45 hover:border-[#f0552f] hover:text-[#f0552f] transition-colors"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-[#212226]/10 text-[#212226]/65 hover:border-[#f0552f] hover:text-[#f0552f] transition-colors"
                     aria-label="Cerrar"
                   >
                     <span className="text-lg leading-none">×</span>
@@ -1057,7 +1057,7 @@ export default function TarifarioCalculator({
                     value={tipoFiltro}
                     onChange={(e) => setTipoFiltro(e.target.value)}
                     placeholder={t("fields.buscarTipo")}
-                    className="mb-4 h-11 w-full rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none placeholder:text-[#212226]/28 focus:border-[#f0552f] transition-colors"
+                    className="mb-4 h-11 w-full rounded-xl border border-[#212226]/10 bg-[#faf9f7] px-4 text-sm outline-none placeholder:text-[#212226]/65 focus:border-[#f0552f] transition-colors"
                     autoFocus
                   />
                 )}
@@ -1109,10 +1109,10 @@ function NumberStepper({
 }) {
   return (
     <div>
-      <label className="block text-[10px] font-black uppercase tracking-wider text-[#212226]/45 mb-2">
+      <label className="block text-[11px] font-black uppercase tracking-wider text-[#212226]/65 mb-2">
         {label}
         {optional && (
-          <span className="ml-1.5 text-[#212226]/28 normal-case tracking-normal font-normal text-[11px]">
+          <span className="ml-1.5 text-[#212226]/65 normal-case tracking-normal font-normal text-[11px]">
             (opcional)
           </span>
         )}
@@ -1121,7 +1121,7 @@ function NumberStepper({
         <button
           type="button"
           onClick={() => onChange(Math.max(0, value - 1))}
-          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-r border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-r border-[#212226]/8 text-[#212226]/65 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
         >
           <MinusIcon className="h-3.5 w-3.5" />
         </button>
@@ -1131,12 +1131,12 @@ function NumberStepper({
           value={value || ""}
           onChange={(e) => onChange(Number(e.target.value) || 0)}
           placeholder={placeholder}
-          className="flex-1 bg-transparent px-4 text-sm outline-none placeholder:text-[#212226]/22"
+          className="flex-1 bg-transparent px-4 text-sm outline-none placeholder:text-[#212226]/65"
         />
         <button
           type="button"
           onClick={() => onChange(value + 1)}
-          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-l border-[#212226]/8 text-[#212226]/35 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
+          className="md:hidden flex h-full w-11 shrink-0 items-center justify-center border-l border-[#212226]/8 text-[#212226]/65 hover:text-[#f0552f] hover:bg-[#f0552f]/5 transition-colors"
         >
           <PlusIcon className="h-3.5 w-3.5" />
         </button>

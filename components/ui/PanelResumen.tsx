@@ -51,7 +51,7 @@ export default function PanelResumen({
         onClick={() => setAbierto(!abierto)}
         className="flex w-full items-center justify-between gap-4 text-left lg:pointer-events-none lg:mb-3"
       >
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35">
+        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#212226]/65">
           {titulo}
         </span>
         <span className="flex items-center gap-2 lg:hidden">
@@ -61,7 +61,7 @@ export default function PanelResumen({
             </span>
           )}
           <ChevronDownIcon
-            className={`h-4 w-4 shrink-0 text-[#212226]/35 transition-transform ${abierto ? "rotate-180" : ""}`}
+            className={`h-4 w-4 shrink-0 text-[#212226]/65 transition-transform ${abierto ? "rotate-180" : ""}`}
           />
         </span>
       </button>
@@ -72,7 +72,7 @@ export default function PanelResumen({
             <p className="font-display text-4xl font-black leading-none text-[#f0552f] lg:text-5xl">
               {monto !== null ? fmt(monto) : "—"}
             </p>
-            <p className="mt-2 text-xs leading-relaxed text-[#212226]/40">
+            <p className="mt-2 text-xs leading-relaxed text-[#212226]/65">
               {monto !== null && montoLabel ? montoLabel : vacio}
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function PanelResumen({
           <div className="divide-y divide-[#212226]/6 border-y border-[#212226]/6">
             {filas.map((f) => (
               <div key={f.label} className="flex items-start justify-between gap-3 py-3">
-                <span className="shrink-0 text-[10px] font-black uppercase tracking-[0.13em] text-[#212226]/35">
+                <span className="shrink-0 text-[11px] font-black uppercase tracking-[0.13em] text-[#212226]/65">
                   {f.label}
                 </span>
                 <span className="text-right text-xs font-bold leading-relaxed text-[#212226]/70">
@@ -92,7 +92,7 @@ export default function PanelResumen({
 
           {children}
 
-          <p className="text-xs leading-relaxed text-[#212226]/40">{disclaimer}</p>
+          <p className="text-xs leading-relaxed text-[#212226]/65">{disclaimer}</p>
         </div>
       </div>
     </aside>
