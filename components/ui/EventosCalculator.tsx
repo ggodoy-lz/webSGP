@@ -26,6 +26,8 @@ import {
 } from "@/lib/eventos-config";
 import { calcularEventos, type EventosResultado } from "@/lib/eventos-engine";
 import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
+import PanelResumen from "@/components/ui/PanelResumen";
+import { useStepScroll } from "@/lib/use-step-scroll";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("es-PY", {
@@ -136,18 +138,29 @@ export default function EventosCalculator({
     evento?.calculo.modo === "porcentual" && evento.calculo.mensual === true;
 
   const stepLabels = [t("steps.tipo"), t("steps.datos")];
+  const contenedorRef = useStepScroll(paso);
 
-  const canNext = (() => {
-    if (paso === 1) return !!tipo;
+  // Campos que faltan para avanzar. Se muestran junto al botón en lugar de
+  // dejarlo deshabilitado sin explicación.
+  const faltantes: string[] = (() => {
+    if (paso === 1) return tipo ? [] : [t("steps.tipo")];
     if (paso === 2) {
-      if (derivaDirecto) return true;
-      if (campos.circo) return aforo > 0 && usos.length > 0;
-      if (campos.personas && personas <= 0) return false;
-      if (campos.ingresos && conIngresos && precioEntrada <= 0) return false;
-      return true;
+      if (derivaDirecto) return [];
+      const f: string[] = [];
+      if (campos.circo) {
+        if (aforo <= 0) f.push(t("fields.aforo"));
+        if (usos.length === 0) f.push(t("fields.usos"));
+        return f;
+      }
+      if (campos.personas && personas <= 0)
+        f.push(esMensual ? t("fields.personasMes") : t("fields.personas"));
+      if (campos.ingresos && conIngresos && precioEntrada <= 0)
+        f.push(t("fields.precioEntrada"));
+      return f;
     }
-    return false;
+    return [];
   })();
+  const canNext = faltantes.length === 0;
 
   const handleNext = () => {
     if (paso === 2 && tipo) {
@@ -242,7 +255,10 @@ export default function EventosCalculator({
   ];
 
   return (
-    <div className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]">
+    <div
+      ref={contenedorRef}
+      className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]"
+    >
       {showOuterHeader && (
         <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
@@ -642,7 +658,7 @@ export default function EventosCalculator({
 
           {/* Navegación */}
           {paso < 3 && (
-            <div className="mt-10 flex items-center justify-between border-t border-[#212226]/8 pt-6">
+            <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-[#212226]/8 pt-6">
               {paso > 1 ? (
                 <button
                   type="button"
@@ -655,49 +671,38 @@ export default function EventosCalculator({
               ) : (
                 <span />
               )}
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!canNext}
-                className="inline-flex h-11 min-w-[156px] items-center justify-center gap-2.5 rounded-xl bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f] disabled:bg-[#212226]/18 disabled:cursor-not-allowed"
-              >
-                {paso === 2 ? t("calcular") : t("siguiente")}
-                <ArrowRightIcon className="h-3.5 w-3.5" />
-              </button>
+              <div className="flex items-center gap-4">
+                {faltantes.length > 0 && (
+                  <p className="text-right text-xs text-[#212226]/45">
+                    {t("completa")}{" "}
+                    <span className="font-bold text-[#212226]/60">
+                      {faltantes.join(" · ")}
+                    </span>
+                  </p>
+                )}
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  disabled={!canNext}
+                  className="inline-flex h-11 min-w-[156px] items-center justify-center gap-2.5 rounded-xl bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f] disabled:bg-[#212226]/18 disabled:cursor-not-allowed"
+                >
+                  {paso === 2 ? t("calcular") : t("siguiente")}
+                  <ArrowRightIcon className="h-3.5 w-3.5" />
+                </button>
+              </div>
             </div>
           )}
         </section>
 
-        {/* Sidebar */}
+        {/* Resumen */}
         {paso < 3 && (
-          <aside className="border-t border-[#212226]/10 bg-white px-6 py-8 lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch shadow-[-1px_0_0_0_rgba(33,34,38,0.07)]">
-            <div className="space-y-5">
-              <div>
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-3">
-                  {t("summary.title")}
-                </p>
-                <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
-                  —
-                </p>
-                <p className="text-xs text-[#212226]/40 mt-2 leading-relaxed">{t("summary.empty")}</p>
-              </div>
-
-              <div className="divide-y divide-[#212226]/6 border-y border-[#212226]/6">
-                {summaryRows.map((row) => (
-                  <div key={row.label} className="py-3 flex items-start justify-between gap-3">
-                    <span className="text-[10px] font-black uppercase tracking-[0.13em] text-[#212226]/35 shrink-0">
-                      {row.label}
-                    </span>
-                    <span className="text-xs font-bold text-[#212226]/70 text-right leading-relaxed">
-                      {row.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-
-              <p className="text-xs text-[#212226]/40 leading-relaxed">{t("disclaimer")}</p>
-            </div>
-          </aside>
+          <PanelResumen
+            titulo={t("summary.title")}
+            monto={null}
+            vacio={t("summary.empty")}
+            filas={summaryRows}
+            disclaimer={t("disclaimer")}
+          />
         )}
       </div>
     </div>

@@ -35,6 +35,8 @@ import {
 } from "@/lib/tarifario-config";
 import { getGimnasioSubtipo } from "@/lib/tarifario-config";
 import type { TarifarioInput } from "@/lib/tarifario-engine";
+import PanelResumen from "@/components/ui/PanelResumen";
+import { useStepScroll } from "@/lib/use-step-scroll";
 
 const TURNOS: Turno[] = ["manana", "mediodia", "tarde", "noche"];
 
@@ -206,32 +208,50 @@ export default function TarifarioCalculator({
     setBarBaseServicio(null);
   };
 
-  const canNext = (() => {
-    if (step === 1) return !!grupo && !!tipoLocal;
+  // Qué falta para avanzar. Se muestra junto al botón en vez de dejarlo
+  // deshabilitado sin explicar por qué.
+  const faltantes: string[] = (() => {
+    if (step === 1) {
+      const f: string[] = [];
+      if (!grupo) f.push(t("summary.rubro"));
+      else if (!tipoLocal) f.push(t("fields.tipoLocal"));
+      return f;
+    }
     if (step === 2) {
-      if (grupo === "gastronomia") return mesas > 0 || butacas > 0;
-      if (grupo === "comercial" || grupo === "entretenimiento") return metrosCuadrados > 0;
-      if (grupo === "hoteles") return habitaciones > 0;
-      if (grupo === "estetica") return estaciones > 0;
-      if (grupo === "academias") return alumnos > 0;
+      const f: string[] = [];
+      if (grupo === "gastronomia" && mesas <= 0 && butacas <= 0)
+        f.push(`${t("fields.mesas")} / ${t("fields.butacas")}`);
+      if ((grupo === "comercial" || grupo === "entretenimiento") && metrosCuadrados <= 0)
+        f.push(t("fields.metrosCuadrados"));
+      if (grupo === "hoteles" && habitaciones <= 0) f.push(t("fields.habitaciones"));
+      if (grupo === "estetica" && estaciones <= 0) f.push(t("fields.estaciones"));
+      if (grupo === "academias" && alumnos <= 0) f.push(t("fields.alumnos"));
       if (grupo === "gimnasios") {
         const sub = getGimnasioSubtipo(tipoLocal);
-        if (sub === "indispensable") return metrosCuadrados > 0 && sesionesPorDia > 0;
-        if (sub === "necesario") return maquinas > 0 && sesionesPorDia > 0;
-        return maquinas > 0;
+        if (sub === "indispensable") {
+          if (metrosCuadrados <= 0) f.push(t("fields.metrosCuadrados"));
+          if (sesionesPorDia <= 0) f.push(t("fields.sesiones"));
+        } else if (sub === "necesario") {
+          if (maquinas <= 0) f.push(t("fields.maquinas"));
+          if (sesionesPorDia <= 0) f.push(t("fields.sesiones"));
+        } else if (maquinas <= 0) {
+          f.push(t("fields.maquinas"));
+        }
       }
-      if (grupo === "oficinas") return sillasEspera > 0;
-      if (grupo === "motel") return camas > 0;
-      return false;
+      if (grupo === "oficinas" && sillasEspera <= 0) f.push(t("fields.sillasEspera"));
+      if (grupo === "motel" && camas <= 0) f.push(t("fields.camas"));
+      return f;
     }
     if (step === 3) {
-      if (!needsHorario) return true;
-      if (grupo === "gastronomia") return dias.length > 0 && turnos.length > 0;
-      return dias.length > 0;
+      if (!needsHorario) return [];
+      const f: string[] = [];
+      if (dias.length === 0) f.push(t("summary.horario"));
+      if (grupo === "gastronomia" && turnos.length === 0) f.push(t("step3"));
+      return f;
     }
-    if (step === 4) return true;
-    return false;
+    return [];
   })();
+  const canNext = step <= 4 && faltantes.length === 0;
 
   const handleNext = () => {
     if (step === 1) setStep(2);
@@ -299,9 +319,13 @@ export default function TarifarioCalculator({
   };
 
   const stepLabels = [t("step1"), t("step2"), t("step3"), t("step4")].slice(0, totalSteps);
+  const contenedorRef = useStepScroll(step);
 
   return (
-    <div className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]">
+    <div
+      ref={contenedorRef}
+      className="overflow-hidden border border-[#212226]/10 bg-[#feffff] shadow-[0_28px_90px_rgba(33,34,38,0.12)]"
+    >
       {showOuterHeader && (
         <div className="border-b border-[#212226]/10 px-6 py-5 lg:px-10">
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-2">
@@ -902,7 +926,7 @@ export default function TarifarioCalculator({
 
           {/* ── Navegación ──────────────────────────────── */}
           {step < 5 && (
-            <div className="mt-7 flex items-center justify-between border-t border-[#212226]/8 pt-5">
+            <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-[#212226]/8 pt-5">
               {step > 1 ? (
                 <button
                   onClick={handleBack}
@@ -915,75 +939,75 @@ export default function TarifarioCalculator({
                 <div />
               )}
 
-              <button
-                onClick={handleNext}
-                disabled={!canNext || loading}
-                className="inline-flex h-11 min-w-[156px] items-center justify-center gap-2.5 rounded-xl bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f] disabled:bg-[#212226]/18 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  "Calculando..."
-                ) : step === totalSteps ? (
-                  t("calcular")
-                ) : (
-                  <>
-                    {t("siguiente")}
-                    <ArrowRightIcon className="w-3.5 h-3.5" />
-                  </>
+              <div className="flex items-center gap-4">
+                {faltantes.length > 0 && (
+                  <p className="text-right text-xs text-[#212226]/45">
+                    {t("completa")}{" "}
+                    <span className="font-bold text-[#212226]/60">
+                      {faltantes.join(" · ")}
+                    </span>
+                  </p>
                 )}
-              </button>
+                <button
+                  onClick={handleNext}
+                  disabled={!canNext || loading}
+                  className="inline-flex h-11 min-w-[156px] items-center justify-center gap-2.5 rounded-xl bg-[#212226] px-6 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f] disabled:bg-[#212226]/18 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    "Calculando..."
+                  ) : step === totalSteps ? (
+                    t("calcular")
+                  ) : (
+                    <>
+                      {t("siguiente")}
+                      <ArrowRightIcon className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           )}
         </section>
 
-        {/* ── Sidebar resumen ─────────────────────────── */}
-        {step < 5 && <aside className="border-t border-[#212226]/10 bg-white px-6 py-8 lg:border-l lg:border-t-0 lg:px-8 lg:py-10 lg:self-stretch shadow-[-1px_0_0_0_rgba(33,34,38,0.07)]">
-          <div className="space-y-5">
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-3">
-                {t("summary.title")}
-              </p>
-              <p className="font-display font-black text-[#f0552f] text-4xl lg:text-5xl leading-none">
-                {tieneTarifaVisible ? fmt(tarifaVisible) : "—"}
-              </p>
-              <p className="text-xs text-[#212226]/40 mt-2 leading-relaxed">
-                {tieneTarifaVisible ? t("tarifaMensual") : t("summary.empty")}
-              </p>
-            </div>
-
-            <div className="divide-y divide-[#212226]/6 border-y border-[#212226]/6">
-              <SummaryRow
-                label={t("summary.rubro")}
-                value={grupo ? t(`grupos.${grupo}`) : t("summary.pending")}
-              />
-              <SummaryRow
-                label={t("summary.tipo")}
-                value={tipoLocal || t("summary.pending")}
-              />
-              <SummaryRow
-                label={t("summary.datos")}
-                value={datosLocal || t("summary.pending")}
-              />
-              {(!grupo || needsHorario) && (
-                <SummaryRow
-                  label={t("summary.horario")}
-                  value={
-                    dias.length > 0
-                      ? `${dias.length} ${t("summary.diasSeleccionados")}`
-                      : t("summary.pending")
-                  }
-                />
-              )}
-              {(!grupo || needsMedio) && (
-                <SummaryRow
-                  label={t("summary.medio")}
-                  value={step >= 4 ? t(`medio.${medio}`) : t("summary.pending")}
-                />
-              )}
-            </div>
-
+        {/* ── Resumen ─────────────────────────────────── */}
+        {step < 5 && (
+          <PanelResumen
+            titulo={t("summary.title")}
+            monto={tieneTarifaVisible ? tarifaVisible : null}
+            montoLabel={t("tarifaMensual")}
+            vacio={t("summary.empty")}
+            filas={[
+              {
+                label: t("summary.rubro"),
+                value: grupo ? t(`grupos.${grupo}`) : t("summary.pending"),
+              },
+              { label: t("summary.tipo"), value: tipoLocal || t("summary.pending") },
+              { label: t("summary.datos"), value: datosLocal || t("summary.pending") },
+              ...(!grupo || needsHorario
+                ? [
+                    {
+                      label: t("summary.horario"),
+                      value:
+                        dias.length > 0
+                          ? `${dias.length} ${t("summary.diasSeleccionados")}`
+                          : t("summary.pending"),
+                    },
+                  ]
+                : []),
+              ...(!grupo || needsMedio
+                ? [
+                    {
+                      label: t("summary.medio"),
+                      value: step >= 4 ? t(`medio.${medio}`) : t("summary.pending"),
+                    },
+                  ]
+                : []),
+            ]}
+            disclaimer={t("disclaimer")}
+          >
             {grupo === "gimnasios" && gimnasioServicios.length > 0 && (
-              <div className="rounded-xl border border-[#212226]/10 overflow-hidden">
-                <div className="px-4 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
+              <div className="overflow-hidden rounded-xl border border-[#212226]/10">
+                <div className="border-b border-[#212226]/8 bg-[#212226]/4 px-4 py-2.5">
                   <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
                     {t("gimnasio.subtotal")}
                   </p>
@@ -991,7 +1015,7 @@ export default function TarifarioCalculator({
                 {gimnasioServicios.map((s, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between px-4 py-2.5 border-b border-[#212226]/5 text-xs"
+                    className="flex items-center justify-between border-b border-[#212226]/5 px-4 py-2.5 text-xs"
                   >
                     <span className="text-[#212226]/55">{s.tipo}</span>
                     <span className="font-black text-[#212226]">{fmt(s.tarifa)}</span>
@@ -1001,24 +1025,22 @@ export default function TarifarioCalculator({
             )}
 
             {barBaseServicio && (
-              <div className="rounded-xl border border-[#212226]/10 overflow-hidden">
-                <div className="px-4 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
+              <div className="overflow-hidden rounded-xl border border-[#212226]/10">
+                <div className="border-b border-[#212226]/8 bg-[#212226]/4 px-4 py-2.5">
                   <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
                     {t("gimnasio.subtotal")}
                   </p>
                 </div>
-                <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#212226]/5 text-xs">
+                <div className="flex items-center justify-between border-b border-[#212226]/5 px-4 py-2.5 text-xs">
                   <span className="text-[#212226]/55">{barBaseServicio.tipo}</span>
-                  <span className="font-black text-[#212226]">{fmt(barBaseServicio.tarifa)}</span>
+                  <span className="font-black text-[#212226]">
+                    {fmt(barBaseServicio.tarifa)}
+                  </span>
                 </div>
               </div>
             )}
-
-            <p className="text-xs text-[#212226]/40 leading-relaxed">
-              {t("disclaimer")}
-            </p>
-          </div>
-        </aside>}
+          </PanelResumen>
+        )}
       </div>
 
       {/* ── Modal tipo de local ─────────────────────── */}
@@ -1103,19 +1125,6 @@ export default function TarifarioCalculator({
 }
 
 // ── Sub-componentes ──────────────────────────────────────────────────────────
-
-function SummaryRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="py-3 flex items-start justify-between gap-3">
-      <span className="text-[10px] font-black uppercase tracking-[0.13em] text-[#212226]/35 shrink-0">
-        {label}
-      </span>
-      <span className="text-xs font-bold text-[#212226]/70 text-right leading-relaxed">
-        {value}
-      </span>
-    </div>
-  );
-}
 
 function NumberStepper({
   label,

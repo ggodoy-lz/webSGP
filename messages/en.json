@@ -527,7 +527,8 @@
       "totalFinal": "Final total",
       "nuevoServicio": "Add gym service",
       "agregarAviso": "Gym calculations start with a 7A service. If the gym offers another service, add it to accumulate tariffs by usage. When finished, the final total adds all loaded services."
-    }
+    },
+    "completa": "Complete:"
   },
   "common": {
     "learnMore": "Learn more",
@@ -632,7 +633,8 @@
     "prontoPagoTitle": "Early payment benefit",
     "notaProntoPago": "You can benefit from a 10% discount by paying the license for the immediately preceding month before the 15th of each month. The discount is applied when confirming and starting the payment process.",
     "datosDeclarados": "Declared details",
-    "desglose": "How it was calculated"
+    "desglose": "How it was calculated",
+    "completa": "Complete:"
   },
   "internetLic": {
     "tag": "Calculator · Internet",
@@ -696,7 +698,8 @@
     "siguiente": "Next",
     "calcular": "Calculate",
     "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
-    "datosDeclarados": "Declared details"
+    "datosDeclarados": "Declared details",
+    "completa": "Complete:"
   },
   "eventos": {
     "tag": "Calculator · Events",
@@ -839,6 +842,7 @@
     "siguiente": "Next",
     "calcular": "Calculate",
     "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
-    "datosDeclarados": "Declared details"
+    "datosDeclarados": "Declared details",
+    "completa": "Complete:"
   }
 }

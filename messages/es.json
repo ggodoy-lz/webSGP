@@ -527,7 +527,8 @@
       "baileTitle": "¿Tus clientes bailan en algún horario o día de la semana?",
       "baileDesc": "Si en algún momento de la noche el local se convierte en \"boliche\", la música está clasificada como indispensable y requiere una licencia adicional que se suma a la ya calculada.",
       "baileBtn": "Agregar licencia de baile"
-    }
+    },
+    "completa": "Completá:"
   },
   "common": {
     "learnMore": "Conocé más",
@@ -632,7 +633,8 @@
     "prontoPagoTitle": "Beneficio por pronto pago",
     "notaProntoPago": "Podés beneficiarte con un 10% de descuento abonando antes del día 15 de cada mes la licencia correspondiente al mes inmediatamente anterior. El descuento se aplica al confirmar e iniciar el proceso de pago.",
     "datosDeclarados": "Datos declarados",
-    "desglose": "Cómo se calculó"
+    "desglose": "Cómo se calculó",
+    "completa": "Completá:"
   },
   "internetLic": {
     "tag": "Calculadora · Internet",
@@ -696,7 +698,8 @@
     "siguiente": "Siguiente",
     "calcular": "Calcular",
     "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
-    "datosDeclarados": "Datos declarados"
+    "datosDeclarados": "Datos declarados",
+    "completa": "Completá:"
   },
   "eventos": {
     "tag": "Calculadora · Eventos",
@@ -839,6 +842,7 @@
     "siguiente": "Siguiente",
     "calcular": "Calcular",
     "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
-    "datosDeclarados": "Datos declarados"
+    "datosDeclarados": "Datos declarados",
+    "completa": "Completá:"
   }
 }
