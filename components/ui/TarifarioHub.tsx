@@ -14,19 +14,20 @@ import {
 import TarifarioCalculator from "@/components/ui/TarifarioCalculator";
 import RadiodifusionCalculator from "@/components/ui/RadiodifusionCalculator";
 import InternetCalculator from "@/components/ui/InternetCalculator";
+import EventosCalculator from "@/components/ui/EventosCalculator";
 import type { CotizacionUSD } from "@/lib/bcp-cotizacion";
 
-type Licencia = "radiodifusion" | "locales" | "internet";
+type Licencia = "radiodifusion" | "locales" | "internet" | "eventos";
 
 const LICENCIAS: {
-  id: Licencia | "eventos";
+  id: Licencia;
   icon: React.ElementType;
   disponible: boolean;
 }[] = [
   { id: "radiodifusion", icon: RadioIcon, disponible: true },
   { id: "locales", icon: BuildingStorefrontIcon, disponible: true },
   { id: "internet", icon: GlobeAltIcon, disponible: true },
-  { id: "eventos", icon: TicketIcon, disponible: false },
+  { id: "eventos", icon: TicketIcon, disponible: true },
 ];
 
 export default function TarifarioHub({
@@ -41,7 +42,10 @@ export default function TarifarioHub({
 
   const param = searchParams.get("licencia");
   const licencia: Licencia | null =
-    param === "radiodifusion" || param === "locales" || param === "internet"
+    param === "radiodifusion" ||
+    param === "locales" ||
+    param === "internet" ||
+    param === "eventos"
       ? param
       : null;
 
@@ -165,6 +169,7 @@ export default function TarifarioHub({
           {licencia === "internet" && (
             <InternetCalculator cotizacion={cotizacion} />
           )}
+          {licencia === "eventos" && <EventosCalculator />}
         </motion.div>
       )}
     </AnimatePresence>

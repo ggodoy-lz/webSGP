@@ -19,7 +19,7 @@ const licCalculadora: Record<(typeof licTypes)[number], string | null> = {
   radio: "radiodifusion",
   comercio: "locales",
   digital: "internet",
-  eventos: null,
+  eventos: "eventos",
 };
 
 export default function LicenciasPage() {
