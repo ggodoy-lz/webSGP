@@ -577,30 +577,30 @@ export default function EventosCalculator({
 
             {/* ── Paso 3: resultado ── */}
             {paso === 3 && resultado && (
-              <motion.div key="s3" {...motionProps}>
+              <motion.div key="s3" {...motionProps} className="max-w-4xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
                   {t("resultado")}
                 </p>
 
                 {resultado.estado === "ejecutivo" ? (
-                  <div className="max-w-lg mb-8">
+                  <div className="mb-8">
                     <AvisoEjecutivo texto={t(`avisos.${resultado.motivo}`)} t={t} destacado />
                   </div>
                 ) : (
-                  <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 mb-8">
-                    <div className="shrink-0 mb-6 lg:mb-0">
+                  <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
+                    <div>
                       <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
                         {fmt(resultado.total)}
                       </p>
                       <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
                         {esMensual ? t("tarifaMensualTemporada") : t("tarifaEstimada")}
                       </p>
-                      <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
+                      <p className="text-xs text-[#212226]/32 leading-relaxed">
                         {t("disclaimer")}
                       </p>
                     </div>
 
-                    <div className="flex-1 rounded-2xl border border-[#212226]/8 overflow-hidden">
+                    <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
                       {resultado.detalle.length > 1 && (
                         <>
                           <div className="px-5 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
@@ -616,7 +616,7 @@ export default function EventosCalculator({
                               <span className="text-sm text-[#212226]/55">
                                 {t(`componentes.${d.clave}`)}
                               </span>
-                              <span className="text-sm font-black text-[#212226]/75">
+                              <span className="text-sm font-black text-[#212226]/75 shrink-0">
                                 {d.clave === "funciones" ? `× ${fmtNum(d.valor)}` : fmt(d.valor)}
                               </span>
                             </div>
@@ -640,27 +640,27 @@ export default function EventosCalculator({
                   </div>
                 )}
 
-                {/* Beneficio pronto pago — solo se informa */}
-                {resultado.estado === "ok" && (
-                  <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4 max-w-lg mb-4">
-                    <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
-                      {t("prontoPagoTitle")}
+                {/* Avisos: pronto pago y descuentos adicionales */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  {resultado.estado === "ok" && (
+                    <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4">
+                      <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
+                        {t("prontoPagoTitle")}
+                      </p>
+                      <p className="text-xs text-[#212226]/52 leading-relaxed">
+                        {t("prontoPagoDesc")}
+                      </p>
+                    </div>
+                  )}
+                  <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4">
+                    <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
+                      {t("descuentosTitle")}
                     </p>
-                    <p className="text-xs text-[#212226]/52 leading-relaxed">
-                      {t("prontoPagoDesc")}
+                    <p className="text-xs text-[#212226]/52 leading-relaxed mb-2">
+                      {t("descuentosDesc")}
                     </p>
+                    <p className="text-xs font-bold text-[#212226]/70">{TELEFONOS}</p>
                   </div>
-                )}
-
-                {/* Descuentos adicionales con verificación de SGP */}
-                <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4 max-w-lg mb-6">
-                  <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
-                    {t("descuentosTitle")}
-                  </p>
-                  <p className="text-xs text-[#212226]/52 leading-relaxed mb-2">
-                    {t("descuentosDesc")}
-                  </p>
-                  <p className="text-xs font-bold text-[#212226]/70">{TELEFONOS}</p>
                 </div>
 
                 <button

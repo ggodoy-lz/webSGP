@@ -373,27 +373,27 @@ export default function RadiodifusionCalculator({
 
             {/* ── Resultado ─────────────────────────── */}
             {paso === "resultado" && resultado && (
-              <motion.div key="resultado" {...motionProps}>
+              <motion.div key="resultado" {...motionProps} className="max-w-4xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
                   {t("resultado")}
                 </p>
 
-                <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
                   {/* Precio */}
-                  <div className="shrink-0 mb-6 lg:mb-0">
+                  <div>
                     <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
                       {fmt(resultado.total)}
                     </p>
                     <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
                       {t("tarifaMensual")}
                     </p>
-                    <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
+                    <p className="text-xs text-[#212226]/32 leading-relaxed">
                       {t("disclaimer")}
                     </p>
                   </div>
 
                   {/* Resumen */}
-                  <div className="flex-1 rounded-2xl border border-[#212226]/8 overflow-hidden">
+                  <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
                     {resultado.aplicaMinimo && (
                       <div className="flex items-center justify-between gap-6 px-5 py-3.5 border-b border-[#212226]/6 bg-[#f0552f]/5">
                         <span className="text-xs font-bold text-[#f0552f]">
@@ -420,24 +420,25 @@ export default function RadiodifusionCalculator({
                   </div>
                 </div>
 
-                {/* Beneficio pronto pago (solo mención; se aplica en la pasarela) */}
-                <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4 max-w-md mb-4">
-                  <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
-                    {t("prontoPagoTitle")}
-                  </p>
-                  <p className="text-xs text-[#212226]/52 leading-relaxed">
-                    {t("notaProntoPago")}
-                  </p>
-                </div>
-
-                {/* Aviso simulcasting */}
-                {medio === "radio" && (
-                  <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4 max-w-md mb-6">
+                {/* Avisos: pronto pago (solo mención) y simulcasting */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4">
+                    <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
+                      {t("prontoPagoTitle")}
+                    </p>
                     <p className="text-xs text-[#212226]/52 leading-relaxed">
-                      {t("notaSimulcasting")}
+                      {t("notaProntoPago")}
                     </p>
                   </div>
-                )}
+
+                  {medio === "radio" && (
+                    <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4">
+                      <p className="text-xs text-[#212226]/52 leading-relaxed">
+                        {t("notaSimulcasting")}
+                      </p>
+                    </div>
+                  )}
+                </div>
 
                 <button
                   onClick={handleReset}

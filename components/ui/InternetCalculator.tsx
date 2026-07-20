@@ -356,14 +356,14 @@ export default function InternetCalculator({
 
             {/* ── Resultado ─────────────────────────── */}
             {paso === 3 && resultado && (
-              <motion.div key="s3" {...motionProps}>
+              <motion.div key="s3" {...motionProps} className="max-w-4xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
                   {t("resultado")}
                 </p>
 
-                <div className="flex flex-col lg:flex-row lg:items-start lg:gap-12 mb-8">
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
                   {/* Precio */}
-                  <div className="shrink-0 mb-6 lg:mb-0">
+                  <div>
                     <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
                       {fmt(resultado.total)}
                     </p>
@@ -375,13 +375,13 @@ export default function InternetCalculator({
                         {t("cotizacion")}: Gs. {fmtTC(cotizacion.usd)} / USD
                       </p>
                     )}
-                    <p className="text-xs text-[#212226]/32 max-w-xs leading-relaxed">
+                    <p className="text-xs text-[#212226]/32 leading-relaxed">
                       {t("disclaimer")}
                     </p>
                   </div>
 
                   {/* Desglose + resumen */}
-                  <div className="flex-1 rounded-2xl border border-[#212226]/8 overflow-hidden">
+                  <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
                     {resultado.componentes.length > 1 && (
                       <>
                         <div className="px-5 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
@@ -432,7 +432,7 @@ export default function InternetCalculator({
                 </div>
 
                 {resultado.minimoUSD !== null && (
-                  <div className="border-l-[3px] border-[#212226]/20 rounded-r-2xl bg-[#faf9f7] px-5 py-4 max-w-lg mb-6">
+                  <div className="border-l-[3px] border-[#212226]/20 rounded-r-2xl bg-[#faf9f7] px-5 py-4 mb-8">
                     <p className="text-xs text-[#212226]/52 leading-relaxed">
                       {t("cotizacionNota")}
                     </p>
