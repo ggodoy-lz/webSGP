@@ -25,6 +25,7 @@ import {
   type UsoCircoTeatro,
 } from "@/lib/eventos-config";
 import { calcularEventos, type EventosResultado } from "@/lib/eventos-engine";
+import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("es-PY", {
@@ -577,99 +578,64 @@ export default function EventosCalculator({
 
             {/* ── Paso 3: resultado ── */}
             {paso === 3 && resultado && (
-              <motion.div key="s3" {...motionProps} className="max-w-4xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
-                  {t("resultado")}
-                </p>
-
+              <motion.div key="s3" {...motionProps}>
                 {resultado.estado === "ejecutivo" ? (
-                  <div className="mb-8">
+                  <div className="mx-auto w-full max-w-xl">
                     <AvisoEjecutivo texto={t(`avisos.${resultado.motivo}`)} t={t} destacado />
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={handleReset}
+                        className="inline-flex items-center gap-2 rounded-xl bg-[#212226] px-6 py-3.5 text-xs font-black uppercase tracking-[0.14em] text-white transition-all hover:bg-[#f0552f]"
+                      >
+                        <ArrowPathIcon className="h-3.5 w-3.5" />
+                        {t("nuevaConsulta")}
+                      </button>
+                    </div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
-                    <div>
-                      <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
-                        {fmt(resultado.total)}
-                      </p>
-                      <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
-                        {esMensual ? t("tarifaMensualTemporada") : t("tarifaEstimada")}
-                      </p>
-                      <p className="text-xs text-[#212226]/32 leading-relaxed">
-                        {t("disclaimer")}
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
-                      {resultado.detalle.length > 1 && (
-                        <>
-                          <div className="px-5 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
-                            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
-                              {t("desglose")}
-                            </p>
-                          </div>
-                          {resultado.detalle.map((d) => (
-                            <div
-                              key={d.clave}
-                              className="flex items-center justify-between gap-6 px-5 py-3 border-b border-[#212226]/6 bg-[#faf9f7]"
-                            >
-                              <span className="text-sm text-[#212226]/55">
-                                {t(`componentes.${d.clave}`)}
-                              </span>
-                              <span className="text-sm font-black text-[#212226]/75 shrink-0">
-                                {d.clave === "funciones" ? `× ${fmtNum(d.valor)}` : fmt(d.valor)}
-                              </span>
-                            </div>
-                          ))}
-                        </>
-                      )}
-                      {summaryRows.map((row, i, arr) => (
-                        <div
-                          key={row.label}
-                          className={`flex items-center justify-between gap-6 px-5 py-3.5 ${i < arr.length - 1 ? "border-b border-[#212226]/6" : ""}`}
-                        >
-                          <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 shrink-0">
-                            {row.label}
-                          </span>
-                          <span className="text-sm font-bold text-[#212226]/75 text-right">
-                            {row.value}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <ResultadoTarifa
+                    monto={resultado.total}
+                    etiqueta={esMensual ? t("tarifaMensualTemporada") : t("tarifaEstimada")}
+                    subtitulo={
+                      otroTipo.trim()
+                        ? `${t(`tipos.${tipo}`)} — ${otroTipo.trim()}`
+                        : t(`tipos.${tipo}`)
+                    }
+                    // La primera fila del resumen es el tipo: ya va como subtítulo.
+                    datos={summaryRows.slice(1)}
+                    calculo={
+                      resultado.detalle.length > 1
+                        ? resultado.detalle.map((d) => ({
+                            label: t(`componentes.${d.clave}`),
+                            value:
+                              d.clave === "funciones"
+                                ? `× ${fmtNum(d.valor)}`
+                                : fmt(d.valor),
+                            destacado: d.valor === resultado.total,
+                          }))
+                        : undefined
+                    }
+                    avisos={[
+                      {
+                        tono: "beneficio",
+                        titulo: t("prontoPagoTitle"),
+                        texto: t("prontoPagoDesc"),
+                      },
+                      {
+                        tono: "contacto",
+                        titulo: t("descuentosTitle"),
+                        texto: t("descuentosDesc"),
+                        extra: TELEFONOS,
+                      },
+                    ]}
+                    disclaimer={t("disclaimer")}
+                    onReset={handleReset}
+                    resetLabel={t("nuevaConsulta")}
+                    labelCalculo={t("desglose")}
+                    labelDatos={t("datosDeclarados")}
+                  />
                 )}
-
-                {/* Avisos: pronto pago y descuentos adicionales */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                  {resultado.estado === "ok" && (
-                    <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4">
-                      <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
-                        {t("prontoPagoTitle")}
-                      </p>
-                      <p className="text-xs text-[#212226]/52 leading-relaxed">
-                        {t("prontoPagoDesc")}
-                      </p>
-                    </div>
-                  )}
-                  <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4">
-                    <p className="text-[11px] font-black uppercase tracking-wider text-[#f0552f] mb-1.5">
-                      {t("descuentosTitle")}
-                    </p>
-                    <p className="text-xs text-[#212226]/52 leading-relaxed mb-2">
-                      {t("descuentosDesc")}
-                    </p>
-                    <p className="text-xs font-bold text-[#212226]/70">{TELEFONOS}</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleReset}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 transition-all"
-                >
-                  <ArrowPathIcon className="w-3.5 h-3.5" />
-                  {t("nuevaConsulta")}
-                </button>
               </motion.div>
             )}
           </AnimatePresence>

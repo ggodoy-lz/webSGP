@@ -630,7 +630,9 @@
     "calcular": "Calculate",
     "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
     "prontoPagoTitle": "Early payment benefit",
-    "notaProntoPago": "You can benefit from a 10% discount by paying the license for the immediately preceding month before the 15th of each month. The discount is applied when confirming and starting the payment process."
+    "notaProntoPago": "You can benefit from a 10% discount by paying the license for the immediately preceding month before the 15th of each month. The discount is applied when confirming and starting the payment process.",
+    "datosDeclarados": "Declared details",
+    "desglose": "How it was calculated"
   },
   "internetLic": {
     "tag": "Calculator · Internet",
@@ -693,7 +695,8 @@
     "atras": "Back",
     "siguiente": "Next",
     "calcular": "Calculate",
-    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data."
+    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
+    "datosDeclarados": "Declared details"
   },
   "eventos": {
     "tag": "Calculator · Events",
@@ -823,7 +826,7 @@
       "musicalProporcional": "For musicals the tariff may have a proportional discount based on the duration of the performance. Contact a Commercial Executive to determine it.",
       "consumo": "When the ticket includes drinks or food, the tariff is determined with a Commercial Executive."
     },
-    "desglose": "Calculation breakdown",
+    "desglose": "How it was calculated",
     "resultado": "Result",
     "tarifaEstimada": "Estimated total tariff",
     "tarifaMensualTemporada": "Estimated monthly tariff per season",
@@ -835,6 +838,7 @@
     "atras": "Back",
     "siguiente": "Next",
     "calcular": "Calculate",
-    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data."
+    "disclaimer": "This value is an indicative estimate. SGP will confirm the final tariff after verifying the declared data.",
+    "datosDeclarados": "Declared details"
   }
 }

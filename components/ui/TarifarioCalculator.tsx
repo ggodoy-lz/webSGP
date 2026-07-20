@@ -280,14 +280,6 @@ export default function TarifarioCalculator({
     return "";
   })();
 
-  const avisoContextual = (() => {
-    if (grupo === "gastronomia" && turnos.includes("noche")) return t("summary.noticeGastronomiaNoche");
-    if (grupo === "oficinas") return t("summary.noticeOficinas");
-    if ((grupo === "comercial" || grupo === "entretenimiento") && dias.length === 7) return t("summary.notice30Dias");
-    if (grupo === "gimnasios") return t("gimnasio.agregarAviso");
-    return "";
-  })();
-
   const motionProps = {
     initial: { opacity: 0, y: 16 },
     animate: { opacity: 1, y: 0 },

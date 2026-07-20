@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
-  ArrowPathIcon,
   CheckIcon,
   SignalIcon,
   WifiIcon,
@@ -18,6 +17,7 @@ import {
   type InternetServicio,
 } from "@/lib/internet-config";
 import { calcularInternet, type InternetResult } from "@/lib/internet-engine";
+import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 import type { CotizacionUSD } from "@/lib/bcp-cotizacion";
 
 const fmt = (n: number) =>
@@ -356,96 +356,39 @@ export default function InternetCalculator({
 
             {/* ── Resultado ─────────────────────────── */}
             {paso === 3 && resultado && (
-              <motion.div key="s3" {...motionProps} className="max-w-4xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
-                  {t("resultado")}
-                </p>
-
-                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
-                  {/* Precio */}
-                  <div>
-                    <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
-                      {fmt(resultado.total)}
-                    </p>
-                    <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
-                      {t("tarifaMensual")}
-                    </p>
-                    {resultado.minimoUSD !== null && (
-                      <p className="text-xs text-[#212226]/45 mb-3">
-                        {t("cotizacion")}: Gs. {fmtTC(cotizacion.usd)} / USD
-                      </p>
-                    )}
-                    <p className="text-xs text-[#212226]/32 leading-relaxed">
-                      {t("disclaimer")}
-                    </p>
-                  </div>
-
-                  {/* Desglose + resumen */}
-                  <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
-                    {resultado.componentes.length > 1 && (
-                      <>
-                        <div className="px-5 py-2.5 border-b border-[#212226]/8 bg-[#212226]/4">
-                          <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#212226]/35">
-                            {t("seAplicaMayor")}
-                          </p>
-                        </div>
-                        {resultado.componentes.map((c) => {
-                          const gana = resultado.gana === c.clave;
-                          return (
-                            <div
-                              key={c.clave}
-                              className={`flex items-center justify-between gap-6 px-5 py-3 border-b ${
-                                gana
-                                  ? "border-[#212226]/10 bg-[#f0552f]/5"
-                                  : "border-[#212226]/6 bg-[#faf9f7]"
-                              }`}
-                            >
-                              <span
-                                className={`text-sm ${gana ? "font-black text-[#212226]/70" : "text-[#212226]/50"}`}
-                              >
-                                {t(`componentes.${c.clave}`)}
-                              </span>
-                              <span
-                                className={`text-sm font-black ${gana ? "text-[#f0552f]" : "text-[#212226]/60"}`}
-                              >
-                                {fmt(c.valor)}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </>
-                    )}
-                    {summaryRows.map((row, i, arr) => (
-                      <div
-                        key={row.label}
-                        className={`flex items-center justify-between gap-6 px-5 py-3.5 ${i < arr.length - 1 ? "border-b border-[#212226]/6" : ""}`}
-                      >
-                        <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 shrink-0">
-                          {row.label}
-                        </span>
-                        <span className="text-sm font-bold text-[#212226]/75 text-right">
-                          {row.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {resultado.minimoUSD !== null && (
-                  <div className="border-l-[3px] border-[#212226]/20 rounded-r-2xl bg-[#faf9f7] px-5 py-4 mb-8">
-                    <p className="text-xs text-[#212226]/52 leading-relaxed">
-                      {t("cotizacionNota")}
-                    </p>
-                  </div>
-                )}
-
-                <button
-                  onClick={handleReset}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 transition-all"
-                >
-                  <ArrowPathIcon className="w-3.5 h-3.5" />
-                  {t("nuevaConsulta")}
-                </button>
+              <motion.div key="s3" {...motionProps}>
+                <ResultadoTarifa
+                  monto={resultado.total}
+                  etiqueta={t("tarifaMensual")}
+                  subtitulo={servicio ? t(`servicios.${servicio}`) : undefined}
+                  // La primera fila del resumen es el servicio: ya va como subtítulo.
+                  datos={summaryRows.slice(1)}
+                  calculo={
+                    resultado.componentes.length > 1
+                      ? resultado.componentes.map((c) => ({
+                          label: t(`componentes.${c.clave}`),
+                          value: fmt(c.valor),
+                          destacado: resultado.gana === c.clave,
+                        }))
+                      : undefined
+                  }
+                  avisos={
+                    resultado.minimoUSD !== null
+                      ? [
+                          {
+                            tono: "neutro",
+                            titulo: `${t("cotizacion")}: Gs. ${fmtTC(cotizacion.usd)} / USD`,
+                            texto: t("cotizacionNota"),
+                          },
+                        ]
+                      : []
+                  }
+                  disclaimer={t("disclaimer")}
+                  onReset={handleReset}
+                  resetLabel={t("nuevaConsulta")}
+                  labelCalculo={t("seAplicaMayor")}
+                  labelDatos={t("datosDeclarados")}
+                />
               </motion.div>
             )}
           </AnimatePresence>

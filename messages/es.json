@@ -630,7 +630,9 @@
     "calcular": "Calcular",
     "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
     "prontoPagoTitle": "Beneficio por pronto pago",
-    "notaProntoPago": "Podés beneficiarte con un 10% de descuento abonando antes del día 15 de cada mes la licencia correspondiente al mes inmediatamente anterior. El descuento se aplica al confirmar e iniciar el proceso de pago."
+    "notaProntoPago": "Podés beneficiarte con un 10% de descuento abonando antes del día 15 de cada mes la licencia correspondiente al mes inmediatamente anterior. El descuento se aplica al confirmar e iniciar el proceso de pago.",
+    "datosDeclarados": "Datos declarados",
+    "desglose": "Cómo se calculó"
   },
   "internetLic": {
     "tag": "Calculadora · Internet",
@@ -693,7 +695,8 @@
     "atras": "Atrás",
     "siguiente": "Siguiente",
     "calcular": "Calcular",
-    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados."
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
+    "datosDeclarados": "Datos declarados"
   },
   "eventos": {
     "tag": "Calculadora · Eventos",
@@ -823,7 +826,7 @@
       "musicalProporcional": "En los musicales la tarifa puede tener un descuento proporcional según la duración de la puesta en escena. Contactá con un Ejecutivo Comercial para determinarla.",
       "consumo": "Cuando la entrada incluye consumición, la tarifa se determina con un Ejecutivo Comercial."
     },
-    "desglose": "Desglose del cálculo",
+    "desglose": "Cómo se calculó",
     "resultado": "Resultado",
     "tarifaEstimada": "Tarifa total estimada",
     "tarifaMensualTemporada": "Tarifa mensual estimada por temporada",
@@ -835,6 +838,7 @@
     "atras": "Atrás",
     "siguiente": "Siguiente",
     "calcular": "Calcular",
-    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados."
+    "disclaimer": "Este valor es una estimación orientativa. SGP confirmará la tarifa final luego de verificar los datos declarados.",
+    "datosDeclarados": "Datos declarados"
   }
 }

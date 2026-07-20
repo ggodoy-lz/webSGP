@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRightIcon,
   ArrowLeftIcon,
-  ArrowPathIcon,
   CheckIcon,
   RadioIcon,
   TvIcon,
@@ -25,6 +24,7 @@ import {
   calcularRadiodifusion,
   type RadiodifusionResult,
 } from "@/lib/radiodifusion-engine";
+import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 
 const fmt = (n: number) =>
   new Intl.NumberFormat("es-PY", {
@@ -373,80 +373,42 @@ export default function RadiodifusionCalculator({
 
             {/* ── Resultado ─────────────────────────── */}
             {paso === "resultado" && resultado && (
-              <motion.div key="resultado" {...motionProps} className="max-w-4xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#212226]/35 mb-6">
-                  {t("resultado")}
-                </p>
-
-                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,320px)_minmax(0,1fr)] lg:items-start gap-8 lg:gap-10 mb-8">
-                  {/* Precio */}
-                  <div>
-                    <p className="font-display font-black text-[#f0552f] text-5xl lg:text-6xl leading-none">
-                      {fmt(resultado.total)}
-                    </p>
-                    <p className="text-sm font-semibold text-[#212226]/50 mt-2 mb-4">
-                      {t("tarifaMensual")}
-                    </p>
-                    <p className="text-xs text-[#212226]/32 leading-relaxed">
-                      {t("disclaimer")}
-                    </p>
-                  </div>
-
-                  {/* Resumen */}
-                  <div className="rounded-2xl border border-[#212226]/8 overflow-hidden">
-                    {resultado.aplicaMinimo && (
-                      <div className="flex items-center justify-between gap-6 px-5 py-3.5 border-b border-[#212226]/6 bg-[#f0552f]/5">
-                        <span className="text-xs font-bold text-[#f0552f]">
-                          {t("aplicaMinimo")}
-                        </span>
-                        <span className="text-sm font-black text-[#f0552f]">
-                          {fmt(resultado.minimo)}
-                        </span>
-                      </div>
-                    )}
-                    {summaryRows.map((row, i, arr) => (
-                      <div
-                        key={row.label}
-                        className={`flex items-center justify-between gap-6 px-5 py-3.5 ${i < arr.length - 1 ? "border-b border-[#212226]/6" : ""}`}
-                      >
-                        <span className="text-[10px] font-black uppercase tracking-[0.14em] text-[#212226]/35 shrink-0">
-                          {row.label}
-                        </span>
-                        <span className="text-sm font-bold text-[#212226]/75 text-right">
-                          {row.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Avisos: pronto pago (solo mención) y simulcasting */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                  <div className="border-l-[3px] border-[#f2b33d] rounded-r-2xl bg-[#f2b33d]/8 px-5 py-4">
-                    <p className="text-[11px] font-black uppercase tracking-wider text-[#b57f14] mb-1.5">
-                      {t("prontoPagoTitle")}
-                    </p>
-                    <p className="text-xs text-[#212226]/52 leading-relaxed">
-                      {t("notaProntoPago")}
-                    </p>
-                  </div>
-
-                  {medio === "radio" && (
-                    <div className="border-l-[3px] border-[#f0552f] rounded-r-2xl bg-[#f0552f]/5 px-5 py-4">
-                      <p className="text-xs text-[#212226]/52 leading-relaxed">
-                        {t("notaSimulcasting")}
-                      </p>
-                    </div>
-                  )}
-                </div>
-
-                <button
-                  onClick={handleReset}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#212226] hover:bg-[#f0552f] text-white text-xs font-black uppercase tracking-[0.14em] px-6 py-3.5 transition-all"
-                >
-                  <ArrowPathIcon className="w-3.5 h-3.5" />
-                  {t("nuevaConsulta")}
-                </button>
+              <motion.div key="resultado" {...motionProps}>
+                <ResultadoTarifa
+                  monto={resultado.total}
+                  etiqueta={t("tarifaMensual")}
+                  subtitulo={medio ? t(`medios.${medio}`) : undefined}
+                  // La primera fila del resumen es el medio: ya va como subtítulo.
+                  datos={summaryRows.slice(1)}
+                  calculo={
+                    resultado.aplicaMinimo
+                      ? [
+                          {
+                            label: t("aplicaMinimo"),
+                            value: fmt(resultado.minimo),
+                            destacado: true,
+                          },
+                        ]
+                      : undefined
+                  }
+                  avisos={[
+                    {
+                      tono: "beneficio",
+                      titulo: t("prontoPagoTitle"),
+                      texto: t("notaProntoPago"),
+                    },
+                    ...(medio === "radio"
+                      ? ([
+                          { tono: "neutro" as const, texto: t("notaSimulcasting") },
+                        ])
+                      : []),
+                  ]}
+                  disclaimer={t("disclaimer")}
+                  onReset={handleReset}
+                  resetLabel={t("nuevaConsulta")}
+                  labelCalculo={t("desglose")}
+                  labelDatos={t("datosDeclarados")}
+                />
               </motion.div>
             )}
           </AnimatePresence>
