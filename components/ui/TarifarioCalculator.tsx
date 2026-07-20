@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -279,6 +279,17 @@ export default function TarifarioCalculator({
       return camas > 0 ? `${compactNumber(camas)} ${t("fields.camas").toLowerCase()}` : "";
     return "";
   })();
+
+  // Cerrar el modal con Escape. Va en document: el overlay no recibe foco,
+  // así que un onKeyDown sobre el div solo se dispara si el foco cayó dentro.
+  useEffect(() => {
+    if (!tipoModalOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setTipoModalOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [tipoModalOpen]);
 
   const motionProps = {
     initial: { opacity: 0, y: 16 },
@@ -1019,7 +1030,6 @@ export default function TarifarioCalculator({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setTipoModalOpen(false)}
-            onKeyDown={(e) => { if (e.key === "Escape") setTipoModalOpen(false); }}
           >
             <motion.div
               role="dialog"
