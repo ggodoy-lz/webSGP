@@ -98,12 +98,13 @@ export const EMPRESARIAL_CAPITAL: RangoTarifaDoble[] = [
   { desde: 901, hasta: 1_000, sinBaile: 3_187_000, conBaile: 4_462_000 },
 ];
 
-// Interior: SIN BAILE llega hasta 300, CON BAILE solo hasta 200. Por encima de
-// esos topes el documento no define tarifa → deriva a ejecutivo comercial.
+// Interior: la tabla llega hasta 200 personas. SGP confirmó que el rango
+// 201–300 no corresponde, así que por encima de 200 se deriva a un ejecutivo
+// (aplica tanto a Empresariales como a Promoción de Producto, que usa esta
+// misma tabla como mínimo).
 export const EMPRESARIAL_INTERIOR: RangoTarifaDoble[] = [
   { desde: 1, hasta: 100, sinBaile: 1_223_000, conBaile: 1_714_000 },
   { desde: 101, hasta: 200, sinBaile: 1_301_000, conBaile: 1_820_000 },
-  { desde: 201, hasta: 300, sinBaile: 1_379_000, conBaile: null },
 ];
 
 // Sección 7 — Estudiantiles (SIN/CON baile, por zona)
@@ -141,7 +142,11 @@ export const DEPORTIVO_MINIMOS: RangoTarifa[] = [
 ];
 export const DEPORTIVO_BASE_5000 = 5_880_000;
 export const DEPORTIVO_ADICIONAL_POR_1000 = 1_176_000; // 30 UDA, desde 5.001
-export const DEPORTIVO_PORCENTAJE = 0.055;
+
+// Deportivos CON ingresos: APA y SGP se calculan por separado y se suman.
+// El 0,5% de SGP se compara contra el mínimo de tabla y se aplica el mayor.
+export const DEPORTIVO_APA_PORCENTAJE = 0.05;
+export const DEPORTIVO_SGP_PORCENTAJE = 0.005;
 
 // ── Circos (sección 9) y Teatros (sección 10) — por función y aforo ─────────
 // Cada "uso" tiene una tabla por aforo (hasta 200/400/600/800/1000) y un
@@ -240,6 +245,13 @@ export interface EventoTipo {
   id: string;
   grupo: EventoGrupo;
   calculo: CalculoSpec;
+  /**
+   * Denominaciones que comparten exactamente el mismo cálculo. Se muestran
+   * como opciones propias para que el cliente encuentre su evento por nombre
+   * ("Oktoberfest") en vez de tener que deducir la categoría técnica.
+   * Las claves se traducen desde `eventos.variantes.<clave>`.
+   */
+  variantes?: string[];
 }
 
 // APA por persona = 2.940. personaSGP = valorPorPersonaTotal − 2.940.
@@ -254,6 +266,11 @@ export const EVENTOS: EventoTipo[] = [
       minCon: { tipo: "fijoSGP", sgp: 1_470_000 },
       sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
     },
+    variantes: [
+      "discoteca", "salsodromo", "pena", "oktoberfest", "primavera",
+      "anoNuevo", "saintPatrick", "amistad", "exa", "retro", "electronica",
+      "sunset", "coffeeParty", "carnaval", "otros",
+    ],
   },
   {
     id: "showBailablePromo",
@@ -277,8 +294,25 @@ export const EVENTOS: EventoTipo[] = [
   },
 
   // ── Celebraciones familiares (sección 4) ──
-  { id: "eventoSocial", grupo: "familiares", calculo: { modo: "tablaFija", tabla: "familiares" } },
-  { id: "eventoInfantil", grupo: "familiares", calculo: { modo: "tablaFija", tabla: "infantiles" } },
+  {
+    id: "eventoSocial",
+    grupo: "familiares",
+    calculo: { modo: "tablaFija", tabla: "familiares" },
+    variantes: [
+      "quinceAnos", "boda", "cumpleanosFamiliar", "aniversarioFamiliar",
+      "colacion", "encuentro", "cocktailSinShow", "brunch", "afterOffice",
+      "otros",
+    ],
+  },
+  {
+    id: "eventoInfantil",
+    grupo: "familiares",
+    calculo: { modo: "tablaFija", tabla: "infantiles" },
+    variantes: [
+      "cumpleanosInfantil", "bautismo", "primeraComunion", "babyShower",
+      "otros",
+    ],
+  },
 
   // ── Espectáculos (sección 5) ──
   {
@@ -388,7 +422,8 @@ export const EVENTOS: EventoTipo[] = [
       modo: "porcentual",
       porcentaje: 0.06,
       minCon: { tipo: "fijoSGP", sgp: 1_176_000 },
-      sin: { tipo: "porPersona", personaSGP: 2_744, minSGP: 1_019_200 },
+      // SGP corrigió el valor por persona: Gs. 4.900 (1.960 SGP + 2.940 APA).
+      sin: { tipo: "porPersona", personaSGP: 1_960, minSGP: 1_019_200 },
       mensual: true,
     },
   },
@@ -396,13 +431,36 @@ export const EVENTOS: EventoTipo[] = [
   { id: "concierto", grupo: "espectaculos", calculo: { modo: "derivaEjecutivo" } },
 
   // ── Empresariales (sección 6) ──
-  { id: "empresarial", grupo: "empresariales", calculo: { modo: "empresarial" } },
+  {
+    id: "empresarial",
+    grupo: "empresariales",
+    calculo: { modo: "empresarial" },
+    variantes: [
+      "aniversarioEmp", "diaTrabajador", "conferencia", "convencion",
+      "cocktail", "lanzamiento", "inauguracion", "cena", "almuerzo",
+      "taller", "workshop", "charla", "otros",
+    ],
+  },
 
   // ── Estudiantiles (sección 7) ──
-  { id: "estudiantil", grupo: "estudiantiles", calculo: { modo: "estudiantil" } },
+  {
+    id: "estudiantil",
+    grupo: "estudiantiles",
+    calculo: { modo: "estudiantil" },
+    variantes: [
+      "graduacion", "bienvenida", "exposicion", "feria", "sanJuan",
+      "diaJuventud", "diaFamilia", "festival", "playback", "intercolegial",
+      "interescolar", "competenciaDeportiva", "otros",
+    ],
+  },
 
   // ── Academias de danza (sección 8) ──
-  { id: "academiaDanza", grupo: "academias", calculo: { modo: "academia" } },
+  {
+    id: "academiaDanza",
+    grupo: "academias",
+    calculo: { modo: "academia" },
+    variantes: ["graduacionDanza", "clausura", "tesina", "festivalDanza", "otros"],
+  },
 
   // ── Circos y Teatros (secciones 9 y 10) ──
   { id: "circo", grupo: "circos", calculo: { modo: "circoTeatro", establecimiento: "circo" } },
@@ -421,6 +479,36 @@ export const EVENTO_GRUPOS: EventoGrupo[] = [
 
 export function eventosPorGrupo(grupo: EventoGrupo): EventoTipo[] {
   return EVENTOS.filter((e) => e.grupo === grupo);
+}
+
+/**
+ * Variantes que se liquidan siempre como evento bailable, aunque el cliente
+ * declare lo contrario (SGP: en los playback estudiantiles corresponde la
+ * tarifa de baile independientemente de lo declarado).
+ */
+export const VARIANTES_SIEMPRE_BAILE = ["playback"];
+
+/** Una opción elegible en el paso 2: un tipo, o una variante de un tipo. */
+export interface OpcionEvento {
+  /** id del EventoTipo que define el cálculo */
+  tipo: string;
+  /** clave de la variante elegida, o null si el tipo no tiene variantes */
+  variante: string | null;
+  /** clave de traducción para el texto visible */
+  labelKey: string;
+}
+
+/** Opciones elegibles de un grupo, con las variantes ya desplegadas. */
+export function opcionesPorGrupo(grupo: EventoGrupo): OpcionEvento[] {
+  return eventosPorGrupo(grupo).flatMap((e): OpcionEvento[] =>
+    e.variantes
+      ? e.variantes.map((v) => ({
+          tipo: e.id,
+          variante: v,
+          labelKey: `variantes.${v}`,
+        }))
+      : [{ tipo: e.id, variante: null, labelKey: `tipos.${e.id}` }],
+  );
 }
 
 export function getEvento(id: string): EventoTipo | undefined {

@@ -18,8 +18,9 @@ import {
 } from "@heroicons/react/24/outline";
 import {
   EVENTO_GRUPOS,
-  eventosPorGrupo,
+  opcionesPorGrupo,
   getEvento,
+  VARIANTES_SIEMPRE_BAILE,
   type EventoGrupo,
   type Zona,
   type UsoCircoTeatro,
@@ -72,14 +73,13 @@ function camposDe(tipoId: string) {
         zona: c.minCon.tipo === "tablaEmp" || c.sin.tipo === "tablaEmp",
         personas: true,
         ingresos: true,
+        cortesias: true,
       };
     case "tablaFija":
       return { ...none, zona: true, personas: true };
     case "empresarial":
       return { ...none, zona: true, personas: true, baile: true };
     case "estudiantil":
-      return { ...none, zona: true, personas: true, baile: true, ingresos: true };
-    case "academia":
       return {
         ...none,
         zona: true,
@@ -88,8 +88,17 @@ function camposDe(tipoId: string) {
         ingresos: true,
         cortesias: true,
       };
+    case "academia":
+      // En academias de danza todo se liquida con baile: no se pregunta.
+      return {
+        ...none,
+        zona: true,
+        personas: true,
+        ingresos: true,
+        cortesias: true,
+      };
     case "deportivo":
-      return { ...none, personas: true, ingresos: true };
+      return { ...none, personas: true, ingresos: true, cortesias: true };
     case "circoTeatro":
       return { ...none, circo: true };
     default:
@@ -115,6 +124,7 @@ export default function EventosCalculator({
   const [paso, setPaso] = useState<1 | 2 | 3>(1);
   const [grupo, setGrupo] = useState<EventoGrupo | null>(null);
   const [tipo, setTipo] = useState<string>("");
+  const [variante, setVariante] = useState<string | null>(null);
   const [otroTipo, setOtroTipo] = useState("");
   const [zona, setZona] = useState<Zona>("capital");
   const [personas, setPersonas] = useState(0);
@@ -134,9 +144,22 @@ export default function EventosCalculator({
     evento?.calculo.modo === "circoTeatro" &&
     evento.calculo.establecimiento === "circo";
   const usosDisponibles = esCirco ? USOS_CIRCO : USOS_TEATRO;
+  const esDeportivo = evento?.calculo.modo === "deportivo";
   const derivaDirecto = evento?.calculo.modo === "derivaEjecutivo";
   const esMensual =
     evento?.calculo.modo === "porcentual" && evento.calculo.mensual === true;
+
+  // Nombre visible del evento: la variante elegida si existe, si no el tipo.
+  const nombreEvento = tipo
+    ? variante
+      ? t(`variantes.${variante}`)
+      : t(`tipos.${tipo}`)
+    : "";
+
+  // Hay variantes (playback) que se liquidan siempre como bailables: en esos
+  // casos no se pregunta, para no mostrar "sin baile" y cobrar como con baile.
+  const baileForzado = !!variante && VARIANTES_SIEMPRE_BAILE.includes(variante);
+  const baileEfectivo = baileForzado || conBaile;
 
   const stepLabels = [t("steps.tipo"), t("steps.datos")];
   const contenedorRef = useStepScroll(paso);
@@ -168,6 +191,7 @@ export default function EventosCalculator({
       setResultado(
         calcularEventos({
           tipo,
+          variante,
           zona,
           personas,
           conIngresos,
@@ -187,6 +211,7 @@ export default function EventosCalculator({
     setPaso(1);
     setGrupo(null);
     setTipo("");
+    setVariante(null);
     setOtroTipo("");
     setZona("capital");
     setPersonas(0);
@@ -213,8 +238,8 @@ export default function EventosCalculator({
       label: t("summary.tipo"),
       value: tipo
         ? otroTipo.trim()
-          ? `${t(`tipos.${tipo}`)} — ${otroTipo.trim()}`
-          : t(`tipos.${tipo}`)
+          ? `${nombreEvento} — ${otroTipo.trim()}`
+          : nombreEvento
         : t("summary.pending"),
     },
     ...(campos.zona
@@ -229,7 +254,17 @@ export default function EventosCalculator({
         ]
       : []),
     ...(campos.baile
-      ? [{ label: t("summary.baile"), value: paso >= 2 ? (conBaile ? t("si") : t("no")) : t("summary.pending") }]
+      ? [
+          {
+            label: t("summary.baile"),
+            value:
+              baileForzado || paso >= 2
+                ? baileEfectivo
+                  ? t("si")
+                  : t("no")
+                : t("summary.pending"),
+          },
+        ]
       : []),
     ...(campos.ingresos
       ? [
@@ -304,6 +339,7 @@ export default function EventosCalculator({
                           onClick={() => {
                             setGrupo(g);
                             setTipo("");
+                            setVariante(null);
                           }}
                           className={`group flex items-start gap-3 rounded-2xl border p-4 text-left transition-all ${
                             selected
@@ -342,20 +378,24 @@ export default function EventosCalculator({
                       02 — {t("steps.tipo")}
                     </p>
                     <div className="flex flex-wrap gap-2">
-                      {eventosPorGrupo(grupo).map((ev) => {
-                        const selected = tipo === ev.id;
+                      {opcionesPorGrupo(grupo).map((op) => {
+                        const selected =
+                          tipo === op.tipo && variante === op.variante;
                         return (
                           <button
-                            key={ev.id}
+                            key={`${op.tipo}-${op.variante ?? ""}`}
                             type="button"
-                            onClick={() => setTipo(ev.id)}
+                            onClick={() => {
+                              setTipo(op.tipo);
+                              setVariante(op.variante);
+                            }}
                             className={`rounded-xl border px-4 py-2.5 text-sm font-bold transition-all ${
                               selected
                                 ? "border-[#f0552f] bg-[#f0552f] text-white shadow-sm"
                                 : "border-[#212226]/8 bg-[#faf9f7] text-[#212226]/65 hover:border-[#f0552f]/35 hover:bg-white hover:text-[#212226]"
                             }`}
                           >
-                            {t(`tipos.${ev.id}`)}
+                            {t(op.labelKey)}
                           </button>
                         );
                       })}
@@ -404,7 +444,7 @@ export default function EventosCalculator({
                       />
                     )}
 
-                    {campos.baile && (
+                    {campos.baile && !baileForzado && (
                       <Selector
                         label={t("fields.baile")}
                         opciones={[
@@ -507,7 +547,11 @@ export default function EventosCalculator({
                         {conIngresos && (
                           <div className="max-w-md space-y-4">
                             <NumInput
-                              label={t("fields.precioEntrada")}
+                              label={
+                                esDeportivo
+                                  ? t("fields.precioInscripcion")
+                                  : t("fields.precioEntrada")
+                              }
                               value={precioEntrada}
                               onChange={setPrecioEntrada}
                               prefix="Gs."
@@ -546,7 +590,9 @@ export default function EventosCalculator({
                       </>
                     )}
 
-                    {campos.cortesias && (
+                    {/* Las cortesías solo aplican si hay imposición económica:
+                        en un evento gratuito todos entran sin abonar. */}
+                    {campos.cortesias && conIngresos && (
                       <div className="max-w-md">
                         <NumInput
                           label={t("fields.cortesias")}
@@ -584,13 +630,20 @@ export default function EventosCalculator({
                     etiqueta={esMensual ? t("tarifaMensualTemporada") : t("tarifaEstimada")}
                     subtitulo={
                       otroTipo.trim()
-                        ? `${t(`tipos.${tipo}`)} — ${otroTipo.trim()}`
-                        : t(`tipos.${tipo}`)
+                        ? `${nombreEvento} — ${otroTipo.trim()}`
+                        : nombreEvento
                     }
-                    // La primera fila del resumen es el tipo: ya va como subtítulo.
-                    datos={summaryRows.slice(1)}
+                    // La primera fila del resumen es el tipo: ya va como
+                    // subtítulo. Si mandó el mínimo se oculta el ingreso
+                    // declarado, porque el valor no se calculó sobre él.
+                    datos={summaryRows
+                      .slice(1)
+                      .filter(
+                        (r) =>
+                          !(resultado.aplicaMinimo && r.label === t("summary.ingresos")),
+                      )}
                     calculo={
-                      resultado.detalle.length > 1
+                      resultado.detalle.length > 0
                         ? resultado.detalle.map((d) => ({
                             label: t(`componentes.${d.clave}`),
                             value:
@@ -607,12 +660,29 @@ export default function EventosCalculator({
                         titulo: t("prontoPagoTitle"),
                         texto: t("prontoPagoDesc"),
                       },
-                      {
-                        tono: "contacto",
-                        titulo: t("descuentosTitle"),
-                        texto: t("descuentosDesc"),
-                        extra: TELEFONOS,
-                      },
+                      // El descuento proporcional por duración de la puesta en
+                      // escena no se calcula en la web.
+                      ...(usos.includes("musical")
+                        ? [
+                            {
+                              tono: "contacto" as const,
+                              titulo: t("avisos.titulo"),
+                              texto: t("avisos.musicalProporcional"),
+                              extra: TELEFONOS,
+                            },
+                          ]
+                        : []),
+                      // Los descuentos adicionales no aplican sobre tablas fijas.
+                      ...(resultado.esTablaFija
+                        ? []
+                        : [
+                            {
+                              tono: "contacto" as const,
+                              titulo: t("descuentosTitle"),
+                              texto: t("descuentosDesc"),
+                              extra: TELEFONOS,
+                            },
+                          ]),
                     ]}
                     disclaimer={t("disclaimer")}
                     onReset={handleReset}

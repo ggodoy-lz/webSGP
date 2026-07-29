@@ -17,7 +17,8 @@ import {
   DEPORTIVO_MINIMOS,
   DEPORTIVO_BASE_5000,
   DEPORTIVO_ADICIONAL_POR_1000,
-  DEPORTIVO_PORCENTAJE,
+  DEPORTIVO_APA_PORCENTAJE,
+  DEPORTIVO_SGP_PORCENTAJE,
   FAMILIARES_CAPITAL,
   FAMILIARES_INTERIOR,
   INFANTILES_CAPITAL,
@@ -29,6 +30,7 @@ import {
   CIRCO_USOS,
   TEATRO_USOS,
   UDA_SGP,
+  VARIANTES_SIEMPRE_BAILE,
   buscarRango,
   buscarRangoDoble,
   getEvento,
@@ -40,15 +42,17 @@ import {
 export interface EventosInput {
   /** id del tipo de evento (ver EVENTOS en eventos-config) */
   tipo: string;
+  /** variante elegida dentro del tipo (ej. "playback"), si corresponde */
+  variante?: string | null;
   zona: Zona;
   personas: number;
-  /** true si cobran entrada / cover */
+  /** true si cobran entrada */
   conIngresos: boolean;
   /** Precio de la entrada en Gs. */
   precioEntrada: number;
   /** true si el evento incluye baile (empresariales y estudiantiles) */
   conBaile: boolean;
-  /** Invitaciones de cortesía (Academias de Danza) */
+  /** Invitaciones de cortesía: se valoran aparte y se suman al final */
   cortesias: number;
   /** Aforo del local (circos y teatros) */
   aforo: number;
@@ -61,21 +65,23 @@ export interface EventosInput {
 export type EventosResultado =
   | {
       estado: "ok";
-      /** Tarifa total conjunta APA + SGP en Gs. */
+      /** Valor total conjunto APA + SGP de la licencia, en Gs. */
       total: number;
-      /** Filas de desglose para mostrar cómo se llegó al total */
+      /** Filas de desglose. Nunca incluye el valor mínimo (SGP pidió ocultarlo). */
       detalle: { clave: string; valor: number }[];
       /** true si el total salió de un mínimo y no del cálculo sobre ingresos */
       aplicaMinimo: boolean;
+      /** true si el valor sale de una tabla fija (no admite descuentos extra) */
+      esTablaFija: boolean;
     }
   | {
       estado: "ejecutivo";
       /** Motivo por el que se deriva a un ejecutivo comercial */
-      motivo: "superaTabla" | "concierto" | "musicalProporcional";
+      motivo: "superaTabla" | "concierto" | "combinacionInvalida";
     };
 
 const ejecutivo = (
-  motivo: "superaTabla" | "concierto" | "musicalProporcional",
+  motivo: "superaTabla" | "concierto" | "combinacionInvalida",
 ): EventosResultado => ({ estado: "ejecutivo", motivo });
 
 /** Tabla doble (empresarial / estudiantil) según zona. */
@@ -154,6 +160,20 @@ export function calcularEventos(input: EventosInput): EventosResultado {
   const ingresoTotal = Math.max(0, input.precioEntrada) * personas;
   const spec = evento.calculo;
 
+  // Las cortesías se valoran a la tarifa mínima de baile por persona y se
+  // suman DESPUÉS del cálculo: no forman parte de la base imponible.
+  const cortesias =
+    input.conIngresos && input.cortesias > 0
+      ? Math.round(input.cortesias * POR_PERSONA_BAILE)
+      : 0;
+  const filaCortesias = cortesias > 0 ? [{ clave: "cortesias", valor: cortesias }] : [];
+
+  // Playback estudiantil: se liquida como bailable aunque se declare sin baile.
+  const conBaile =
+    input.variante && VARIANTES_SIEMPRE_BAILE.includes(input.variante)
+      ? true
+      : input.conBaile;
+
   switch (spec.modo) {
     case "derivaEjecutivo":
       return ejecutivo("concierto");
@@ -169,15 +189,20 @@ export function calcularEventos(input: EventosInput): EventosResultado {
           if (t === null) return ejecutivo("superaTabla");
           minimo = t;
         }
-        const total = Math.max(porIngresos, minimo);
+        const aplicaMinimo = porIngresos < minimo;
+        const base = Math.max(porIngresos, minimo);
         return {
           estado: "ok",
-          total: Math.round(total),
-          aplicaMinimo: porIngresos < minimo,
-          detalle: [
-            { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
-            { clave: "minimo", valor: Math.round(minimo) },
-          ],
+          total: Math.round(base) + cortesias,
+          aplicaMinimo,
+          esTablaFija: false,
+          // Si manda el mínimo no se muestra el desglose: revelaría su valor.
+          detalle: aplicaMinimo
+            ? filaCortesias
+            : [
+                { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
+                ...filaCortesias,
+              ],
         };
       }
       // SIN ingresos
@@ -187,22 +212,20 @@ export function calcularEventos(input: EventosInput): EventosResultado {
         return {
           estado: "ok",
           total: Math.round(t),
-          aplicaMinimo: true,
-          detalle: [{ clave: "tablaFija", valor: Math.round(t) }],
+          aplicaMinimo: false,
+          esTablaFija: true,
+          detalle: [],
         };
       }
       // Por persona: SGP = max(personaSGP × p, minSGP); total = SGP + APA
       const sgpPorPersona = spec.sin.personaSGP * personas;
       const sgp = Math.max(sgpPorPersona, spec.sin.minSGP);
-      const total = sgp + apa;
       return {
         estado: "ok",
-        total: Math.round(total),
+        total: Math.round(sgp + apa),
         aplicaMinimo: sgpPorPersona < spec.sin.minSGP,
-        detalle: [
-          { clave: "porPersona", valor: Math.round(sgpPorPersona + apa) },
-          { clave: "minimo", valor: Math.round(spec.sin.minSGP + apa) },
-        ],
+        esTablaFija: false,
+        detalle: [],
       };
     }
 
@@ -216,98 +239,112 @@ export function calcularEventos(input: EventosInput): EventosResultado {
         estado: "ok",
         total: Math.round(t),
         aplicaMinimo: false,
-        detalle: [{ clave: "tablaFija", valor: Math.round(t) }],
+        esTablaFija: true,
+        detalle: [],
       };
     }
 
     case "empresarial": {
-      const t = tablaEmpresarial(input.zona, personas, input.conBaile);
+      const t = tablaEmpresarial(input.zona, personas, conBaile);
       if (t === null) return ejecutivo("superaTabla");
       return {
         estado: "ok",
         total: Math.round(t),
         aplicaMinimo: false,
-        detalle: [{ clave: "tablaFija", valor: Math.round(t) }],
+        esTablaFija: true,
+        detalle: [],
       };
     }
 
     case "estudiantil": {
       // Solo las fiestas bailables con imposición económica usan el 20%.
-      const tabla = tablaEstudiantil(input.zona, personas, input.conBaile);
+      const tabla = tablaEstudiantil(input.zona, personas, conBaile);
       if (tabla === null) return ejecutivo("superaTabla");
-      if (input.conIngresos && input.conBaile) {
+      if (input.conIngresos && conBaile) {
         const porIngresos = ingresoTotal * 0.2;
-        const total = Math.max(porIngresos, tabla);
+        const aplicaMinimo = porIngresos < tabla;
         return {
           estado: "ok",
-          total: Math.round(total),
-          aplicaMinimo: porIngresos < tabla,
-          detalle: [
-            { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
-            { clave: "minimo", valor: Math.round(tabla) },
-          ],
+          total: Math.round(Math.max(porIngresos, tabla)) + cortesias,
+          aplicaMinimo,
+          esTablaFija: false,
+          detalle: aplicaMinimo
+            ? filaCortesias
+            : [
+                { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
+                ...filaCortesias,
+              ],
         };
       }
       return {
         estado: "ok",
         total: Math.round(tabla),
         aplicaMinimo: false,
-        detalle: [{ clave: "tablaFija", valor: Math.round(tabla) }],
+        esTablaFija: true,
+        detalle: [],
       };
     }
 
     case "academia": {
-      const tabla = tablaEstudiantil(input.zona, personas, input.conBaile);
+      // En academias de danza todos los eventos se liquidan como bailables.
+      const tabla = tablaEstudiantil(input.zona, personas, true);
       if (tabla === null) return ejecutivo("superaTabla");
-      // Las cortesías se SUMAN después de aplicar el 10%: no integran la base.
-      const cortesias = Math.max(0, input.cortesias) * POR_PERSONA_BAILE;
       if (input.conIngresos) {
         const porIngresos = ingresoTotal * 0.1;
-        const base = Math.max(porIngresos, tabla);
-        const total = base + cortesias;
+        const aplicaMinimo = porIngresos < tabla;
         return {
           estado: "ok",
-          total: Math.round(total),
-          aplicaMinimo: porIngresos < tabla,
-          detalle: [
-            { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
-            { clave: "minimo", valor: Math.round(tabla) },
-            { clave: "cortesias", valor: Math.round(cortesias) },
-          ],
+          total: Math.round(Math.max(porIngresos, tabla)) + cortesias,
+          aplicaMinimo,
+          esTablaFija: false,
+          detalle: aplicaMinimo
+            ? filaCortesias
+            : [
+                { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
+                ...filaCortesias,
+              ],
         };
       }
       return {
         estado: "ok",
-        total: Math.round(tabla + cortesias),
+        total: Math.round(tabla),
         aplicaMinimo: false,
-        detalle: [
-          { clave: "tablaFija", valor: Math.round(tabla) },
-          { clave: "cortesias", valor: Math.round(cortesias) },
-        ],
+        esTablaFija: true,
+        detalle: [],
       };
     }
 
     case "deportivo": {
       const minSGP = minimoDeportivoSGP(personas);
-      const minimo = minSGP + apa;
       if (input.conIngresos) {
-        const porIngresos = ingresoTotal * DEPORTIVO_PORCENTAJE;
-        const total = Math.max(porIngresos, minimo);
+        // APA y SGP se calculan por separado: el 0,5% de SGP se compara con
+        // el mínimo de tabla y se aplica el mayor, luego se suma APA.
+        const apaCalc = ingresoTotal * DEPORTIVO_APA_PORCENTAJE;
+        const sgpPorc = ingresoTotal * DEPORTIVO_SGP_PORCENTAJE;
+        const aplicaMinimo = sgpPorc < minSGP;
+        const total = apaCalc + Math.max(sgpPorc, minSGP);
         return {
           estado: "ok",
-          total: Math.round(total),
-          aplicaMinimo: porIngresos < minimo,
-          detalle: [
-            { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
-            { clave: "minimo", valor: Math.round(minimo) },
-          ],
+          total: Math.round(total) + cortesias,
+          aplicaMinimo,
+          esTablaFija: false,
+          detalle: aplicaMinimo
+            ? filaCortesias
+            : [
+                {
+                  clave: "porcentajeIngresos",
+                  valor: Math.round(apaCalc + sgpPorc),
+                },
+                ...filaCortesias,
+              ],
         };
       }
       return {
         estado: "ok",
-        total: Math.round(minimo),
+        total: Math.round(minSGP + apa),
         aplicaMinimo: true,
-        detalle: [{ clave: "minimo", valor: Math.round(minimo) }],
+        esTablaFija: false,
+        detalle: [],
       };
     }
 
@@ -316,18 +353,18 @@ export function calcularEventos(input: EventosInput): EventosResultado {
       const aforo = Math.max(0, input.aforo);
       const funciones = Math.max(1, input.funciones);
 
-      // El descuento proporcional de Musicales no se calcula en la web.
-      if (input.usos.includes("musical")) {
-        return ejecutivo("musicalProporcional");
-      }
-      // Combinaciones válidas: A, B, C, A+B o A+C. Nunca B+C.
+      if (input.usos.length === 0) return ejecutivo("combinacionInvalida");
+      // Combinaciones válidas: un uso de intervalos (A o Teatro Musical) más,
+      // como mucho, un uso durante la puesta en escena (B o C).
       if (
         input.usos.includes("durante_corto") &&
         input.usos.includes("durante_largo")
       ) {
-        return ejecutivo("superaTabla");
+        return ejecutivo("combinacionInvalida");
       }
-      if (input.usos.length === 0) return ejecutivo("superaTabla");
+      if (input.usos.includes("antes") && input.usos.includes("musical")) {
+        return ejecutivo("combinacionInvalida");
+      }
 
       const detalle = input.usos.map((id) => {
         const uso = usos.find((u) => u.id === id)!;
@@ -338,7 +375,9 @@ export function calcularEventos(input: EventosInput): EventosResultado {
         estado: "ok",
         total: Math.round(porFuncion * funciones),
         aplicaMinimo: false,
-        detalle: [...detalle, { clave: "funciones", valor: funciones }],
+        esTablaFija: true,
+        detalle:
+          funciones > 1 ? [...detalle, { clave: "funciones", valor: funciones }] : detalle,
       };
     }
   }
