@@ -655,11 +655,17 @@ export default function EventosCalculator({
                         : undefined
                     }
                     avisos={[
-                      {
-                        tono: "beneficio",
-                        titulo: t("prontoPagoTitle"),
-                        texto: t("prontoPagoDesc"),
-                      },
+                      // Si se liquida por el mínimo no corresponde ningún
+                      // descuento, así que tampoco se ofrecen.
+                      ...(resultado.aplicaMinimo
+                        ? []
+                        : [
+                            {
+                              tono: "beneficio" as const,
+                              titulo: t("prontoPagoTitle"),
+                              texto: t("prontoPagoDesc"),
+                            },
+                          ]),
                       // El descuento proporcional por duración de la puesta en
                       // escena no se calcula en la web.
                       ...(usos.includes("musical")
@@ -672,8 +678,9 @@ export default function EventosCalculator({
                             },
                           ]
                         : []),
-                      // Los descuentos adicionales no aplican sobre tablas fijas.
-                      ...(resultado.esTablaFija
+                      // Los descuentos adicionales no aplican sobre tablas
+                      // fijas ni cuando se liquida por el mínimo.
+                      ...(resultado.esTablaFija || resultado.aplicaMinimo
                         ? []
                         : [
                             {

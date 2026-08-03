@@ -315,27 +315,37 @@ export function calcularEventos(input: EventosInput): EventosResultado {
     }
 
     case "deportivo": {
-      const minSGP = minimoDeportivoSGP(personas);
+      const cortesiasCant = input.conIngresos ? Math.max(0, input.cortesias) : 0;
+      // Las cortesías asisten al evento, así que cuentan para el tramo del
+      // mínimo de SGP, que se define por cantidad de asistentes.
+      const minSGP = minimoDeportivoSGP(personas + cortesiasCant);
+
       if (input.conIngresos) {
         // APA y SGP se calculan por separado: el 0,5% de SGP se compara con
         // el mínimo de tabla y se aplica el mayor, luego se suma APA.
         const apaCalc = ingresoTotal * DEPORTIVO_APA_PORCENTAJE;
+        // De la cortesía solo se suma su APA: la parte de SGP ya está
+        // comprendida en el mínimo por cantidad de asistentes, y cobrarla
+        // aparte contaría dos veces a la misma persona.
+        const apaCortesias = cortesiasCant * APA_POR_PERSONA;
         const sgpPorc = ingresoTotal * DEPORTIVO_SGP_PORCENTAJE;
         const aplicaMinimo = sgpPorc < minSGP;
-        const total = apaCalc + Math.max(sgpPorc, minSGP);
+        const total = apaCalc + apaCortesias + Math.max(sgpPorc, minSGP);
+        const filaCortesiasApa =
+          apaCortesias > 0 ? [{ clave: "cortesias", valor: apaCortesias }] : [];
         return {
           estado: "ok",
-          total: Math.round(total) + cortesias,
+          total: Math.round(total),
           aplicaMinimo,
           esTablaFija: false,
           detalle: aplicaMinimo
-            ? filaCortesias
+            ? filaCortesiasApa
             : [
                 {
                   clave: "porcentajeIngresos",
                   valor: Math.round(apaCalc + sgpPorc),
                 },
-                ...filaCortesias,
+                ...filaCortesiasApa,
               ],
         };
       }
