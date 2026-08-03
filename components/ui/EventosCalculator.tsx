@@ -99,6 +99,9 @@ function camposDe(tipoId: string) {
       };
     case "deportivo":
       return { ...none, personas: true, ingresos: true, cortesias: true };
+    case "parque":
+      // Tarifa mensual: la cantidad es de asistentes del mes, sin cortesías.
+      return { ...none, personas: true, ingresos: true };
     case "circoTeatro":
       return { ...none, circo: true };
     default:
@@ -147,7 +150,8 @@ export default function EventosCalculator({
   const esDeportivo = evento?.calculo.modo === "deportivo";
   const derivaDirecto = evento?.calculo.modo === "derivaEjecutivo";
   const esMensual =
-    evento?.calculo.modo === "porcentual" && evento.calculo.mensual === true;
+    evento?.calculo.modo === "parque" ||
+    (evento?.calculo.modo === "porcentual" && evento.calculo.mensual === true);
 
   // Nombre visible del evento: la variante elegida si existe, si no el tipo.
   const nombreEvento = tipo

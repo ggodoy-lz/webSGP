@@ -19,6 +19,11 @@ import {
   DEPORTIVO_ADICIONAL_POR_1000,
   DEPORTIVO_APA_PORCENTAJE,
   DEPORTIVO_SGP_PORCENTAJE,
+  PARQUE_APA_PORCENTAJE,
+  PARQUE_SGP_PORCENTAJE,
+  PARQUE_SGP_MIN_CON_INGRESOS,
+  PARQUE_SGP_MIN_SIN_INGRESOS,
+  PARQUE_SGP_POR_PERSONA,
   FAMILIARES_CAPITAL,
   FAMILIARES_INTERIOR,
   INFANTILES_CAPITAL,
@@ -353,6 +358,42 @@ export function calcularEventos(input: EventosInput): EventosResultado {
         estado: "ok",
         total: Math.round(minSGP + apa),
         aplicaMinimo: true,
+        esTablaFija: false,
+        detalle: [],
+      };
+    }
+
+    case "parque": {
+      // Tarifa mensual. APA y SGP se calculan por separado; el mínimo de SGP
+      // es mensual y depende de si hay obtención de ingresos.
+      if (input.conIngresos) {
+        const apaCalc = ingresoTotal * PARQUE_APA_PORCENTAJE;
+        const sgpPorc = ingresoTotal * PARQUE_SGP_PORCENTAJE;
+        const aplicaMinimo = sgpPorc < PARQUE_SGP_MIN_CON_INGRESOS;
+        const total =
+          apaCalc + Math.max(sgpPorc, PARQUE_SGP_MIN_CON_INGRESOS);
+        return {
+          estado: "ok",
+          total: Math.round(total),
+          aplicaMinimo,
+          esTablaFija: false,
+          detalle: aplicaMinimo
+            ? []
+            : [
+                {
+                  clave: "porcentajeIngresos",
+                  valor: Math.round(apaCalc + sgpPorc),
+                },
+              ],
+        };
+      }
+      // Sin ingresos: SGP por persona contra el mínimo mensual, más APA.
+      const sgpPorPersona = PARQUE_SGP_POR_PERSONA * personas;
+      const sgp = Math.max(sgpPorPersona, PARQUE_SGP_MIN_SIN_INGRESOS);
+      return {
+        estado: "ok",
+        total: Math.round(sgp + apa),
+        aplicaMinimo: sgpPorPersona < PARQUE_SGP_MIN_SIN_INGRESOS,
         esTablaFija: false,
         detalle: [],
       };

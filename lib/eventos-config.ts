@@ -148,6 +148,19 @@ export const DEPORTIVO_ADICIONAL_POR_1000 = 1_176_000; // 30 UDA, desde 5.001
 export const DEPORTIVO_APA_PORCENTAJE = 0.05;
 export const DEPORTIVO_SGP_PORCENTAJE = 0.005;
 
+// ── Parques de diversiones (5.11) — tarifa mensual ─────────────────────────
+// Misma estructura que deportivos: APA y SGP por separado. El 6% del documento
+// era la suma de ambos (5% APA + 1% SGP), pero cada parte tiene su propia
+// regla, así que se calculan aparte.
+export const PARQUE_APA_PORCENTAJE = 0.05;
+export const PARQUE_SGP_PORCENTAJE = 0.01;
+/** Mínimo SGP mensual con obtención de ingresos: 30 UDA */
+export const PARQUE_SGP_MIN_CON_INGRESOS = 1_176_000;
+/** Mínimo SGP mensual sin obtención de ingresos: 26 UDA */
+export const PARQUE_SGP_MIN_SIN_INGRESOS = 1_019_200;
+/** SGP por persona sin obtención de ingresos: 5% de UDA */
+export const PARQUE_SGP_POR_PERSONA = 1_960;
+
 // ── Circos (sección 9) y Teatros (sección 10) — por función y aforo ─────────
 // Cada "uso" tiene una tabla por aforo (hasta 200/400/600/800/1000) y un
 // adicional en UDA por cada N personas por encima de 1.000.
@@ -238,6 +251,7 @@ export type CalculoSpec =
   | { modo: "estudiantil" }
   | { modo: "academia" }
   | { modo: "deportivo" }
+  | { modo: "parque" }
   | { modo: "circoTeatro"; establecimiento: "circo" | "teatro" }
   | { modo: "derivaEjecutivo" }; // conciertos
 
@@ -415,18 +429,7 @@ export const EVENTOS: EventoTipo[] = [
       sin: { tipo: "porPersona", personaSGP: 1_960, minSGP: 784_000 },
     },
   },
-  {
-    id: "parqueDiversiones",
-    grupo: "espectaculos",
-    calculo: {
-      modo: "porcentual",
-      porcentaje: 0.06,
-      minCon: { tipo: "fijoSGP", sgp: 1_176_000 },
-      // SGP corrigió el valor por persona: Gs. 4.900 (1.960 SGP + 2.940 APA).
-      sin: { tipo: "porPersona", personaSGP: 1_960, minSGP: 1_019_200 },
-      mensual: true,
-    },
-  },
+  { id: "parqueDiversiones", grupo: "espectaculos", calculo: { modo: "parque" } },
   { id: "deportivo", grupo: "espectaculos", calculo: { modo: "deportivo" } },
   { id: "concierto", grupo: "espectaculos", calculo: { modo: "derivaEjecutivo" } },
 
