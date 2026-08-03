@@ -173,6 +173,11 @@ export function calcularEventos(input: EventosInput): EventosResultado {
       : 0;
   const filaCortesias = cortesias > 0 ? [{ clave: "cortesias", valor: cortesias }] : [];
 
+  // Las cortesías asisten al evento: cuentan para elegir el tramo de tabla o
+  // de mínimo, aunque no hayan abonado entrada.
+  const asistentes =
+    personas + (input.conIngresos ? Math.max(0, input.cortesias) : 0);
+
   // Playback estudiantil: se liquida como bailable aunque se declare sin baile.
   const conBaile =
     input.variante && VARIANTES_SIEMPRE_BAILE.includes(input.variante)
@@ -188,22 +193,25 @@ export function calcularEventos(input: EventosInput): EventosResultado {
         const porIngresos = ingresoTotal * spec.porcentaje;
         let minimo: number;
         if (spec.minCon.tipo === "fijoSGP") {
-          minimo = spec.minCon.sgp + apa;
+          // Las cortesías asisten, así que su APA integra el mínimo.
+          minimo = spec.minCon.sgp + asistentes * APA_POR_PERSONA;
         } else {
-          const t = tablaEmpresarial(input.zona, personas, spec.minCon.baile);
+          const t = tablaEmpresarial(input.zona, asistentes, spec.minCon.baile);
           if (t === null) return ejecutivo("superaTabla");
           minimo = t;
         }
-        const aplicaMinimo = porIngresos < minimo;
-        const base = Math.max(porIngresos, minimo);
+        // El mínimo es un piso para todo el evento: si manda, ya contempla a
+        // las cortesías y no se les cobra nada aparte.
+        const calculado = porIngresos + cortesias;
+        const aplicaMinimo = calculado < minimo;
         return {
           estado: "ok",
-          total: Math.round(base) + cortesias,
+          total: Math.round(Math.max(calculado, minimo)),
           aplicaMinimo,
           esTablaFija: false,
           // Si manda el mínimo no se muestra el desglose: revelaría su valor.
           detalle: aplicaMinimo
-            ? filaCortesias
+            ? []
             : [
                 { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
                 ...filaCortesias,
@@ -263,18 +271,19 @@ export function calcularEventos(input: EventosInput): EventosResultado {
 
     case "estudiantil": {
       // Solo las fiestas bailables con imposición económica usan el 20%.
-      const tabla = tablaEstudiantil(input.zona, personas, conBaile);
+      const tabla = tablaEstudiantil(input.zona, asistentes, conBaile);
       if (tabla === null) return ejecutivo("superaTabla");
       if (input.conIngresos && conBaile) {
         const porIngresos = ingresoTotal * 0.2;
-        const aplicaMinimo = porIngresos < tabla;
+        const calculado = porIngresos + cortesias;
+        const aplicaMinimo = calculado < tabla;
         return {
           estado: "ok",
-          total: Math.round(Math.max(porIngresos, tabla)) + cortesias,
+          total: Math.round(Math.max(calculado, tabla)),
           aplicaMinimo,
           esTablaFija: false,
           detalle: aplicaMinimo
-            ? filaCortesias
+            ? []
             : [
                 { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
                 ...filaCortesias,
@@ -292,18 +301,19 @@ export function calcularEventos(input: EventosInput): EventosResultado {
 
     case "academia": {
       // En academias de danza todos los eventos se liquidan como bailables.
-      const tabla = tablaEstudiantil(input.zona, personas, true);
+      const tabla = tablaEstudiantil(input.zona, asistentes, true);
       if (tabla === null) return ejecutivo("superaTabla");
       if (input.conIngresos) {
         const porIngresos = ingresoTotal * 0.1;
-        const aplicaMinimo = porIngresos < tabla;
+        const calculado = porIngresos + cortesias;
+        const aplicaMinimo = calculado < tabla;
         return {
           estado: "ok",
-          total: Math.round(Math.max(porIngresos, tabla)) + cortesias,
+          total: Math.round(Math.max(calculado, tabla)),
           aplicaMinimo,
           esTablaFija: false,
           detalle: aplicaMinimo
-            ? filaCortesias
+            ? []
             : [
                 { clave: "porcentajeIngresos", valor: Math.round(porIngresos) },
                 ...filaCortesias,
