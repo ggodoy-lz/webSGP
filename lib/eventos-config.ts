@@ -541,6 +541,32 @@ export function getEvento(id: string): EventoTipo | undefined {
   return EVENTOS.find((e) => e.id === id);
 }
 
+/**
+ * Sobre qué eje puede repetirse la carga de datos, y cómo se aplica el mínimo:
+ *
+ * - `sectores`: modalidades de un mismo evento (generales / niños / damas).
+ *   Se suman las bases y se aplica **un solo mínimo** al conjunto.
+ * - `fechas`: jornadas o meses distintos. Cada uno se liquida completo con
+ *   **su propio mínimo** y recién después se suman.
+ * - `null`: no admite repetición (una boda es una boda).
+ */
+export function ejeDeRepeticion(
+  modo: CalculoSpec["modo"],
+): "sectores" | "fechas" | null {
+  switch (modo) {
+    case "deportivo":
+    case "porcentual":
+    case "academia":
+      return "sectores";
+    case "apaSgp":
+    case "parque":
+    case "estudiantil":
+      return "fechas";
+    default:
+      return null;
+  }
+}
+
 // Busca la tarifa en una tabla simple por cantidad de personas.
 export function buscarRango(tabla: RangoTarifa[], personas: number): RangoTarifa | undefined {
   return tabla.find((r) => personas >= r.desde && personas <= r.hasta);

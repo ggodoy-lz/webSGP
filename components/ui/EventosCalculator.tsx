@@ -20,12 +20,18 @@ import {
   EVENTO_GRUPOS,
   opcionesPorGrupo,
   getEvento,
+  ejeDeRepeticion,
   VARIANTES_SIEMPRE_BAILE,
   type EventoGrupo,
   type Zona,
   type UsoCircoTeatro,
 } from "@/lib/eventos-config";
-import { calcularEventos, type EventosResultado } from "@/lib/eventos-engine";
+import {
+  calcularEventos,
+  type EventosResultado,
+  type FilaEvento,
+} from "@/lib/eventos-engine";
+import FilasEvento from "@/components/ui/FilasEvento";
 import ResultadoTarifa from "@/components/ui/ResultadoTarifa";
 import PanelResumen from "@/components/ui/PanelResumen";
 import IndicadorPasos from "@/components/ui/IndicadorPasos";
@@ -133,6 +139,9 @@ export default function EventosCalculator({
   const [otroTipo, setOtroTipo] = useState("");
   const [zona, setZona] = useState<Zona>("capital");
   const [personas, setPersonas] = useState(0);
+  const [filas, setFilas] = useState<FilaEvento[]>([
+    { etiqueta: "", personas: 0, precioEntrada: 0 },
+  ]);
   const [conBaile, setConBaile] = useState(false);
   const [conIngresos, setConIngresos] = useState(false);
   const [precioEntrada, setPrecioEntrada] = useState(0);
@@ -151,6 +160,18 @@ export default function EventosCalculator({
   const usosDisponibles = esCirco ? USOS_CIRCO : USOS_TEATRO;
   const esDeportivo = evento?.calculo.modo === "deportivo";
   const derivaDirecto = evento?.calculo.modo === "derivaEjecutivo";
+  // Eje sobre el que se pueden cargar varias filas (sectores o fechas).
+  const eje = evento ? ejeDeRepeticion(evento.calculo.modo) : null;
+  // Totales declarados: salen de las filas cuando el tipo las admite.
+  const personasTotal = eje
+    ? filas.reduce((a, f) => a + Math.max(0, f.personas), 0)
+    : personas;
+  const ingresoTotal = eje
+    ? filas.reduce(
+        (a, f) => a + Math.max(0, f.personas) * Math.max(0, f.precioEntrada),
+        0,
+      )
+    : personas * precioEntrada;
   const esMensual =
     evento?.calculo.modo === "parque" ||
     (evento?.calculo.modo === "porcentual" && evento.calculo.mensual === true);
@@ -182,10 +203,12 @@ export default function EventosCalculator({
         if (usos.length === 0) f.push(t("fields.usos"));
         return f;
       }
-      if (campos.personas && personas <= 0)
+      if (campos.personas && personasTotal <= 0)
         f.push(esMensual ? t("fields.personasMes") : t("fields.personas"));
-      if (campos.ingresos && conIngresos && precioEntrada <= 0)
-        f.push(t("fields.precioEntrada"));
+      if (campos.ingresos && conIngresos && ingresoTotal <= 0)
+        f.push(
+          esDeportivo ? t("fields.precioInscripcion") : t("fields.precioEntrada"),
+        );
       return f;
     }
     return [];
@@ -202,6 +225,7 @@ export default function EventosCalculator({
           personas,
           conIngresos,
           precioEntrada,
+          filas: eje ? filas : undefined,
           conBaile,
           cortesias,
           aforo,
@@ -221,6 +245,7 @@ export default function EventosCalculator({
     setOtroTipo("");
     setZona("capital");
     setPersonas(0);
+    setFilas([{ etiqueta: "", personas: 0, precioEntrada: 0 }]);
     setConBaile(false);
     setConIngresos(false);
     setPrecioEntrada(0);
@@ -255,9 +280,13 @@ export default function EventosCalculator({
       ? [
           {
             label: esMensual ? t("summary.personasMes") : t("summary.personas"),
-            value: personas > 0 ? fmtNum(personas) : t("summary.pending"),
+            value: personasTotal > 0 ? fmtNum(personasTotal) : t("summary.pending"),
           },
         ]
+      : []),
+    // Con varias filas conviene decir cuántas se declararon.
+    ...(eje && filas.length > 1
+      ? [{ label: t(`filas.${eje}.resumen`), value: fmtNum(filas.length) }]
       : []),
     ...(campos.baile
       ? [
@@ -278,8 +307,8 @@ export default function EventosCalculator({
             label: t("summary.ingresos"),
             value:
               paso >= 2
-                ? conIngresos && precioEntrada > 0
-                  ? fmt(precioEntrada * personas)
+                ? conIngresos && ingresoTotal > 0
+                  ? fmt(ingresoTotal)
                   : t("summary.sinIngresos")
                 : t("summary.pending"),
           },
@@ -462,8 +491,45 @@ export default function EventosCalculator({
                       />
                     )}
 
+                    {/* ¿Cobran entrada? va antes de la carga de datos porque
+                        define si en cada fila se pide el precio. */}
+                    {campos.ingresos && (
+                      <Selector
+                        label={t("fields.cobranEntrada")}
+                        opciones={[
+                          { id: "no", label: t("no"), desc: t("fields.sinEntradaDesc") },
+                          { id: "si", label: t("si"), desc: t("fields.conEntradaDesc") },
+                        ]}
+                        valor={conIngresos ? "si" : "no"}
+                        onChange={(v) => setConIngresos(v === "si")}
+                      />
+                    )}
+
+                    {campos.personas && eje && (
+                      <FilasEvento
+                        filas={filas}
+                        onChange={setFilas}
+                        conIngresos={conIngresos}
+                        textos={{
+                          titulo: t(`filas.${eje}.titulo`),
+                          ayuda: t(`filas.${eje}.ayuda`),
+                          etiqueta: t(`filas.${eje}.etiqueta`),
+                          etiquetaPlaceholder: t(`filas.${eje}.placeholder`),
+                          personas: esMensual
+                            ? t("fields.personasMes")
+                            : t("fields.personas"),
+                          precio: esDeportivo
+                            ? t("fields.precioInscripcion")
+                            : t("fields.precioEntrada"),
+                          agregar: t(`filas.${eje}.agregar`),
+                          quitar: t("filas.quitar"),
+                          subtotal: t("filas.subtotal"),
+                        }}
+                      />
+                    )}
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-2xl">
-                      {campos.personas && (
+                      {campos.personas && !eje && (
                         <NumInput
                           label={esMensual ? t("fields.personasMes") : t("fields.personas")}
                           value={personas}
@@ -543,18 +609,9 @@ export default function EventosCalculator({
                       </div>
                     )}
 
-                    {campos.ingresos && (
+                    {campos.ingresos && conIngresos && (
                       <>
-                        <Selector
-                          label={t("fields.cobranEntrada")}
-                          opciones={[
-                            { id: "no", label: t("no"), desc: t("fields.sinEntradaDesc") },
-                            { id: "si", label: t("si"), desc: t("fields.conEntradaDesc") },
-                          ]}
-                          valor={conIngresos ? "si" : "no"}
-                          onChange={(v) => setConIngresos(v === "si")}
-                        />
-                        {conIngresos && (
+                        {!eje && (
                           <div className="max-w-md space-y-4">
                             <NumInput
                               label={
@@ -574,6 +631,9 @@ export default function EventosCalculator({
                                 </strong>
                               </p>
                             )}
+                          </div>
+                        )}
+                        <div className="max-w-md space-y-4">
                             <button
                               type="button"
                               onClick={() => setIncluyeConsumo(!incluyeConsumo)}
@@ -595,8 +655,7 @@ export default function EventosCalculator({
                               </span>
                             </button>
                             {incluyeConsumo && <AvisoEjecutivo texto={t("avisos.consumo")} t={t} />}
-                          </div>
-                        )}
+                        </div>
                       </>
                     )}
 
@@ -654,8 +713,12 @@ export default function EventosCalculator({
                       )}
                     calculo={
                       resultado.detalle.length > 0
-                        ? resultado.detalle.map((d) => ({
-                            label: t(`componentes.${d.clave}`),
+                        ? resultado.detalle.map((d, i) => ({
+                            // Las filas traen su propia etiqueta; el resto usa
+                            // el nombre del componente de cálculo.
+                            label: d.clave.startsWith("fila-")
+                              ? d.etiqueta || `${t(`filas.${eje ?? "fechas"}.etiqueta`)} ${i + 1}`
+                              : t(`componentes.${d.clave}`),
                             value:
                               d.clave === "funciones"
                                 ? `× ${fmtNum(d.valor)}`

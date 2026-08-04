@@ -919,6 +919,26 @@
       "tesina": "Thesis performance",
       "festivalDanza": "Festival",
       "otros": "Other"
+    },
+    "filas": {
+      "quitar": "Remove",
+      "subtotal": "Declared total",
+      "sectores": {
+        "titulo": "Sections or ticket types",
+        "ayuda": "If the event has different prices per section or ticket type, enter each one separately. It is all settled as a single event.",
+        "etiqueta": "Section",
+        "placeholder": "E.g.: General admission",
+        "agregar": "Add section",
+        "resumen": "Sections"
+      },
+      "fechas": {
+        "titulo": "Event dates",
+        "ayuda": "Enter each date separately with its own attendance and price. Each one is settled on its own and then added up.",
+        "etiqueta": "Date",
+        "placeholder": "E.g.: Friday 7 August",
+        "agregar": "Add date",
+        "resumen": "Dates"
+      }
     }
   }
 }

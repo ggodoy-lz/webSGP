@@ -919,6 +919,26 @@
       "tesina": "Tesina",
       "festivalDanza": "Festival",
       "otros": "Otros"
+    },
+    "filas": {
+      "quitar": "Quitar",
+      "subtotal": "Total declarado",
+      "sectores": {
+        "titulo": "Sectores o modalidades",
+        "ayuda": "Si el evento tiene precios distintos por sector o modalidad, cargá cada uno por separado. Todo se liquida como un solo evento.",
+        "etiqueta": "Sector",
+        "placeholder": "Ej.: Generales",
+        "agregar": "Agregar sector",
+        "resumen": "Sectores"
+      },
+      "fechas": {
+        "titulo": "Fechas del evento",
+        "ayuda": "Cargá cada fecha por separado con su cantidad de personas y su precio. Cada una se liquida por su cuenta y se suman.",
+        "etiqueta": "Fecha",
+        "placeholder": "Ej.: Viernes 7 de agosto",
+        "agregar": "Agregar fecha",
+        "resumen": "Fechas"
+      }
     }
   }
 }

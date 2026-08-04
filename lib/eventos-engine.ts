@@ -39,10 +39,20 @@ import {
   buscarRango,
   buscarRangoDoble,
   getEvento,
+  ejeDeRepeticion,
   type Zona,
   type RangoTarifaDoble,
   type UsoCircoTeatro,
+  type CalculoSpec,
 } from "./eventos-config";
+
+/** Una fila declarada: un sector del evento o una fecha del período. */
+export interface FilaEvento {
+  /** Nombre libre del sector o de la fecha, para el desglose */
+  etiqueta?: string;
+  personas: number;
+  precioEntrada: number;
+}
 
 export interface EventosInput {
   /** id del tipo de evento (ver EVENTOS en eventos-config) */
@@ -55,6 +65,11 @@ export interface EventosInput {
   conIngresos: boolean;
   /** Precio de la entrada en Gs. */
   precioEntrada: number;
+  /**
+   * Sectores o fechas declarados. Si viene vacío se usa `personas` y
+   * `precioEntrada` como fila única.
+   */
+  filas?: FilaEvento[];
   /** true si el evento incluye baile (empresariales y estudiantiles) */
   conBaile: boolean;
   /** Invitaciones de cortesía: se valoran aparte y se suman al final */
@@ -73,7 +88,7 @@ export type EventosResultado =
       /** Valor total conjunto APA + SGP de la licencia, en Gs. */
       total: number;
       /** Filas de desglose. Nunca incluye el valor mínimo (SGP pidió ocultarlo). */
-      detalle: { clave: string; valor: number }[];
+      detalle: { clave: string; valor: number; etiqueta?: string }[];
       /** true si el total salió de un mínimo y no del cálculo sobre ingresos */
       aplicaMinimo: boolean;
       /** true si el valor sale de una tabla fija (no admite descuentos extra) */
@@ -156,27 +171,32 @@ export function tarifaUso(uso: UsoCircoTeatro, aforo: number): number {
   return uso.tramos[4] + bloques * uso.adicionalUda * UDA_SGP;
 }
 
-export function calcularEventos(input: EventosInput): EventosResultado {
-  const evento = getEvento(input.tipo);
-  if (!evento) return ejecutivo("superaTabla");
-
-  const personas = Math.max(0, input.personas);
+/**
+ * Calcula una unidad de liquidación: un evento completo, o una fecha suelta
+ * cuando el tipo se declara por fechas. Recibe los agregados ya resueltos para
+ * que quien la llame decida si suma las filas antes (sectores de un mismo
+ * evento, un solo mínimo) o después (fechas distintas, un mínimo cada una).
+ */
+function calcularUnidad(
+  spec: CalculoSpec,
+  input: EventosInput,
+  personas: number,
+  ingresoTotal: number,
+  cortesiasCant: number,
+): EventosResultado {
   const apa = personas * APA_POR_PERSONA;
-  const ingresoTotal = Math.max(0, input.precioEntrada) * personas;
-  const spec = evento.calculo;
 
   // Las cortesías se valoran a la tarifa mínima de baile por persona y se
   // suman DESPUÉS del cálculo: no forman parte de la base imponible.
   const cortesias =
-    input.conIngresos && input.cortesias > 0
-      ? Math.round(input.cortesias * POR_PERSONA_BAILE)
+    input.conIngresos && cortesiasCant > 0
+      ? Math.round(cortesiasCant * POR_PERSONA_BAILE)
       : 0;
   const filaCortesias = cortesias > 0 ? [{ clave: "cortesias", valor: cortesias }] : [];
 
   // Las cortesías asisten al evento: cuentan para elegir el tramo de tabla o
   // de mínimo, aunque no hayan abonado entrada.
-  const asistentes =
-    personas + (input.conIngresos ? Math.max(0, input.cortesias) : 0);
+  const asistentes = personas + (input.conIngresos ? cortesiasCant : 0);
 
   // Playback estudiantil: se liquida como bailable aunque se declare sin baile.
   const conBaile =
@@ -330,10 +350,9 @@ export function calcularEventos(input: EventosInput): EventosResultado {
     }
 
     case "deportivo": {
-      const cortesiasCant = input.conIngresos ? Math.max(0, input.cortesias) : 0;
       // Las cortesías asisten al evento, así que cuentan para el tramo del
       // mínimo de SGP, que se define por cantidad de asistentes.
-      const minSGP = minimoDeportivoSGP(personas + cortesiasCant);
+      const minSGP = minimoDeportivoSGP(asistentes);
 
       if (input.conIngresos) {
         // APA y SGP se calculan por separado: el 0,5% de SGP se compara con
@@ -477,4 +496,73 @@ export function calcularEventos(input: EventosInput): EventosResultado {
       };
     }
   }
+}
+
+/** Filas declaradas, o una sola armada con los valores sueltos del input. */
+function normalizarFilas(input: EventosInput): FilaEvento[] {
+  const filas = (input.filas ?? []).filter(
+    (f) => f.personas > 0 || f.precioEntrada > 0,
+  );
+  if (filas.length > 0) return filas;
+  return [{ personas: input.personas, precioEntrada: input.precioEntrada }];
+}
+
+export function calcularEventos(input: EventosInput): EventosResultado {
+  const evento = getEvento(input.tipo);
+  if (!evento) return ejecutivo("superaTabla");
+
+  const spec = evento.calculo;
+  const filas = normalizarFilas(input);
+  const cortesias = input.conIngresos ? Math.max(0, input.cortesias) : 0;
+  const eje = ejeDeRepeticion(spec.modo);
+
+  // Fechas distintas: cada una se liquida entera, con su propio mínimo, y
+  // recién después se suman. Es lo que pidió SGP (opción B).
+  if (eje === "fechas" && filas.length > 1) {
+    const parciales: { fila: FilaEvento; res: EventosResultado }[] = filas.map(
+      (fila, i) => ({
+        fila,
+        // Las cortesías pertenecen al evento, no a cada jornada: se cargan
+        // una sola vez, en la primera fecha.
+        res: calcularUnidad(
+          spec,
+          input,
+          Math.max(0, fila.personas),
+          Math.max(0, fila.precioEntrada) * Math.max(0, fila.personas),
+          i === 0 ? cortesias : 0,
+        ),
+      }),
+    );
+
+    const derivada = parciales.find((p) => p.res.estado === "ejecutivo");
+    if (derivada && derivada.res.estado === "ejecutivo") {
+      return ejecutivo(derivada.res.motivo);
+    }
+
+    let total = 0;
+    let aplicaMinimo = false;
+    let esTablaFija = true;
+    const detalle = parciales.map(({ fila, res }, i) => {
+      if (res.estado !== "ok") throw new Error("unreachable");
+      total += res.total;
+      aplicaMinimo = aplicaMinimo || res.aplicaMinimo;
+      esTablaFija = esTablaFija && res.esTablaFija;
+      return {
+        clave: `fila-${i}`,
+        valor: res.total,
+        etiqueta: fila.etiqueta?.trim() || undefined,
+      };
+    });
+
+    return { estado: "ok", total, detalle, aplicaMinimo, esTablaFija };
+  }
+
+  // Sectores de un mismo evento (o fila única): se suman las bases y se
+  // aplica un solo mínimo al conjunto.
+  const personas = filas.reduce((acc, f) => acc + Math.max(0, f.personas), 0);
+  const ingresoTotal = filas.reduce(
+    (acc, f) => acc + Math.max(0, f.personas) * Math.max(0, f.precioEntrada),
+    0,
+  );
+  return calcularUnidad(spec, input, personas, ingresoTotal, cortesias);
 }
