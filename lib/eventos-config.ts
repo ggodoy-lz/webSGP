@@ -252,6 +252,22 @@ export type CalculoSpec =
   | { modo: "academia" }
   | { modo: "deportivo" }
   | { modo: "parque" }
+  /**
+   * APA y SGP se calculan por separado sobre la misma base y se suman. El
+   * mínimo es solo de SGP: el APA se agrega encima, nunca queda absorbido.
+   * Es la estructura que usa SGP en sus planillas para patronales y similares.
+   */
+  | {
+      modo: "apaSgp";
+      apaPorc: number;
+      sgpPorc: number;
+      /** Mínimo de SGP cuando hay obtención de ingresos */
+      minSgpCon: number;
+      /** Mínimo de SGP cuando no hay obtención de ingresos */
+      minSgpSin: number;
+      /** SGP por persona cuando no hay obtención de ingresos */
+      sgpPorPersona: number;
+    }
   | { modo: "circoTeatro"; establecimiento: "circo" | "teatro" }
   | { modo: "derivaEjecutivo" }; // conciertos
 
@@ -410,23 +426,30 @@ export const EVENTOS: EventoTipo[] = [
     },
   },
   {
+    // Fiesta social / patronal: 10% APA + 10% SGP (el 20% del documento era
+    // la suma de ambos). Mínimos SGP: 26 UDA con ingresos, 20 UDA sin ellos.
     id: "fiestaPatronal",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.2,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 1_960, minSGP: 784_000 },
+      modo: "apaSgp",
+      apaPorc: 0.1,
+      sgpPorc: 0.1,
+      minSgpCon: 1_019_200,
+      minSgpSin: 784_000,
+      sgpPorPersona: 1_960,
     },
   },
   {
+    // Torín / jineteada: 5% APA + 10% SGP (el 15% era la suma).
     id: "jineteadas",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.15,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 1_960, minSGP: 784_000 },
+      modo: "apaSgp",
+      apaPorc: 0.05,
+      sgpPorc: 0.1,
+      minSgpCon: 1_019_200,
+      minSgpSin: 784_000,
+      sgpPorPersona: 1_960,
     },
   },
   { id: "parqueDiversiones", grupo: "espectaculos", calculo: { modo: "parque" } },

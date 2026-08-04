@@ -373,6 +373,39 @@ export function calcularEventos(input: EventosInput): EventosResultado {
       };
     }
 
+    case "apaSgp": {
+      // APA y SGP se calculan por separado sobre la misma base. El mínimo es
+      // solo de SGP, así que el APA siempre se suma encima.
+      if (input.conIngresos) {
+        const apaCalc = ingresoTotal * spec.apaPorc;
+        const sgpCalc = ingresoTotal * spec.sgpPorc;
+        const aplicaMinimo = sgpCalc < spec.minSgpCon;
+        return {
+          estado: "ok",
+          total: Math.round(apaCalc + Math.max(sgpCalc, spec.minSgpCon)),
+          aplicaMinimo,
+          esTablaFija: false,
+          detalle: aplicaMinimo
+            ? []
+            : [
+                {
+                  clave: "porcentajeIngresos",
+                  valor: Math.round(apaCalc + sgpCalc),
+                },
+              ],
+        };
+      }
+      // Sin ingresos: SGP por persona contra su mínimo, más el APA por cabeza.
+      const sgpPorPersona = spec.sgpPorPersona * personas;
+      return {
+        estado: "ok",
+        total: Math.round(Math.max(sgpPorPersona, spec.minSgpSin) + apa),
+        aplicaMinimo: sgpPorPersona < spec.minSgpSin,
+        esTablaFija: false,
+        detalle: [],
+      };
+    }
+
     case "parque": {
       // Tarifa mensual. APA y SGP se calculan por separado; el mínimo de SGP
       // es mensual y depende de si hay obtención de ingresos.
@@ -415,15 +448,17 @@ export function calcularEventos(input: EventosInput): EventosResultado {
       const funciones = Math.max(1, input.funciones);
 
       if (input.usos.length === 0) return ejecutivo("combinacionInvalida");
-      // Combinaciones válidas: un uso de intervalos (A o Teatro Musical) más,
-      // como mucho, un uso durante la puesta en escena (B o C).
+      // En Teatro Musical la música es indispensable, no accesoria: se aplica
+      // solo su tarifa y no se combina con ningún otro uso.
+      if (input.usos.includes("musical") && input.usos.length > 1) {
+        return ejecutivo("combinacionInvalida");
+      }
+      // En el resto, el uso en intervalos puede sumarse a uno de los usos
+      // durante la puesta en escena, pero nunca los dos a la vez.
       if (
         input.usos.includes("durante_corto") &&
         input.usos.includes("durante_largo")
       ) {
-        return ejecutivo("combinacionInvalida");
-      }
-      if (input.usos.includes("antes") && input.usos.includes("musical")) {
         return ejecutivo("combinacionInvalida");
       }
 

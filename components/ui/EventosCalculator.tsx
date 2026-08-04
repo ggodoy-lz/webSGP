@@ -102,6 +102,8 @@ function camposDe(tipoId: string) {
     case "parque":
       // Tarifa mensual: la cantidad es de asistentes del mes, sin cortesías.
       return { ...none, personas: true, ingresos: true };
+    case "apaSgp":
+      return { ...none, personas: true, ingresos: true, cortesias: true };
     case "circoTeatro":
       return { ...none, circo: true };
     default:
@@ -491,8 +493,12 @@ export default function EventosCalculator({
                         <div className="space-y-2.5">
                           {usosDisponibles.map((u) => {
                             const selected = usos.includes(u);
-                            // No se pueden combinar los dos usos "durante".
+                            // Teatro Musical no se combina con nada, y los dos
+                            // usos "durante" son excluyentes entre sí.
+                            const hayMusical = usos.includes("musical");
                             const bloqueado =
+                              (u === "musical" && usos.length > 0 && !selected) ||
+                              (u !== "musical" && hayMusical) ||
                               (u === "durante_corto" && usos.includes("durante_largo")) ||
                               (u === "durante_largo" && usos.includes("durante_corto"));
                             return (
