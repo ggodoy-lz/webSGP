@@ -253,9 +253,9 @@ export type CalculoSpec =
   | { modo: "deportivo" }
   | { modo: "parque" }
   /**
-   * APA y SGP se calculan por separado sobre la misma base y se suman. El
-   * mínimo es solo de SGP: el APA se agrega encima, nunca queda absorbido.
-   * Es la estructura que usa SGP en sus planillas para patronales y similares.
+   * APA y SGP se calculan por separado sobre la misma base y se suman. Cada
+   * uno tiene su propio piso: el de APA es siempre 2.940 por persona, el de
+   * SGP depende del tipo de evento. Es la estructura de las planillas de SGP.
    */
   | {
       modo: "apaSgp";
@@ -406,13 +406,16 @@ export const EVENTOS: EventoTipo[] = [
     },
   },
   {
+    // Rifas y bingos: 5% APA + 3% SGP (el 8% del documento era la suma).
     id: "rifasBingos",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.08,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 7_056, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.05,
+      sgpPorc: 0.03,
+      minSgpCon: 1_019_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 7_056,
     },
   },
   {

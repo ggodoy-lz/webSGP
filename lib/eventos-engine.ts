@@ -357,13 +357,16 @@ function calcularUnidad(
       if (input.conIngresos) {
         // APA y SGP se calculan por separado: el 0,5% de SGP se compara con
         // el mínimo de tabla y se aplica el mayor, luego se suma APA.
-        const apaCalc = ingresoTotal * DEPORTIVO_APA_PORCENTAJE;
+        // El APA nunca baja de 2.940 por persona.
+        const apaPorc = ingresoTotal * DEPORTIVO_APA_PORCENTAJE;
+        const apaCalc = Math.max(apaPorc, personas * APA_POR_PERSONA);
         // De la cortesía solo se suma su APA: la parte de SGP ya está
         // comprendida en el mínimo por cantidad de asistentes, y cobrarla
         // aparte contaría dos veces a la misma persona.
         const apaCortesias = cortesiasCant * APA_POR_PERSONA;
         const sgpPorc = ingresoTotal * DEPORTIVO_SGP_PORCENTAJE;
-        const aplicaMinimo = sgpPorc < minSGP;
+        const aplicaMinimo =
+          sgpPorc < minSGP || apaPorc < personas * APA_POR_PERSONA;
         const total = apaCalc + apaCortesias + Math.max(sgpPorc, minSGP);
         const filaCortesiasApa =
           apaCortesias > 0 ? [{ clave: "cortesias", valor: apaCortesias }] : [];
@@ -393,28 +396,33 @@ function calcularUnidad(
     }
 
     case "apaSgp": {
-      // APA y SGP se calculan por separado sobre la misma base. El mínimo es
-      // solo de SGP, así que el APA siempre se suma encima.
+      // APA y SGP se calculan por separado sobre la misma base, y cada uno
+      // tiene su propio piso: se aplica el mayor de cada lado y se suman.
       if (input.conIngresos) {
-        const apaCalc = ingresoTotal * spec.apaPorc;
-        const sgpCalc = ingresoTotal * spec.sgpPorc;
-        const aplicaMinimo = sgpCalc < spec.minSgpCon;
+        // Las cortesías se liquidan al valor por persona del propio evento:
+        // su parte de SGP más los 2.940 de APA.
+        const apaCortesias = cortesiasCant * APA_POR_PERSONA;
+        const sgpCortesias = cortesiasCant * spec.sgpPorPersona;
+
+        const apaCalc = Math.max(
+          ingresoTotal * spec.apaPorc,
+          personas * APA_POR_PERSONA,
+        );
+        const sgpCalc = Math.max(ingresoTotal * spec.sgpPorc, spec.minSgpCon);
+        const aplicaMinimo =
+          ingresoTotal * spec.sgpPorc < spec.minSgpCon ||
+          ingresoTotal * spec.apaPorc < personas * APA_POR_PERSONA;
+
+        const cortesiasGs = Math.round(apaCortesias + sgpCortesias);
         return {
           estado: "ok",
-          total: Math.round(apaCalc + Math.max(sgpCalc, spec.minSgpCon)),
+          total: Math.round(apaCalc + sgpCalc) + cortesiasGs,
           aplicaMinimo,
           esTablaFija: false,
-          detalle: aplicaMinimo
-            ? []
-            : [
-                {
-                  clave: "porcentajeIngresos",
-                  valor: Math.round(apaCalc + sgpCalc),
-                },
-              ],
+          detalle: cortesiasGs > 0 ? [{ clave: "cortesias", valor: cortesiasGs }] : [],
         };
       }
-      // Sin ingresos: SGP por persona contra su mínimo, más el APA por cabeza.
+      // Sin ingresos: cada lado contra su propio piso por persona.
       const sgpPorPersona = spec.sgpPorPersona * personas;
       return {
         estado: "ok",
@@ -429,9 +437,13 @@ function calcularUnidad(
       // Tarifa mensual. APA y SGP se calculan por separado; el mínimo de SGP
       // es mensual y depende de si hay obtención de ingresos.
       if (input.conIngresos) {
-        const apaCalc = ingresoTotal * PARQUE_APA_PORCENTAJE;
+        // El APA nunca baja de 2.940 por persona.
+        const apaPorc = ingresoTotal * PARQUE_APA_PORCENTAJE;
+        const apaCalc = Math.max(apaPorc, personas * APA_POR_PERSONA);
         const sgpPorc = ingresoTotal * PARQUE_SGP_PORCENTAJE;
-        const aplicaMinimo = sgpPorc < PARQUE_SGP_MIN_CON_INGRESOS;
+        const aplicaMinimo =
+          sgpPorc < PARQUE_SGP_MIN_CON_INGRESOS ||
+          apaPorc < personas * APA_POR_PERSONA;
         const total =
           apaCalc + Math.max(sgpPorc, PARQUE_SGP_MIN_CON_INGRESOS);
         return {
