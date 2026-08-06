@@ -97,11 +97,11 @@ export type EventosResultado =
   | {
       estado: "ejecutivo";
       /** Motivo por el que se deriva a un ejecutivo comercial */
-      motivo: "superaTabla" | "concierto" | "combinacionInvalida";
+      motivo: "superaTabla" | "concierto" | "combinacionInvalida" | "otros";
     };
 
 const ejecutivo = (
-  motivo: "superaTabla" | "concierto" | "combinacionInvalida",
+  motivo: "superaTabla" | "concierto" | "combinacionInvalida" | "otros",
 ): EventosResultado => ({ estado: "ejecutivo", motivo });
 
 /** Tabla doble (empresarial / estudiantil) según zona. */
@@ -206,7 +206,20 @@ function calcularUnidad(
 
   switch (spec.modo) {
     case "derivaEjecutivo":
-      return ejecutivo("concierto");
+      return ejecutivo(spec.motivo);
+
+    case "estudiantilFijo": {
+      // Solo zona y cantidad: siempre la tabla de uso secundario.
+      const tabla = tablaEstudiantil(input.zona, personas, false);
+      if (tabla === null) return ejecutivo("superaTabla");
+      return {
+        estado: "ok",
+        total: Math.round(tabla),
+        aplicaMinimo: false,
+        esTablaFija: true,
+        detalle: [],
+      };
+    }
 
     case "porcentual": {
       if (input.conIngresos) {

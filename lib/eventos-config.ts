@@ -253,6 +253,11 @@ export type CalculoSpec =
   | { modo: "deportivo" }
   | { modo: "parque" }
   /**
+   * Tabla estudiantil fija de uso secundario. Solo se declara zona y cantidad:
+   * ni el baile ni la imposición económica cambian el valor.
+   */
+  | { modo: "estudiantilFijo" }
+  /**
    * APA y SGP se calculan por separado sobre la misma base y se suman. Cada
    * uno tiene su propio piso: el de APA es siempre 2.940 por persona, el de
    * SGP depende del tipo de evento. Es la estructura de las planillas de SGP.
@@ -269,7 +274,11 @@ export type CalculoSpec =
       sgpPorPersona: number;
     }
   | { modo: "circoTeatro"; establecimiento: "circo" | "teatro" }
-  | { modo: "derivaEjecutivo" }; // conciertos
+  | {
+      // No se calcula en la web: lo resuelve un ejecutivo comercial.
+      modo: "derivaEjecutivo";
+      motivo: "concierto" | "otros";
+    };
 
 export interface EventoTipo {
   id: string;
@@ -299,7 +308,7 @@ export const EVENTOS: EventoTipo[] = [
     variantes: [
       "discoteca", "salsodromo", "pena", "oktoberfest", "primavera",
       "anoNuevo", "saintPatrick", "amistad", "exa", "retro", "electronica",
-      "sunset", "coffeeParty", "carnaval", "otros",
+      "sunset", "coffeeParty", "carnaval",
     ],
   },
   {
@@ -321,6 +330,13 @@ export const EVENTOS: EventoTipo[] = [
       minCon: { tipo: "fijoSGP", sgp: 1_528_800 },
       sin: { tipo: "porPersona", personaSGP: 14_112, minSGP: 1_528_800 },
     },
+  },
+  {
+    // Va último en la lista: si el baile no encaja en ninguno de los
+    // anteriores, la tarifa la determina un ejecutivo comercial.
+    id: "otrosBaile",
+    grupo: "bailes",
+    calculo: { modo: "derivaEjecutivo", motivo: "otros" },
   },
 
   // ── Celebraciones familiares (sección 4) ──
@@ -457,7 +473,7 @@ export const EVENTOS: EventoTipo[] = [
   },
   { id: "parqueDiversiones", grupo: "espectaculos", calculo: { modo: "parque" } },
   { id: "deportivo", grupo: "espectaculos", calculo: { modo: "deportivo" } },
-  { id: "concierto", grupo: "espectaculos", calculo: { modo: "derivaEjecutivo" } },
+  { id: "concierto", grupo: "espectaculos", calculo: { modo: "derivaEjecutivo", motivo: "concierto" } },
 
   // ── Empresariales (sección 6) ──
   {
@@ -473,14 +489,37 @@ export const EVENTOS: EventoTipo[] = [
 
   // ── Estudiantiles (sección 7) ──
   {
+    // Estos sí distinguen baile e imposición económica.
     id: "estudiantil",
     grupo: "estudiantiles",
     calculo: { modo: "estudiantil" },
     variantes: [
-      "graduacion", "bienvenida", "exposicion", "feria", "sanJuan",
-      "diaJuventud", "diaFamilia", "festival", "playback", "intercolegial",
-      "interescolar", "competenciaDeportiva", "otros",
+      "bienvenida", "exposicion", "feria", "sanJuan",
+      "diaJuventud", "diaFamilia", "festival", "playback",
     ],
+  },
+  {
+    // SGP indicó que estos solo piden zona y cantidad, y siempre liquidan
+    // por la tabla fija de uso secundario.
+    id: "estudiantilFijo",
+    grupo: "estudiantiles",
+    calculo: { modo: "estudiantilFijo" },
+    variantes: [
+      "graduacion", "intercolegial", "interescolar", "competenciaDeportiva",
+    ],
+  },
+  {
+    // La colación ya existe en celebraciones familiares; se agrega también
+    // acá conservando exactamente el mismo cálculo.
+    id: "colacionEstudiantil",
+    grupo: "estudiantiles",
+    calculo: { modo: "tablaFija", tabla: "familiares" },
+  },
+  {
+    // "Otros" no se puede clasificar: lo determina un ejecutivo comercial.
+    id: "otrosEstudiantil",
+    grupo: "estudiantiles",
+    calculo: { modo: "derivaEjecutivo", motivo: "otros" },
   },
 
   // ── Academias de danza (sección 8) ──
@@ -564,6 +603,7 @@ export function ejeDeRepeticion(
     case "apaSgp":
     case "parque":
     case "estudiantil":
+    case "estudiantilFijo":
       return "fechas";
     default:
       return null;

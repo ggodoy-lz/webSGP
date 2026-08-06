@@ -764,7 +764,11 @@
       "estudiantil": "Student event",
       "academiaDanza": "Dance academy event",
       "circo": "Circus",
-      "teatro": "Theatre / performance hall"
+      "teatro": "Theatre / performance hall",
+      "estudiantilFijo": "Student event",
+      "colacionEstudiantil": "Graduation dinner",
+      "otrosBaile": "Other",
+      "otrosEstudiantil": "Other"
     },
     "usos": {
       "antes": "Before, after or during intervals",
@@ -841,7 +845,8 @@
       "concierto": "For live concerts (shows where live music is the main performance) the declaration must be made with a Commercial Executive.",
       "musicalProporcional": "Musicals may qualify for a proportional discount based on the length of the performance. Check with a Commercial Executive to apply it.",
       "consumo": "When the ticket includes drinks or food, the tariff is determined with a Commercial Executive.",
-      "combinacionInvalida": "That combination of musical uses is not valid. You can declare interval use together with one use during the performance, but not both during-performance uses at once."
+      "combinacionInvalida": "That combination of musical uses is not valid. You can declare interval use together with one use during the performance, but not both during-performance uses at once.",
+      "otros": "For this type of event the tariff is determined by a Commercial Executive, who will verify the characteristics of the activity."
     },
     "desglose": "How it was calculated",
     "resultado": "Result",

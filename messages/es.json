@@ -764,7 +764,11 @@
       "estudiantil": "Evento estudiantil",
       "academiaDanza": "Evento de academia de danza",
       "circo": "Circo",
-      "teatro": "Teatro / sala de espectáculos"
+      "teatro": "Teatro / sala de espectáculos",
+      "estudiantilFijo": "Evento estudiantil",
+      "colacionEstudiantil": "Colación",
+      "otrosBaile": "Otros",
+      "otrosEstudiantil": "Otros"
     },
     "usos": {
       "antes": "Antes, después o en intervalos",
@@ -841,7 +845,8 @@
       "concierto": "Para conciertos (espectáculos con música en vivo como presentación principal) es necesario realizar la declaración con un Ejecutivo Comercial.",
       "musicalProporcional": "En los musicales puede corresponder un descuento proporcional según la duración de la puesta en escena. Consultá con un Ejecutivo Comercial para aplicarlo.",
       "consumo": "Cuando la entrada incluye consumición, la tarifa se determina con un Ejecutivo Comercial.",
-      "combinacionInvalida": "Esa combinación de usos musicales no es válida. Podés declarar el uso en intervalos junto con un uso durante la puesta en escena, pero no los dos usos durante la función a la vez."
+      "combinacionInvalida": "Esa combinación de usos musicales no es válida. Podés declarar el uso en intervalos junto con un uso durante la puesta en escena, pero no los dos usos durante la función a la vez.",
+      "otros": "Para este tipo de evento la tarifa la determina un Ejecutivo Comercial, que va a verificar las características de la actividad."
     },
     "desglose": "Cómo se calculó",
     "resultado": "Resultado",

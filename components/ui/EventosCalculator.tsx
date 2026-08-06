@@ -110,6 +110,9 @@ function camposDe(tipoId: string) {
       return { ...none, personas: true, ingresos: true };
     case "apaSgp":
       return { ...none, personas: true, ingresos: true, cortesias: true };
+    case "estudiantilFijo":
+      // Solo zona y cantidad: el baile y la entrada no cambian el valor.
+      return { ...none, zona: true, personas: true };
     case "circoTeatro":
       return { ...none, circo: true };
     default:
@@ -751,9 +754,12 @@ export default function EventosCalculator({
                             },
                           ]
                         : []),
-                      // Los descuentos adicionales no aplican sobre tablas
-                      // fijas ni cuando se liquida por el mínimo.
-                      ...(resultado.esTablaFija || resultado.aplicaMinimo
+                      // Los descuentos adicionales se calculan sobre una
+                      // tarifa basada en ingresos: no aplican en tablas fijas,
+                      // cuando manda el mínimo, ni sin imposición económica.
+                      ...(resultado.esTablaFija ||
+                      resultado.aplicaMinimo ||
+                      !conIngresos
                         ? []
                         : [
                             {
