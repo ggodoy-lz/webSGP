@@ -47,7 +47,7 @@ export default function RegaliasPage() {
         </div>
       </section>
 
-      {/* Convenios — IFPI/WIPO clickeables */}
+      {/* Convenios internacionales — IFPI */}
       <section className="bg-[#f2e2c4] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -59,23 +59,14 @@ export default function RegaliasPage() {
               </h2>
               <p className="text-[#212226]/60 leading-relaxed text-sm">{t("convenios.subtitle")}</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { n: "IFPI", c: "#f0552f", href: "https://www.ifpi.org/" },
-                { n: "WIPO", c: "#4666a6", href: "https://www.wipo.int/portal/es/index.html" },
-              ].map(({ n, c, href }) => (
-                <a
-                  key={n}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center py-16 hover:opacity-90 transition-opacity"
-                  style={{ backgroundColor: c }}
-                >
-                  <span className="font-display font-black text-white text-5xl">{n}</span>
-                </a>
-              ))}
-            </div>
+            <a
+              href="https://www.ifpi.org/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center bg-[#f0552f] py-16 transition-opacity hover:opacity-90"
+            >
+              <span className="font-display font-black text-white text-5xl">IFPI</span>
+            </a>
           </div>
         </div>
       </section>
