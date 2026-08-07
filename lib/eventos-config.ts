@@ -272,6 +272,13 @@ export type CalculoSpec =
       minSgpSin: number;
       /** SGP por persona cuando no hay obtención de ingresos */
       sgpPorPersona: number;
+      /**
+       * Si está presente, con ingresos el SGP se cobra por persona en vez de
+       * por porcentaje (shows bailables de promoción: 36% del UDA por cabeza).
+       */
+      sgpPorPersonaCon?: number;
+      /** Sin ingresos liquida por la tabla empresarial CON BAILE */
+      sinTablaEmpConBaile?: boolean;
     }
   | { modo: "circoTeatro"; establecimiento: "circo" | "teatro" }
   | {
@@ -300,10 +307,12 @@ export const EVENTOS: EventoTipo[] = [
     id: "baileComun",
     grupo: "bailes",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.2,
-      minCon: { tipo: "fijoSGP", sgp: 1_470_000 },
-      sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.1,
+      sgpPorc: 0.1,
+      minSgpCon: 1_470_000,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 9_408,
     },
     variantes: [
       "discoteca", "salsodromo", "pena", "oktoberfest", "primavera",
@@ -315,21 +324,29 @@ export const EVENTOS: EventoTipo[] = [
     id: "showBailablePromo",
     grupo: "bailes",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.2,
-      minCon: { tipo: "tablaEmp", baile: true },
-      sin: { tipo: "tablaEmp", baile: true },
+      modo: "apaSgp",
+      apaPorc: 0.1,
+      sgpPorc: 0,
+      minSgpCon: 1_411_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 14_112,
+      sgpPorPersonaCon: 14_112,
+      sinTablaEmpConBaile: true,
     },
   },
   {
+    // Almuerzos y cenas bailables, parrilladas y similares.
     id: "cenaBailable",
     grupo: "bailes",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.2,
-      minCon: { tipo: "fijoSGP", sgp: 1_528_800 },
-      sin: { tipo: "porPersona", personaSGP: 14_112, minSGP: 1_528_800 },
+      modo: "apaSgp",
+      apaPorc: 0.1,
+      sgpPorc: 0.1,
+      minSgpCon: 1_528_800,
+      minSgpSin: 1_528_800,
+      sgpPorPersona: 14_112,
     },
+    variantes: ["cenaShowBaile", "almuerzoBailable", "parrilladaBailable"],
   },
   {
     // Va último en la lista: si el baile no encaja en ninguno de los
@@ -347,7 +364,6 @@ export const EVENTOS: EventoTipo[] = [
     variantes: [
       "quinceAnos", "boda", "cumpleanosFamiliar", "aniversarioFamiliar",
       "colacion", "encuentro", "cocktailSinShow", "brunch", "afterOffice",
-      "otros",
     ],
   },
   {
@@ -356,8 +372,13 @@ export const EVENTOS: EventoTipo[] = [
     calculo: { modo: "tablaFija", tabla: "infantiles" },
     variantes: [
       "cumpleanosInfantil", "bautismo", "primeraComunion", "babyShower",
-      "otros",
     ],
+  },
+
+  {
+    id: "otrosFamiliar",
+    grupo: "familiares",
+    calculo: { modo: "derivaEjecutivo", motivo: "otros" },
   },
 
   // ── Espectáculos (sección 5) ──
@@ -365,10 +386,12 @@ export const EVENTOS: EventoTipo[] = [
     id: "recital",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.2,
-      minCon: { tipo: "fijoSGP", sgp: 1_411_200 },
-      sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.1,
+      sgpPorc: 0.1,
+      minSgpCon: 1_411_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 9_408,
     },
   },
   {
@@ -395,30 +418,36 @@ export const EVENTOS: EventoTipo[] = [
     id: "cenaShow",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.11,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.05,
+      sgpPorc: 0.06,
+      minSgpCon: 1_019_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 9_408,
     },
   },
   {
     id: "reinas",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.1,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.05,
+      sgpPorc: 0.05,
+      minSgpCon: 1_019_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 9_408,
     },
   },
   {
     id: "sobreHielo",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.09,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 9_408, minSGP: 1_019_200 },
+      modo: "apaSgp",
+      apaPorc: 0.05,
+      sgpPorc: 0.04,
+      minSgpCon: 1_019_200,
+      minSgpSin: 1_019_200,
+      sgpPorPersona: 9_408,
     },
   },
   {
@@ -438,10 +467,12 @@ export const EVENTOS: EventoTipo[] = [
     id: "feriasExpo",
     grupo: "espectaculos",
     calculo: {
-      modo: "porcentual",
-      porcentaje: 0.05,
-      minCon: { tipo: "fijoSGP", sgp: 1_019_200 },
-      sin: { tipo: "porPersona", personaSGP: 2_744, minSGP: 401_800 },
+      modo: "apaSgp",
+      apaPorc: 0.025,
+      sgpPorc: 0.025,
+      minSgpCon: 1_019_200,
+      minSgpSin: 401_800,
+      sgpPorPersona: 2_744,
     },
   },
   {
@@ -462,6 +493,7 @@ export const EVENTOS: EventoTipo[] = [
     // Torín / jineteada: 5% APA + 10% SGP (el 15% era la suma).
     id: "jineteadas",
     grupo: "espectaculos",
+    variantes: ["jineteada", "torin", "corridaToros", "sortijeada"],
     calculo: {
       modo: "apaSgp",
       apaPorc: 0.05,
@@ -472,7 +504,14 @@ export const EVENTOS: EventoTipo[] = [
     },
   },
   { id: "parqueDiversiones", grupo: "espectaculos", calculo: { modo: "parque" } },
-  { id: "deportivo", grupo: "espectaculos", calculo: { modo: "deportivo" } },
+  {
+    // Mitin, desfile/corso y conferencia comparten el cálculo deportivo.
+    // Esta conferencia es la de espectáculos, distinta de la empresarial.
+    id: "deportivo",
+    grupo: "espectaculos",
+    calculo: { modo: "deportivo" },
+    variantes: ["eventoDeportivo", "mitin", "desfileCorso", "conferenciaEsp"],
+  },
   { id: "concierto", grupo: "espectaculos", calculo: { modo: "derivaEjecutivo", motivo: "concierto" } },
 
   // ── Empresariales (sección 6) ──
@@ -483,8 +522,14 @@ export const EVENTOS: EventoTipo[] = [
     variantes: [
       "aniversarioEmp", "diaTrabajador", "conferencia", "convencion",
       "cocktail", "lanzamiento", "inauguracion", "cena", "almuerzo",
-      "taller", "workshop", "charla", "otros",
+      "taller", "workshop", "charla",
     ],
+  },
+
+  {
+    id: "otrosEmpresarial",
+    grupo: "empresariales",
+    calculo: { modo: "derivaEjecutivo", motivo: "otros" },
   },
 
   // ── Estudiantiles (sección 7) ──
@@ -527,12 +572,31 @@ export const EVENTOS: EventoTipo[] = [
     id: "academiaDanza",
     grupo: "academias",
     calculo: { modo: "academia" },
-    variantes: ["graduacionDanza", "clausura", "tesina", "festivalDanza", "otros"],
+    variantes: ["graduacionDanza", "clausura", "tesina", "festivalDanza"],
+  },
+
+  {
+    id: "otrosAcademia",
+    grupo: "academias",
+    calculo: { modo: "derivaEjecutivo", motivo: "otros" },
   },
 
   // ── Circos y Teatros (secciones 9 y 10) ──
-  { id: "circo", grupo: "circos", calculo: { modo: "circoTeatro", establecimiento: "circo" } },
-  { id: "teatro", grupo: "circos", calculo: { modo: "circoTeatro", establecimiento: "teatro" } },
+  {
+    id: "circo",
+    grupo: "circos",
+    calculo: { modo: "circoTeatro", establecimiento: "circo" },
+    variantes: ["circoShow", "malabaristasPayasos"],
+  },
+  {
+    id: "teatro",
+    grupo: "circos",
+    calculo: { modo: "circoTeatro", establecimiento: "teatro" },
+    variantes: [
+      "teatroSala", "cafeTeatro", "cafeConcert", "monologoStandUp",
+      "showMagia", "showImitadores",
+    ],
+  },
 ];
 
 export const EVENTO_GRUPOS: EventoGrupo[] = [

@@ -768,7 +768,10 @@
       "estudiantilFijo": "Evento estudiantil",
       "colacionEstudiantil": "Colación",
       "otrosBaile": "Otros",
-      "otrosEstudiantil": "Otros"
+      "otrosEstudiantil": "Otros",
+      "otrosFamiliar": "Otros",
+      "otrosEmpresarial": "Otros",
+      "otrosAcademia": "Otros"
     },
     "usos": {
       "antes": "Antes, después o en intervalos",
@@ -923,7 +926,26 @@
       "clausura": "Clausura",
       "tesina": "Tesina",
       "festivalDanza": "Festival",
-      "otros": "Otros"
+      "otros": "Otros",
+      "cenaShowBaile": "Cena show bailable",
+      "almuerzoBailable": "Almuerzo bailable",
+      "parrilladaBailable": "Parrillada bailable",
+      "jineteada": "Jineteada",
+      "torin": "Torín",
+      "corridaToros": "Corrida de toros",
+      "sortijeada": "Sortijeada",
+      "eventoDeportivo": "Evento deportivo",
+      "mitin": "Mitin",
+      "desfileCorso": "Desfile / Corso",
+      "conferenciaEsp": "Conferencia",
+      "teatroSala": "Teatro / sala de espectáculos",
+      "cafeTeatro": "Café-teatro",
+      "cafeConcert": "Café-concert",
+      "monologoStandUp": "Monólogo / Stand up",
+      "showMagia": "Show de magia",
+      "showImitadores": "Show de imitadores",
+      "circoShow": "Circo",
+      "malabaristasPayasos": "Malabaristas / Payasos"
     },
     "filas": {
       "quitar": "Quitar",

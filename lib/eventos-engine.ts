@@ -421,9 +421,14 @@ function calcularUnidad(
           ingresoTotal * spec.apaPorc,
           personas * APA_POR_PERSONA,
         );
-        const sgpCalc = Math.max(ingresoTotal * spec.sgpPorc, spec.minSgpCon);
+        // Algunos tipos cobran el SGP por cabeza en vez de por porcentaje.
+        const sgpBase =
+          spec.sgpPorPersonaCon !== undefined
+            ? spec.sgpPorPersonaCon * personas
+            : ingresoTotal * spec.sgpPorc;
+        const sgpCalc = Math.max(sgpBase, spec.minSgpCon);
         const aplicaMinimo =
-          ingresoTotal * spec.sgpPorc < spec.minSgpCon ||
+          sgpBase < spec.minSgpCon ||
           ingresoTotal * spec.apaPorc < personas * APA_POR_PERSONA;
 
         const cortesiasGs = Math.round(apaCortesias + sgpCortesias);
@@ -435,7 +440,19 @@ function calcularUnidad(
           detalle: cortesiasGs > 0 ? [{ clave: "cortesias", valor: cortesiasGs }] : [],
         };
       }
-      // Sin ingresos: cada lado contra su propio piso por persona.
+      // Sin ingresos, algunos tipos liquidan por la tabla empresarial.
+      if (spec.sinTablaEmpConBaile) {
+        const t = tablaEmpresarial(input.zona, asistentes, true);
+        if (t === null) return ejecutivo("superaTabla");
+        return {
+          estado: "ok",
+          total: Math.round(t),
+          aplicaMinimo: false,
+          esTablaFija: true,
+          detalle: [],
+        };
+      }
+      // El resto: cada lado contra su propio piso por persona.
       const sgpPorPersona = spec.sgpPorPersona * personas;
       return {
         estado: "ok",

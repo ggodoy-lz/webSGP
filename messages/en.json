@@ -768,7 +768,10 @@
       "estudiantilFijo": "Student event",
       "colacionEstudiantil": "Graduation dinner",
       "otrosBaile": "Other",
-      "otrosEstudiantil": "Other"
+      "otrosEstudiantil": "Other",
+      "otrosFamiliar": "Other",
+      "otrosEmpresarial": "Other",
+      "otrosAcademia": "Other"
     },
     "usos": {
       "antes": "Before, after or during intervals",
@@ -923,7 +926,26 @@
       "clausura": "Closing ceremony",
       "tesina": "Thesis performance",
       "festivalDanza": "Festival",
-      "otros": "Other"
+      "otros": "Other",
+      "cenaShowBaile": "Dinner show with dancing",
+      "almuerzoBailable": "Lunch with dancing",
+      "parrilladaBailable": "Barbecue with dancing",
+      "jineteada": "Rodeo",
+      "torin": "Bull-riding",
+      "corridaToros": "Bullfight",
+      "sortijeada": "Ring-tilting",
+      "eventoDeportivo": "Sports event",
+      "mitin": "Rally",
+      "desfileCorso": "Parade",
+      "conferenciaEsp": "Conference",
+      "teatroSala": "Theatre / performance hall",
+      "cafeTeatro": "Café-theatre",
+      "cafeConcert": "Café-concert",
+      "monologoStandUp": "Monologue / Stand up",
+      "showMagia": "Magic show",
+      "showImitadores": "Impersonator show",
+      "circoShow": "Circus",
+      "malabaristasPayasos": "Jugglers / Clowns"
     },
     "filas": {
       "quitar": "Remove",
