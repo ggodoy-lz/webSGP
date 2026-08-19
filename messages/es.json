@@ -320,7 +320,8 @@
     "readMore": "Leer más",
     "backToNews": "Volver a noticias",
     "publishedOn": "Publicado el",
-    "shareArticle": "Compartir artículo"
+    "shareArticle": "Compartir artículo",
+    "vacio": "Todavía no hay noticias publicadas."
   },
   "galardones": {
     "hero": {

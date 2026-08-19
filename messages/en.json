@@ -320,7 +320,8 @@
     "readMore": "Read more",
     "backToNews": "Back to news",
     "publishedOn": "Published on",
-    "shareArticle": "Share article"
+    "shareArticle": "Share article",
+    "vacio": "No news published yet."
   },
   "galardones": {
     "hero": {
