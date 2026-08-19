@@ -1,5 +1,10 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element --
+   Las piezas de premiación ya vienen optimizadas (WebP, 512 px, ~30 KB
+   cada una) y se muestran a tamaño fijo, así que next/image no aporta
+   nada y evitarlo ahorra el servicio de optimización de imágenes. */
+
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
@@ -17,6 +22,7 @@ export default function AwardsPreview() {
       external: true,
       bg: "#fe3fb6",
       accent: "#ffffff",
+      art: "/img/premios/arasunu.webp",
     },
     {
       title: t("streaming"),
@@ -26,6 +32,7 @@ export default function AwardsPreview() {
       external: false,
       bg: "#4666a6",
       accent: "#f2b33d",
+      art: "/img/premios/disco-oro.webp",
     },
   ];
 
@@ -52,7 +59,16 @@ export default function AwardsPreview() {
                 className="group relative min-h-[360px] overflow-hidden p-8 lg:p-10"
                 style={{ backgroundColor: panel.bg }}
               >
-                <div className="absolute -right-12 -bottom-12 h-48 w-48 rounded-full border border-white/20" />
+                {/* La pieza real reemplaza al círculo decorativo: se
+                    recorta contra el borde del panel y crece al pasar por
+                    encima, sin competir con el texto. */}
+                <img
+                  src={panel.art}
+                  alt=""
+                  aria-hidden="true"
+                  loading="lazy"
+                  className="pointer-events-none absolute -bottom-8 -right-6 h-56 w-56 object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 lg:h-64 lg:w-64"
+                />
                 <div className="relative z-10 flex min-h-[280px] flex-col justify-between">
                   <div>
                     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/65 mb-6">

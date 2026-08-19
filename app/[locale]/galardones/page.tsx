@@ -1,3 +1,7 @@
+/* eslint-disable @next/next/no-img-element --
+   Las piezas de premiación ya vienen optimizadas (WebP, 512 px, ~30 KB
+   cada una) y se muestran a tamaño fijo, así que next/image no aporta
+   nada y evitarlo ahorra el servicio de optimización de imágenes. */
 import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
@@ -8,39 +12,32 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t("hero.title"), description: t("hero.subtitle") };
 }
 
-function DiscoOro({ className = "w-8 h-8" }: { className?: string }) {
+/**
+ * Discos de premiación. Son los recursos reales provistos por SGP, servidos
+ * en WebP a 512 px: en pantalla se ven entre 20 y 40 px, así que alcanza de
+ * sobra para retina y pesan una fracción de los originales.
+ */
+function Disco({
+  nivel,
+  className = "w-8 h-8",
+}: {
+  nivel: "oro" | "platino" | "diamante";
+  className?: string;
+}) {
   return (
-    <svg className={className} viewBox="0 0 64 64" fill="none">
-      <circle cx="32" cy="32" r="30" fill="#f2b33d" stroke="#d4982a" strokeWidth="2"/>
-      <circle cx="32" cy="32" r="12" fill="#d4982a"/>
-      <circle cx="32" cy="32" r="4" fill="#f2b33d"/>
-      <circle cx="32" cy="32" r="28" fill="none" stroke="#d4982a" strokeWidth="0.5" opacity="0.5"/>
-    </svg>
+    <img
+      src={`/img/premios/disco-${nivel}.webp`}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      className={`${className} object-contain`}
+    />
   );
 }
 
-function DiscoPlatino({ className = "w-8 h-8" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 64 64" fill="none">
-      <circle cx="32" cy="32" r="30" fill="#d5cfc6" stroke="#b5ad9f" strokeWidth="2"/>
-      <circle cx="32" cy="32" r="12" fill="#b5ad9f"/>
-      <circle cx="32" cy="32" r="4" fill="#d5cfc6"/>
-      <circle cx="32" cy="32" r="28" fill="none" stroke="#b5ad9f" strokeWidth="0.5" opacity="0.5"/>
-    </svg>
-  );
-}
-
-function DiscoDiamante({ className = "w-8 h-8" }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 64 64" fill="none">
-      <circle cx="32" cy="32" r="30" fill="#4666a6" stroke="#374f82" strokeWidth="2"/>
-      <circle cx="32" cy="32" r="12" fill="#374f82"/>
-      <circle cx="32" cy="32" r="4" fill="#4666a6"/>
-      <circle cx="32" cy="32" r="28" fill="none" stroke="#374f82" strokeWidth="0.5" opacity="0.5"/>
-      <path d="M32 8 L38 20 L32 16 L26 20 Z" fill="#8ba3d0" opacity="0.6"/>
-    </svg>
-  );
-}
+const DiscoOro = (p: { className?: string }) => <Disco nivel="oro" {...p} />;
+const DiscoPlatino = (p: { className?: string }) => <Disco nivel="platino" {...p} />;
+const DiscoDiamante = (p: { className?: string }) => <Disco nivel="diamante" {...p} />;
 
 const artists = [
   { artista: "Beto Ayala", obra: "Alma Guaraní", nivel: "Diamante", streams: "1.2M", color: "#4666a6", Icon: DiscoDiamante },
