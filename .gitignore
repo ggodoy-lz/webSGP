@@ -45,3 +45,6 @@ next-env.d.ts
 
 # almacenamiento local del panel de admin (en produccion se usa Vercel Blob)
 /data
+
+# portadas de noticias que sube SGP (en produccion van a Vercel Blob)
+/public/img/noticias

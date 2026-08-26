@@ -16,9 +16,11 @@ import {
   LockClosedIcon,
   NewspaperIcon,
   PlusIcon,
+  PhotoIcon,
   TrashIcon,
   TrophyIcon,
 } from "@heroicons/react/24/outline";
+import { prepararImagen } from "@/lib/redimensionar";
 import {
   CATEGORIAS,
   colorCategoria,
@@ -40,6 +42,7 @@ function noticiaVacia(): NewsArticle {
     category: "SGP",
     estado: "borrador",
     fecha: hoy(),
+    imagen: "",
     titleEs: "",
     titleEn: "",
     excerptEs: "",
@@ -374,6 +377,7 @@ export default function AdminNoticiasPage() {
                   <Editor
                     noticia={editando}
                     locale={locale}
+                    password={password}
                     onCambio={(cambios) => actualizar(editando.id, cambios)}
                     onTitulo={(v) => cambiarTitulo(editando, v)}
                     onVolver={() => setEditandoId(null)}
@@ -473,6 +477,7 @@ export default function AdminNoticiasPage() {
 function Editor({
   noticia,
   locale,
+  password,
   onCambio,
   onTitulo,
   onVolver,
@@ -480,6 +485,7 @@ function Editor({
 }: {
   noticia: NewsArticle;
   locale: string;
+  password: string;
   onCambio: (cambios: Partial<NewsArticle>) => void;
   onTitulo: (valor: string) => void;
   onVolver: () => void;
@@ -589,6 +595,22 @@ function Editor({
         </div>
       </section>
 
+      {/* Portada */}
+      <section className="bg-[#feffff] border-l-4 border-[#212226]/20 p-6 lg:p-8 shadow-sm">
+        <div className="mb-5">
+          <h3 className="font-display font-black text-[#212226] text-lg">Imagen de portada</h3>
+          <p className="text-xs text-[#212226]/45 mt-1">
+            Se muestra en el carrusel de la portada del sitio y arriba de la nota. Sin imagen, la
+            tarjeta queda solo con texto. Se recomienda una foto horizontal.
+          </p>
+        </div>
+        <CargaDeImagen
+          url={noticia.imagen}
+          password={password}
+          onCambio={(imagen) => onCambio({ imagen })}
+        />
+      </section>
+
       {/* Español */}
       <section className="bg-[#feffff] border-l-4 border-[#4666a6] p-6 lg:p-8 shadow-sm space-y-5">
         <h3 className="font-display font-black text-[#212226] text-lg">Español</h3>
@@ -668,4 +690,128 @@ function Editor({
       </section>
     </div>
   );
+}
+
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Subida de la portada. La imagen se reduce y se convierte a WebP en el
+ * navegador antes de viajar, así lo que se sube pesa alrededor de 100 KB
+ * aunque la original venga de una cámara.
+ */
+function CargaDeImagen({
+  url,
+  password,
+  onCambio,
+}: {
+  url: string;
+  password: string;
+  onCambio: (url: string) => void;
+}) {
+  const [subiendo, setSubiendo] = useState(false);
+  const [error, setError] = useState("");
+
+  const seleccionar = async (archivo: File | undefined) => {
+    if (!archivo) return;
+    setError("");
+    setSubiendo(true);
+
+    try {
+      const { blob } = await prepararImagen(archivo);
+
+      const cuerpo = new FormData();
+      cuerpo.append("imagen", blob, "portada.webp");
+
+      const res = await fetch("/api/admin/noticias/imagen", {
+        method: "POST",
+        headers: { "x-admin-password": password },
+        body: cuerpo,
+      });
+
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(data.error ?? "No se pudo subir la imagen");
+        return;
+      }
+
+      // La anterior deja de usarse: se borra para no acumular archivos sueltos.
+      if (url) quitarDelServidor(url, password);
+      onCambio(data.url);
+    } catch {
+      setError("No se pudo procesar la imagen");
+    } finally {
+      setSubiendo(false);
+    }
+  };
+
+  const quitar = () => {
+    if (url) quitarDelServidor(url, password);
+    onCambio("");
+  };
+
+  return (
+    <div>
+      {url && (
+        // eslint-disable-next-line @next/next/no-img-element -- vista previa del panel
+        <img
+          src={url}
+          alt=""
+          className="w-full max-w-md aspect-video object-cover bg-[#212226]/5 mb-4"
+        />
+      )}
+
+      <div className="flex flex-wrap items-center gap-3">
+        <label
+          className={`inline-flex items-center gap-2 px-4 py-2.5 text-[10px] font-black uppercase tracking-wider transition-colors cursor-pointer ${
+            subiendo
+              ? "bg-[#212226]/10 text-[#212226]/40 cursor-wait"
+              : "bg-[#212226]/8 text-[#212226]/70 hover:bg-[#212226]/14"
+          }`}
+        >
+          <PhotoIcon className="w-4 h-4" />
+          {subiendo ? "Subiendo…" : url ? "Cambiar imagen" : "Subir imagen"}
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            disabled={subiendo}
+            onChange={(e) => {
+              seleccionar(e.target.files?.[0]);
+              // Permite volver a elegir el mismo archivo después de quitarlo.
+              e.target.value = "";
+            }}
+            className="hidden"
+          />
+        </label>
+
+        {url && !subiendo && (
+          <button
+            type="button"
+            onClick={quitar}
+            className="inline-flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider text-[#212226]/45 hover:text-[#f0552f] transition-colors"
+          >
+            <TrashIcon className="w-3.5 h-3.5" />
+            Quitar
+          </button>
+        )}
+      </div>
+
+      {error && (
+        <p className="flex items-center gap-2 text-xs text-[#f0552f] mt-3">
+          <ExclamationTriangleIcon className="w-4 h-4 shrink-0" />
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Borra el archivo del servidor. No se espera el resultado ni se corta el flujo
+ * si falla: que quede un archivo huérfano no debería impedir editar la nota.
+ */
+function quitarDelServidor(url: string, password: string) {
+  fetch(`/api/admin/noticias/imagen?url=${encodeURIComponent(url)}`, {
+    method: "DELETE",
+    headers: { "x-admin-password": password },
+  }).catch(() => {});
 }

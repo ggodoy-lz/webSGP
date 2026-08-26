@@ -13,6 +13,7 @@ import {
   usaBlob,
   type OpcionesLectura,
 } from "./almacen";
+import { esUrlDeImagenValida } from "./imagenes";
 import {
   CATEGORIAS,
   ESTADOS,
@@ -57,12 +58,17 @@ export function normalizarNoticia(entrada: unknown, indice: number): NewsArticle
   const estado = texto(n.estado, 20) as EstadoNoticia;
   const fecha = texto(n.fecha, 10);
 
+  // Solo se acepta una imagen que haya subido el propio panel: si no, el panel
+  // podría apuntar a un servidor externo y el sitio cargaría contenido ajeno.
+  const imagen = texto(n.imagen, 600);
+
   return {
     id: texto(n.id, 100) || slug,
     slug,
     category: CATEGORIAS.includes(categoria) ? categoria : "SGP",
     estado: ESTADOS.includes(estado) ? estado : "borrador",
     fecha: ES_FECHA_ISO.test(fecha) ? fecha : new Date().toISOString().slice(0, 10),
+    imagen: esUrlDeImagenValida(imagen) ? imagen : "",
     titleEs: titleEs || titleEn,
     titleEn: titleEn || titleEs,
     excerptEs: texto(n.excerptEs, 600),

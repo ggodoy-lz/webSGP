@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element --
+   Las portadas se suben ya reducidas y en WebP desde el panel. */
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -70,6 +72,15 @@ export default async function ArticlePage({ params }: Props) {
           <div className="w-10 h-[3px]" style={{backgroundColor:color}} />
           <div className="flex-1 h-px bg-[#212226]/10" />
         </div>
+
+        {a.imagen && (
+          <img
+            src={a.imagen}
+            alt=""
+            aria-hidden="true"
+            className="w-full aspect-video object-cover mb-10"
+          />
+        )}
 
         {/* Cuerpo */}
         {content

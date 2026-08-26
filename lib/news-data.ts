@@ -24,6 +24,11 @@ export type NewsArticle = {
   estado: EstadoNoticia;
   /** ISO `aaaa-mm-dd`. Se formatea por idioma al mostrarla. */
   fecha: string;
+  /**
+   * URL de la imagen de portada, o "" si no tiene. La usan las tarjetas del
+   * home y la portada de la nota.
+   */
+  imagen: string;
   titleEs: string;
   titleEn: string;
   excerptEs: string;
@@ -90,6 +95,7 @@ export const NOTICIAS_SEMILLA: NewsArticle[] = [
     category: "Streaming",
     estado: "borrador",
     fecha: "2026-03-12",
+    imagen: "",
     titleEs: "SGP distribuye récord histórico de regalías en el primer trimestre 2026",
     titleEn: "SGP distributes historic record royalties in Q1 2026",
     excerptEs:
@@ -107,6 +113,7 @@ export const NOTICIAS_SEMILLA: NewsArticle[] = [
     category: "SGP",
     estado: "borrador",
     fecha: "2026-02-05",
+    imagen: "",
     titleEs: "Paraguay celebra los primeros Propya Awards de la industria fonográfica",
     titleEn: "Paraguay celebrates the first Propya Awards of the phonographic industry",
     excerptEs:
@@ -124,6 +131,7 @@ export const NOTICIAS_SEMILLA: NewsArticle[] = [
     category: "Legal",
     estado: "borrador",
     fecha: "2026-01-20",
+    imagen: "",
     titleEs: "Nuevas tarifas de licencias para plataformas digitales entran en vigencia",
     titleEn: "New licence rates for digital platforms come into effect",
     excerptEs:
@@ -141,6 +149,7 @@ export const NOTICIAS_SEMILLA: NewsArticle[] = [
     category: "Industria",
     estado: "borrador",
     fecha: "2026-01-10",
+    imagen: "",
     titleEs: "SGP amplía su convenio con IFPI para mayor cobertura internacional",
     titleEn: "SGP expands its agreement with IFPI for greater international coverage",
     excerptEs:

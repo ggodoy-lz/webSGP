@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element --
+   Las portadas se suben ya reducidas y en WebP desde el panel. */
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -37,6 +39,16 @@ export default async function NoticiasPage({ params }: Props) {
             const color = colorCategoria(a.category);
             return (
               <Link href={`/${locale}/noticias/${a.slug}`} className="group block mb-12">
+                {a.imagen && (
+                  <div className="overflow-hidden">
+                    <img
+                      src={a.imagen}
+                      alt=""
+                      aria-hidden="true"
+                      className="w-full aspect-[21/9] object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                )}
                 <div className="bg-[#f2e2c4] p-10 lg:p-14 border-l-4 hover:border-l-8 transition-all duration-300" style={{borderColor:color}}>
                   <div className="flex items-center gap-2 mb-5">
                     <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 text-white" style={{backgroundColor:color}}>{a.category}</span>
@@ -67,6 +79,15 @@ export default async function NoticiasPage({ params }: Props) {
                       <span className="text-[10px] font-black uppercase tracking-widest text-[#212226]/40">{a.category}</span>
                       <span className="text-[10px] text-[#212226]/30">{formatearFecha(a.fecha, locale)}</span>
                     </div>
+                    {a.imagen && (
+                      <img
+                        src={a.imagen}
+                        alt=""
+                        aria-hidden="true"
+                        loading="lazy"
+                        className="w-28 aspect-video object-cover shrink-0 order-first md:order-none"
+                      />
+                    )}
                     <div>
                       <h3 className="font-display font-black text-[#212226] text-xl leading-tight group-hover:text-[#f0552f] transition-colors">
                         {title}

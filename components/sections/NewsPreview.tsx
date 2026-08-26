@@ -1,5 +1,9 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element --
+   Las portadas se suben ya reducidas y en WebP desde el panel, que es lo
+   que aportaría next/image. */
+
 import { motion } from "framer-motion";
 import { useTranslations, useLocale } from "next-intl";
 import Link from "next/link";
@@ -52,11 +56,30 @@ export default function NewsPreview({ articles }: { articles: NewsArticle[] }) {
                 href={`/${locale}/noticias/${article.slug}`}
                 className="group relative block min-h-[360px] p-7 overflow-hidden bg-[#212226] text-white"
               >
+                {article.imagen && (
+                  <img
+                    src={article.imagen}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
                 <div
-                  className="absolute inset-0 opacity-85 transition-opacity group-hover:opacity-100"
-                  style={{ background: `linear-gradient(135deg, ${colorCategoria(article.category)}, #212226 78%)` }}
+                  className={`absolute inset-0 transition-opacity ${
+                    article.imagen
+                      ? "opacity-90 group-hover:opacity-95"
+                      : "opacity-85 group-hover:opacity-100"
+                  }`}
+                  style={{
+                    background: article.imagen
+                      ? `linear-gradient(to top, #212226 12%, ${colorCategoria(article.category)}cc 55%, transparent 105%)`
+                      : `linear-gradient(135deg, ${colorCategoria(article.category)}, #212226 78%)`,
+                  }}
                 />
-                <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full border border-white/20" />
+                {!article.imagen && (
+                  <div className="absolute -right-10 -bottom-10 h-40 w-40 rounded-full border border-white/20" />
+                )}
                 <div className="relative z-10 flex min-h-[306px] flex-col justify-between">
                   <div>
                     <div className="flex items-center justify-between gap-4 mb-8">
