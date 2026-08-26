@@ -342,6 +342,23 @@
       "description": "The Propya Awards are the Paraguayan phonographic industry prizes, organised by SGP to recognise excellence in national music production.",
       "categorias": "Categories",
       "ediciones": "Previous editions"
+    },
+    "galeria": {
+      "titulo": "The night in pictures",
+      "cerrar": "Close",
+      "anterior": "Previous photo",
+      "siguiente": "Next photo",
+      "fotos": {
+        "auditorio": "Wide view of the venue during the Propya Awards ceremony",
+        "premiados": "Award winners on stage, under the motto El arte nacional late fuerte",
+        "artista-del-ano": "Presentation of the Artist of the Year award",
+        "arpa": "Live performance featuring the Paraguayan harp",
+        "trofeo": "Close-up of the Propya Awards trophy",
+        "performance": "Live performance during the ceremony",
+        "alfombra-roja": "Guests on the red carpet",
+        "retrato": "Portrait of an artist during the ceremony",
+        "publico": "The audience during the celebration"
+      }
     }
   },
   "contacto": {

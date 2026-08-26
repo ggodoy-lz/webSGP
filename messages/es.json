@@ -342,6 +342,23 @@
       "description": "Los Propya Awards son los premios de la industria fonográfica paraguaya, organizados por SGP para reconocer la excelencia en la producción musical nacional.",
       "categorias": "Categorías",
       "ediciones": "Ediciones anteriores"
+    },
+    "galeria": {
+      "titulo": "La noche en imágenes",
+      "cerrar": "Cerrar",
+      "anterior": "Foto anterior",
+      "siguiente": "Foto siguiente",
+      "fotos": {
+        "auditorio": "Vista general del auditorio durante la ceremonia de los Propya Awards",
+        "premiados": "Los premiados sobre el escenario, bajo el lema El arte nacional late fuerte",
+        "artista-del-ano": "Entrega del premio Artista del Año",
+        "arpa": "Interpretación en vivo con arpa paraguaya",
+        "trofeo": "Detalle del trofeo de los Propya Awards",
+        "performance": "Presentación en vivo durante la ceremonia",
+        "alfombra-roja": "Invitados en la alfombra roja",
+        "retrato": "Retrato de una artista durante la ceremonia",
+        "publico": "El público durante la celebración"
+      }
     }
   },
   "contacto": {

@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
+import GaleriaPropya from "@/components/ui/GaleriaPropya";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("galardones");
@@ -118,10 +119,13 @@ export default function GalardonesPage() {
                     <div className="font-display font-black text-[#fe3fb6] text-2xl">I Propya Awards</div>
                     <div className="text-[10px] text-white/40 uppercase tracking-wider mt-1">Asunción · 2025</div>
                   </div>
-                  <svg className="w-10 h-10 text-[#fe3fb6] group-hover:scale-110 transition-transform" viewBox="0 0 64 64" fill="none">
-                    <path d="M32 6L38 22H50L40 32L44 48L32 38L20 48L24 32L14 22H26Z" fill="currentColor"/>
-                    <path d="M32 52V56M24 54L22 58M40 54L42 58" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
+                  <img
+                    src="/img/premios/arasunu.webp"
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    className="w-12 h-12 object-contain group-hover:scale-110 transition-transform"
+                  />
                 </div>
               </a>
             </div>
@@ -137,6 +141,8 @@ export default function GalardonesPage() {
               </div>
             </div>
           </div>
+
+          <GaleriaPropya />
         </div>
       </section>
     </>
