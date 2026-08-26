@@ -60,24 +60,29 @@ export default function GalardonesPage() {
       {/* Streaming levels */}
       <section className="bg-[#feffff] py-20">
         <div className="max-w-screen-xl mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 mb-16">
-            <div className="lg:col-span-2">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-4">Reconocimientos</p>
-              <div className="w-10 h-[3px] bg-[#f0552f] mb-6" />
-              <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-4">{t("streaming.title")}</h2>
-              <p className="text-[#212226]/55 text-sm leading-relaxed max-w-xl">{t("streaming.description")}</p>
-            </div>
-            <div className="grid grid-cols-3 gap-2 lg:mt-0 mt-4 self-start">
-              {[{Icon:DiscoOro,lbl:t("streaming.niveles.oro"),c:"#f2b33d",r:"100K+"},
-                {Icon:DiscoPlatino,lbl:t("streaming.niveles.platino"),c:"#d5cfc6",r:"500K+"},
-                {Icon:DiscoDiamante,lbl:t("streaming.niveles.diamante"),c:"#4666a6",r:"1M+"}].map(lvl => (
-                <div key={lvl.lbl} className="text-center p-5 bg-[#f2e2c4] border-t-2" style={{borderColor:lvl.c}}>
-                  <div className="flex justify-center mb-2"><lvl.Icon className="w-10 h-10" /></div>
-                  <div className="font-display font-black text-[#212226] text-sm">{lvl.lbl}</div>
-                  <div className="text-[10px] text-[#212226]/40 mt-0.5">{lvl.r}</div>
+          <div className="mb-12 max-w-2xl">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#f0552f] mb-4">Reconocimientos</p>
+            <div className="w-10 h-[3px] bg-[#f0552f] mb-6" />
+            <h2 className="font-display font-black text-[#212226] text-3xl lg:text-4xl mb-4">{t("streaming.title")}</h2>
+            <p className="text-[#212226]/55 text-sm leading-relaxed">{t("streaming.description")}</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-16">
+            {[{Icon:DiscoOro,lbl:t("streaming.niveles.oro"),c:"#f2b33d",r:"100K+"},
+              {Icon:DiscoPlatino,lbl:t("streaming.niveles.platino"),c:"#8a847a",r:"500K+"},
+              {Icon:DiscoDiamante,lbl:t("streaming.niveles.diamante"),c:"#4666a6",r:"1M+"}].map(lvl => (
+              <div
+                key={lvl.lbl}
+                className="group text-center bg-[#f2e2c4] border-t-4 px-6 py-10 lg:py-12 transition-colors hover:bg-[#eeddb9]"
+                style={{borderColor:lvl.c}}
+              >
+                <lvl.Icon className="mx-auto w-28 h-28 lg:w-36 lg:h-36 mb-7 drop-shadow-lg transition-transform duration-500 group-hover:scale-105" />
+                <div className="font-display font-black text-[#212226] text-2xl lg:text-3xl">{lvl.lbl}</div>
+                <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#212226]/40 mt-2">
+                  {lvl.r} {t("streaming.reproducciones")}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
 
           {/* Artists table */}

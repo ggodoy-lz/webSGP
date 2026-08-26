@@ -339,7 +339,8 @@
         "oro": "Gold",
         "platino": "Platinum",
         "diamante": "Diamond"
-      }
+      },
+      "reproducciones": "streams"
     },
     "propya": {
       "title": "Propya Awards",
