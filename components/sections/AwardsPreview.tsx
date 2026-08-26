@@ -59,15 +59,21 @@ export default function AwardsPreview() {
                 className="group relative min-h-[360px] overflow-hidden p-8 lg:p-10"
                 style={{ backgroundColor: panel.bg }}
               >
-                {/* La pieza real reemplaza al círculo decorativo: se
-                    recorta contra el borde del panel y crece al pasar por
-                    encima, sin competir con el texto. */}
+                {/* La pieza va entera dentro del panel. Antes sangraba fuera y
+                    `overflow-hidden` la cortaba: el trofeo quedaba sin base y
+                    el disco con la etiqueta partida, que se leía como un error
+                    de maquetado y no como un recorte buscado.
+
+                    En desktop va centrada contra el borde derecho, donde hay
+                    lugar de sobra. En mobile el panel es angosto y ahí se
+                    cruzaría con el texto, así que baja a la esquina inferior
+                    derecha —el enlace queda a la izquierda— y achica. */}
                 <img
                   src={panel.art}
                   alt=""
                   aria-hidden="true"
                   loading="lazy"
-                  className="pointer-events-none absolute -bottom-8 -right-6 h-56 w-56 object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 lg:h-64 lg:w-64"
+                  className="pointer-events-none absolute bottom-5 right-4 h-28 w-28 object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-105 lg:bottom-auto lg:right-8 lg:top-1/2 lg:h-52 lg:w-52 lg:-translate-y-1/2"
                 />
                 <div className="relative z-10 flex min-h-[280px] flex-col justify-between">
                   <div>
@@ -77,7 +83,7 @@ export default function AwardsPreview() {
                     <h3 className="font-display font-black text-white text-4xl lg:text-5xl leading-none mb-5">
                       {panel.title}
                     </h3>
-                    <p className="text-sm text-white/70 leading-relaxed max-w-sm">
+                    <p className="text-sm text-white/70 leading-relaxed max-w-[15rem] lg:max-w-xs">
                       {panel.body}
                     </p>
                   </div>
