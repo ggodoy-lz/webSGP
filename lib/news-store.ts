@@ -1,17 +1,18 @@
 /**
- * Almacenamiento de las noticias. Solo para código de servidor.
+ * Almacenamiento de las noticias. Solo servidor.
  *
- * Producción usa Vercel Blob, porque el filesystem de Vercel es de solo lectura
- * y se descarta en cada deploy: lo que se guarde ahí se pierde. En desarrollo,
- * cuando no hay token de Blob, cae a `data/noticias.json` para poder trabajar
- * sin depender de la nube.
- *
- * Mientras no se haya guardado nada devuelve la semilla de `news-data.ts`.
+ * El acceso al almacenamiento vive en `almacen.ts`; acá está el esquema y la
+ * validación. Mientras no se haya guardado nada devuelve la semilla de
+ * `news-data.ts`.
  */
 
-import { list, put } from "@vercel/blob";
-import { promises as fs } from "fs";
-import path from "path";
+import {
+  describirAlmacenamiento as describir,
+  guardarJson,
+  leerJson,
+  usaBlob,
+  type OpcionesLectura,
+} from "./almacen";
 import {
   CATEGORIAS,
   ESTADOS,
@@ -21,17 +22,11 @@ import {
   type NewsArticle,
 } from "./news-data";
 
-const RUTA_BLOB = "noticias/noticias.json";
-const RUTA_FS = path.join(process.cwd(), "data", "noticias.json");
+const CLAVE = "noticias/noticias.json";
+const ARCHIVO_LOCAL = "noticias.json";
 
-export function usaBlob(): boolean {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN);
-}
-
-/** Dónde se está guardando ahora, para mostrarlo en el panel. */
-export function describirAlmacenamiento(): string {
-  return usaBlob() ? "Vercel Blob" : "data/noticias.json (solo local)";
-}
+export { usaBlob };
+export const describirAlmacenamiento = () => describir(ARCHIVO_LOCAL);
 
 /* -------------------------------------------------------------------------- */
 /* Validación                                                                  */
@@ -106,64 +101,18 @@ export function normalizarLista(entrada: unknown): NewsArticle[] {
 /* Lectura y escritura                                                         */
 /* -------------------------------------------------------------------------- */
 
-type OpcionesLectura = {
-  /**
-   * `true` saltea la caché. Lo usa el panel, para que quien acaba de guardar
-   * vea su propio cambio; las páginas públicas prefieren la versión cacheada.
-   */
-  fresco?: boolean;
-};
-
-async function leerDeBlob({ fresco }: OpcionesLectura): Promise<NewsArticle[] | null> {
-  const { blobs } = await list({ prefix: RUTA_BLOB, limit: 1 });
-  const blob = blobs.find((b) => b.pathname === RUTA_BLOB);
-  if (!blob) return null;
-
-  const res = await fetch(blob.url, fresco ? { cache: "no-store" } : { next: { revalidate: 60 } });
-  if (!res.ok) return null;
-
-  return normalizarLista(await res.json());
-}
-
-async function leerDeArchivo(): Promise<NewsArticle[] | null> {
-  try {
-    return normalizarLista(JSON.parse(await fs.readFile(RUTA_FS, "utf-8")));
-  } catch {
-    return null;
-  }
-}
-
 /**
  * Todas las noticias, publicadas y borradores. Las páginas públicas tienen que
  * filtrar con `soloPublicadas`.
  *
- * Si el almacenamiento falla devuelve la semilla en vez de propagar el error:
- * es preferible que la sección de noticias muestre algo desactualizado a que la
- * página entera se caiga.
+ * Si el almacenamiento falla devuelve la semilla: es preferible que la sección
+ * muestre algo desactualizado a que la página entera se caiga.
  */
 export async function leerNoticias(opciones: OpcionesLectura = {}): Promise<NewsArticle[]> {
-  try {
-    const guardadas = usaBlob() ? await leerDeBlob(opciones) : await leerDeArchivo();
-    if (guardadas) return guardadas;
-  } catch (error) {
-    console.error("[noticias] no se pudo leer el almacenamiento:", error);
-  }
-  return NOTICIAS_SEMILLA;
+  const guardadas = await leerJson(CLAVE, ARCHIVO_LOCAL, opciones);
+  return guardadas ? normalizarLista(guardadas) : NOTICIAS_SEMILLA;
 }
 
 export async function guardarNoticias(noticias: NewsArticle[]): Promise<void> {
-  const json = JSON.stringify(noticias, null, 2);
-
-  if (usaBlob()) {
-    await put(RUTA_BLOB, json, {
-      access: "public",
-      contentType: "application/json",
-      addRandomSuffix: false,
-      allowOverwrite: true,
-    });
-    return;
-  }
-
-  await fs.mkdir(path.dirname(RUTA_FS), { recursive: true });
-  await fs.writeFile(RUTA_FS, json, "utf-8");
+  await guardarJson(CLAVE, ARCHIVO_LOCAL, noticias);
 }

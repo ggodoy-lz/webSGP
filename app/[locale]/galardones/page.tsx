@@ -3,10 +3,16 @@
    cada una) y se muestran a tamaño fijo, así que next/image no aporta
    nada y evitarlo ahorra el servicio de optimización de imágenes. */
 import { getTranslations } from "next-intl/server";
-import { useTranslations } from "next-intl";
 import type { Metadata } from "next";
 import PageHero from "@/components/ui/PageHero";
 import GaleriaPropya from "@/components/ui/GaleriaPropya";
+import {
+  COLOR_NIVEL,
+  formatearStreams,
+  galardonesVisibles,
+  nivelDe,
+} from "@/lib/galardones-data";
+import { leerGalardones } from "@/lib/galardones-store";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("galardones");
@@ -40,18 +46,16 @@ const DiscoOro = (p: { className?: string }) => <Disco nivel="oro" {...p} />;
 const DiscoPlatino = (p: { className?: string }) => <Disco nivel="platino" {...p} />;
 const DiscoDiamante = (p: { className?: string }) => <Disco nivel="diamante" {...p} />;
 
-const artists = [
-  { artista: "Beto Ayala", obra: "Alma Guaraní", nivel: "Diamante", streams: "1.2M", color: "#4666a6", Icon: DiscoDiamante },
-  { artista: "Mara Flores", obra: "Corazón Paraguay", nivel: "Platino", streams: "650K", color: "#8a847a", Icon: DiscoPlatino },
-  { artista: "Grupo Cañaveral", obra: "Fiesta Paraguaya", nivel: "Platino", streams: "590K", color: "#8a847a", Icon: DiscoPlatino },
-  { artista: "Pedro Giménez", obra: "Madrugada", nivel: "Oro", streams: "210K", color: "#f2b33d", Icon: DiscoOro },
-  { artista: "Luna Nueva", obra: "Entre Ríos", nivel: "Oro", streams: "180K", color: "#f2b33d", Icon: DiscoOro },
-];
+const DISCO_POR_NIVEL = {
+  Oro: DiscoOro,
+  Platino: DiscoPlatino,
+  Diamante: DiscoDiamante,
+} as const;
 
-const propyaCats = ["Producción del Año","Artista Revelación","Álbum del Año","Canción del Año","Mejor Producción Folclórica","Mejor Producción Pop","Mejor Producción Urbana","Trayectoria"];
-
-export default function GalardonesPage() {
-  const t = useTranslations("galardones");
+export default async function GalardonesPage() {
+  const t = await getTranslations("galardones");
+  const { galardones, categoriasPropya } = await leerGalardones();
+  const premiados = galardonesVisibles(galardones);
 
   return (
     <>
@@ -85,22 +89,31 @@ export default function GalardonesPage() {
             ))}
           </div>
 
-          {/* Artists table */}
-          <div className="border-t-2 border-[#212226]">
-            <div className="grid grid-cols-4 bg-[#212226] text-white/40 text-[10px] font-black uppercase tracking-widest px-6 py-3">
-              <span>Artista</span><span>Obra</span><span>Nivel</span><span className="text-right">Streams</span>
-            </div>
-            {artists.map((a, i) => (
-              <div key={i} className="grid grid-cols-4 items-center px-6 py-5 border-b border-[#212226]/10 hover:bg-[#f2e2c4] transition-colors group">
-                <span className="font-display font-black text-[#212226] text-lg">{a.artista}</span>
-                <span className="text-[#212226]/55 text-sm">{a.obra}</span>
-                <span className="font-black text-sm flex items-center gap-2" style={{color:a.color}}>
-                  <a.Icon className="w-5 h-5" /> {a.nivel}
-                </span>
-                <span className="text-right text-[#212226]/40 text-sm font-mono">{a.streams}</span>
+          {/* Galardones entregados */}
+          {premiados.length > 0 && (
+            <div className="border-t-2 border-[#212226]">
+              <div className="grid grid-cols-4 bg-[#212226] text-white/40 text-[10px] font-black uppercase tracking-widest px-6 py-3">
+                <span>{t("tabla.artista")}</span>
+                <span>{t("tabla.obra")}</span>
+                <span>{t("tabla.nivel")}</span>
+                <span className="text-right">{t("tabla.streams")}</span>
               </div>
-            ))}
-          </div>
+              {premiados.map((g) => {
+                const nivel = nivelDe(g.streams)!;
+                const Disco = DISCO_POR_NIVEL[nivel];
+                return (
+                  <div key={g.id} className="grid grid-cols-4 items-center px-6 py-5 border-b border-[#212226]/10 hover:bg-[#f2e2c4] transition-colors">
+                    <span className="font-display font-black text-[#212226] text-lg">{g.artista}</span>
+                    <span className="text-[#212226]/55 text-sm">{g.obra}</span>
+                    <span className="font-black text-sm flex items-center gap-2" style={{color: COLOR_NIVEL[nivel]}}>
+                      <Disco className="w-5 h-5" /> {nivel}
+                    </span>
+                    <span className="text-right text-[#212226]/40 text-sm font-mono">{formatearStreams(g.streams)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
@@ -137,7 +150,7 @@ export default function GalardonesPage() {
             <div>
               <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-4">{t("propya.categorias")}</p>
               <div className="border-t border-white/20">
-                {propyaCats.map((cat, i) => (
+                {categoriasPropya.map((cat, i) => (
                   <div key={cat} className="flex items-center gap-5 py-4 border-b border-white/10 hover:pl-3 transition-all">
                     <span className="font-display font-black text-white/30 text-xs w-5 shrink-0">{String(i+1).padStart(2,"0")}</span>
                     <span className="text-white/80 text-sm">{cat}</span>

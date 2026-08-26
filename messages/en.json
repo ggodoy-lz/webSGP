@@ -364,6 +364,12 @@
         "retrato": "Portrait of an artist during the ceremony",
         "publico": "The audience during the celebration"
       }
+    },
+    "tabla": {
+      "artista": "Artist",
+      "obra": "Work",
+      "nivel": "Level",
+      "streams": "Streams"
     }
   },
   "contacto": {

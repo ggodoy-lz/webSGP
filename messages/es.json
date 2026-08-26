@@ -364,6 +364,12 @@
         "retrato": "Retrato de una artista durante la ceremonia",
         "publico": "El público durante la celebración"
       }
+    },
+    "tabla": {
+      "artista": "Artista",
+      "obra": "Obra",
+      "nivel": "Nivel",
+      "streams": "Streams"
     }
   },
   "contacto": {

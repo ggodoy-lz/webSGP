@@ -203,6 +203,12 @@ export default function AdminTarifarioPage() {
           </nav>
           <div className="p-4 border-t border-white/10 space-y-2">
             <Link
+              href={`/${locale}/admin/galardones`}
+              className="flex items-center justify-center gap-2 w-full py-2.5 text-[10px] font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-[#f0552f] hover:text-[#f0552f] transition-colors"
+            >
+              Panel de premios
+            </Link>
+            <Link
               href={`/${locale}/admin/noticias`}
               className="flex items-center justify-center gap-2 w-full py-2.5 text-[10px] font-black uppercase tracking-wider text-white/70 border border-white/20 hover:border-[#f0552f] hover:text-[#f0552f] transition-colors"
             >

@@ -17,6 +17,7 @@ import {
   NewspaperIcon,
   PlusIcon,
   TrashIcon,
+  TrophyIcon,
 } from "@heroicons/react/24/outline";
 import {
   CATEGORIAS,
@@ -269,6 +270,13 @@ export default function AdminNoticiasPage() {
                 {noticias.length}
               </span>
             </span>
+            <Link
+              href={`/${locale}/admin/galardones`}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs font-bold uppercase tracking-wider text-white/70 hover:bg-white/5 hover:text-white transition-all"
+            >
+              <TrophyIcon className="w-5 h-5 shrink-0 opacity-80" />
+              <span className="flex-1">Premios</span>
+            </Link>
             <Link
               href={`/${locale}/admin/tarifario`}
               className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-xs font-bold uppercase tracking-wider text-white/70 hover:bg-white/5 hover:text-white transition-all"
