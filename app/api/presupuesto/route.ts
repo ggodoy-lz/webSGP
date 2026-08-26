@@ -1,65 +1,45 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
+import { FALTAN_CAMPOS, responderFormulario } from "@/lib/formulario";
+import { campo, emailValido } from "@/lib/validacion";
+
+const guaranies = (valor: unknown): string => {
+  const n = Number(valor);
+  return Number.isFinite(n) && n > 0 ? `Gs. ${n.toLocaleString("es-PY")}` : "";
+};
 
 export async function POST(req: NextRequest) {
-  try {
-    const data = await req.json();
+  const datos = await req.json().catch(() => null);
+  if (!datos) return FALTAN_CAMPOS;
 
-    const {
-      tipoNegocio,
-      aforo,
-      superficie,
-      nombre,
-      empresa,
-      email,
-      telefono,
-      mensaje,
-      estimado,
-    } = data;
+  const tipoNegocio = campo(datos.tipoNegocio, 60);
+  const nombre = campo(datos.nombre, 120);
+  const email = campo(datos.email, 254);
+  const empresa = campo(datos.empresa, 160);
+  const telefono = campo(datos.telefono, 60);
+  const mensaje = campo(datos.mensaje, 5000);
+  const aforo = campo(datos.aforo, 20) || String(datos.aforo ?? "");
+  const superficie = campo(datos.superficie, 20) || String(datos.superficie ?? "");
 
-    // Validate required fields
-    if (!nombre || !email || !tipoNegocio) {
-      return NextResponse.json(
-        { error: "Faltan campos requeridos" },
-        { status: 400 }
-      );
-    }
+  if (!tipoNegocio || !nombre || !emailValido(email)) return FALTAN_CAMPOS;
 
-    // Log the request internally (in production, send email/CRM notification)
-    console.log("[SGP Presupuesto Request]", {
-      timestamp: new Date().toISOString(),
-      tipoNegocio,
-      aforo,
-      superficie,
-      nombre,
-      empresa,
-      email,
-      telefono,
-      mensaje,
-      estimado,
-    });
-
-    // TODO: Connect to email service (e.g., Resend, SendGrid) or CRM
-    // Example with fetch to an email service:
-    //
-    // await fetch('https://api.resend.com/emails', {
-    //   method: 'POST',
-    //   headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({
-    //     from: 'web@sgp.com.py',
-    //     to: 'comercial@sgp.com.py',
-    //     subject: `Nueva solicitud de presupuesto - ${nombre}`,
-    //     html: `<p>Tipo: ${tipoNegocio}</p><p>Estimado: ${estimado}</p>...`
-    //   })
-    // });
-
-    return NextResponse.json(
-      { success: true, message: "Presupuesto recibido" },
-      { status: 200 }
-    );
-  } catch {
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 }
-    );
-  }
+  return responderFormulario(
+    "presupuesto",
+    {
+      asunto: `Solicitud de presupuesto: ${empresa || nombre}`,
+      responderA: email,
+      datos: [
+        ["Tipo de negocio", tipoNegocio],
+        ["Aforo", aforo],
+        ["Superficie (m²)", superficie],
+        // Es la estimación que vio en pantalla, no un presupuesto emitido.
+        ["Estimación mostrada en la web", guaranies(datos.estimado)],
+        ["Nombre", nombre],
+        ["Empresa", empresa],
+        ["Email", email],
+        ["Teléfono", telefono],
+        ["Mensaje", mensaje],
+      ],
+    },
+    { tipoNegocio, aforo, superficie, nombre, empresa, email, telefono, mensaje, estimado: datos.estimado },
+  );
 }

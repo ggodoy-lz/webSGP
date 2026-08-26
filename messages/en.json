@@ -176,7 +176,7 @@
       "submit": "Request quote",
       "sending": "Sending...",
       "success": "Your request was sent! The SGP team will contact you soon.",
-      "error": "There was an error. Please try again.",
+      "error": "We could not send your message. Please write to sgp@sgp.com.py or try again in a few minutes.",
       "estimado": "Approximate monthly estimate"
     },
     "tarifarioBanner": {
@@ -272,7 +272,7 @@
       "submit": "Request ISRC",
       "sending": "Sending...",
       "success": "Request received! We'll contact you within 48 hours.",
-      "error": "There was an error. Please try again."
+      "error": "We could not send your message. Please write to sgp@sgp.com.py or try again in a few minutes."
     }
   },
   "sobreNosotros": {
@@ -385,7 +385,7 @@
       "submit": "Send message",
       "sending": "Sending...",
       "success": "Message sent! We'll get back to you shortly.",
-      "error": "There was an error. Please try again."
+      "error": "We could not send your message. Please write to sgp@sgp.com.py or try again in a few minutes."
     },
     "info": {
       "title": "Contact information",

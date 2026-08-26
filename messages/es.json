@@ -176,7 +176,7 @@
       "submit": "Solicitar presupuesto",
       "sending": "Enviando...",
       "success": "¡Tu solicitud fue enviada! El equipo de SGP se contactará contigo pronto.",
-      "error": "Hubo un error. Por favor intentá de nuevo.",
+      "error": "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py o probá de nuevo en unos minutos.",
       "estimado": "Estimado mensual aproximado"
     },
     "tarifarioBanner": {
@@ -272,7 +272,7 @@
       "submit": "Solicitar ISRC",
       "sending": "Enviando...",
       "success": "¡Solicitud recibida! Nos contactaremos contigo en las próximas 48 horas.",
-      "error": "Hubo un error. Por favor intentá de nuevo."
+      "error": "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py o probá de nuevo en unos minutos."
     }
   },
   "sobreNosotros": {
@@ -385,7 +385,7 @@
       "submit": "Enviar mensaje",
       "sending": "Enviando...",
       "success": "¡Mensaje enviado! Te responderemos a la brevedad.",
-      "error": "Hubo un error. Por favor intentá de nuevo."
+      "error": "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py o probá de nuevo en unos minutos."
     },
     "info": {
       "title": "Información de contacto",
