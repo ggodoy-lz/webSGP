@@ -190,7 +190,11 @@
       "subtitle": "Usá Pagopar para pagar de forma rápida y segura. Descuento especial por pago en línea.",
       "cta": "Pagar con Pagopar",
       "descuento": "10% de descuento pagando online",
-      "recurrente": "Activá pagos recurrentes y nunca olvides renovar"
+      "recurrente": "Activá pagos recurrentes y nunca olvides renovar",
+      "planMensual": "Licencia mensual",
+      "planAnual": "Licencia anual",
+      "montoSegunCalculo": "Según tu cálculo",
+      "verTarifario": "Calcular mi tarifa →"
     },
     "proximamente": "Próximamente",
     "calcularTarifa": "Calcular tarifa"

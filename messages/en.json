@@ -190,7 +190,11 @@
       "subtitle": "Use Pagopar to pay quickly and securely. Special discount for online payment.",
       "cta": "Pay with Pagopar",
       "descuento": "10% discount when paying online",
-      "recurrente": "Enable recurring payments and never miss a renewal"
+      "recurrente": "Enable recurring payments and never miss a renewal",
+      "planMensual": "Monthly licence",
+      "planAnual": "Annual licence",
+      "montoSegunCalculo": "Based on your calculation",
+      "verTarifario": "Calculate my rate →"
     },
     "proximamente": "Coming soon",
     "calcularTarifa": "Calculate tariff"

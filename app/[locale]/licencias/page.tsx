@@ -142,15 +142,21 @@ export default function LicenciasPage() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 <div className="border border-white/10 p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35 mb-2">Licencia mensual</p>
-                  <p className="font-display font-black text-[#f2e2c4] text-2xl">Gs. $$</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-white/35 mb-2">{t("pagopar.planMensual")}</p>
+                  <p className="font-display font-black text-[#f2e2c4] text-lg">{t("pagopar.montoSegunCalculo")}</p>
                 </div>
                 <div className="border border-[#f2b33d]/40 p-4">
-                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f2b33d] mb-2">Licencia anual</p>
-                  <p className="font-display font-black text-[#f2e2c4] text-2xl">Gs. $$$</p>
+                  <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f2b33d] mb-2">{t("pagopar.planAnual")}</p>
+                  <p className="font-display font-black text-[#f2e2c4] text-lg">{t("pagopar.montoSegunCalculo")}</p>
                   <p className="text-xs text-white/45 mt-1">Incluye 2 meses gratis</p>
                 </div>
               </div>
+              <Link
+                href={`/${locale}/tarifario`}
+                className="inline-block text-[10px] font-black uppercase tracking-[0.18em] text-[#f2b33d] hover:text-white transition-colors mb-8"
+              >
+                {t("pagopar.verTarifario")}
+              </Link>
               <a href="https://www.pagopar.com" target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 bg-[#f2e2c4] hover:bg-[#f0552f] text-[#212226] hover:text-white font-black uppercase text-xs tracking-widest px-8 py-4 transition-colors">
                 {t("pagopar.cta")} <ArrowTopRightOnSquareIcon className="w-4 h-4" />
