@@ -996,5 +996,15 @@
         "resumen": "Dates"
       }
     }
+  },
+  "noEncontrado": {
+    "titulo": "We could not find this page",
+    "texto": "The link may be out of date, or the page may have moved.",
+    "volver": "Go to homepage"
+  },
+  "errorInesperado": {
+    "titulo": "Something went wrong",
+    "texto": "We had a problem loading this page. You can try again, or write to us if it keeps happening.",
+    "reintentar": "Try again"
   }
 }

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { FALTAN_CAMPOS, responderFormulario } from "@/lib/formulario";
+import { excedeEnvios, FALTAN_CAMPOS, responderFormulario } from "@/lib/formulario";
 import { campo, emailValido } from "@/lib/validacion";
 
 const guaranies = (valor: unknown): string => {
@@ -8,6 +8,9 @@ const guaranies = (valor: unknown): string => {
 };
 
 export async function POST(req: NextRequest) {
+  const demasiados = excedeEnvios(req);
+  if (demasiados) return demasiados;
+
   const datos = await req.json().catch(() => null);
   if (!datos) return FALTAN_CAMPOS;
 

@@ -66,22 +66,6 @@ export default function AdminTarifarioPage() {
     }
   };
 
-  const handleSave = async () => {
-    setStatus("saving");
-    try {
-      const res = await fetch("/api/admin/tarifario", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-password": password,
-        },
-        body: JSON.stringify(config),
-      });
-      setStatus(res.ok ? "saved" : "error");
-    } catch {
-      setStatus("error");
-    }
-  };
 
   useEffect(() => {
     if (status === "saved") {
@@ -278,8 +262,7 @@ export default function AdminTarifarioPage() {
                     Motor de tarifas
                   </h2>
                   <p className="text-sm text-[#212226]/50 mt-2 max-w-lg">
-                    Valores que alimentan la calculadora pública. Los cambios se guardan en{" "}
-                    <code className="text-xs bg-[#212226]/5 px-1">data/tarifario.json</code> en el servidor.
+                    Vista de los valores que usa hoy la calculadora pública.
                   </p>
                 </div>
                 <div className="hidden sm:block text-right">
@@ -288,6 +271,23 @@ export default function AdminTarifarioPage() {
                   </p>
                   <p className="font-display font-black text-2xl text-[#f0552f]">
                     Gs. {config.uda.toLocaleString("es-PY")}
+                  </p>
+                </div>
+              </div>
+
+              {/* Este panel nunca llegó a conectarse: escribía un archivo que
+                  ninguna parte del sitio lee, y las calculadoras siguen tomando
+                  los valores de lib/tarifario-config.ts. Mostrar "Guardado" era
+                  peligroso: alguien podía cambiar la UDA, ver la confirmación y
+                  creer que las tarifas del sitio cambiaron. */}
+              <div className="flex gap-3 bg-[#f2b33d]/15 border-l-4 border-[#f2b33d] p-4 mb-8">
+                <ExclamationTriangleIcon className="w-5 h-5 text-[#a97b12] shrink-0 mt-0.5" />
+                <div className="text-sm text-[#212226]/75">
+                  <p className="font-bold text-[#212226] mb-1">Solo lectura</p>
+                  <p>
+                    Esta sección todavía no está conectada al motor de cálculo: modificar estos
+                    valores no cambia las tarifas del sitio. Para actualizar una tarifa hay que
+                    pedirlo al equipo de desarrollo.
                   </p>
                 </div>
               </div>
@@ -430,14 +430,9 @@ export default function AdminTarifarioPage() {
                     </section>
 
                     <div className="sticky bottom-0 left-0 right-0 flex flex-wrap items-center gap-4 py-4 bg-[#f2e2c4]/95 backdrop-blur-sm border-t border-[#212226]/10 -mx-6 px-6 lg:static lg:border-0 lg:bg-transparent lg:p-0">
-                      <button
-                        type="button"
-                        onClick={handleSave}
-                        disabled={status === "saving"}
-                        className="bg-[#212226] hover:bg-[#f0552f] disabled:opacity-50 text-white text-xs font-black uppercase tracking-[0.2em] px-8 py-4 transition-colors"
-                      >
-                        {status === "saving" ? "Guardando…" : "Guardar cambios"}
-                      </button>
+                      <span className="text-xs text-[#212226]/45">
+                        Los valores se actualizan desde el código, no desde acá.
+                      </span>
                       {status === "saved" && (
                         <span className="inline-flex items-center gap-2 text-sm font-medium text-emerald-700">
                           <CheckCircleIcon className="w-5 h-5" />

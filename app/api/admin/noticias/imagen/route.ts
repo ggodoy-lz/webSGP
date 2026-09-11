@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verificarAdmin } from "@/lib/admin-auth";
 import {
   MAXIMO_BYTES,
   TIPOS_ACEPTADOS,
@@ -7,17 +8,13 @@ import {
   guardarImagen,
 } from "@/lib/imagenes";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "sgp-admin-2026";
 
-function autorizado(req: NextRequest): boolean {
-  return req.headers.get("x-admin-password") === ADMIN_PASSWORD;
-}
 
-const NO_AUTORIZADO = NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
 /** Recibe la portada de una noticia, ya reducida por el navegador. */
 export async function POST(req: NextRequest) {
-  if (!autorizado(req)) return NO_AUTORIZADO;
+  const rechazo = verificarAdmin(req);
+  if (rechazo) return rechazo;
 
   let archivo: File | null = null;
   try {
@@ -50,7 +47,8 @@ export async function POST(req: NextRequest) {
 
 /** Borra una portada que se quitó de la noticia. */
 export async function DELETE(req: NextRequest) {
-  if (!autorizado(req)) return NO_AUTORIZADO;
+  const rechazo = verificarAdmin(req);
+  if (rechazo) return rechazo;
 
   const url = new URL(req.url).searchParams.get("url") ?? "";
   // Solo se borran las imágenes que generó el propio panel.

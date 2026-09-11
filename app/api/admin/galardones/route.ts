@@ -1,4 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
+import { verificarAdmin } from "@/lib/admin-auth";
+import {
+  excedeLimite,
+  identificar,
+  LIMITE_INGRESO,
+  respuestaLimite,
+} from "@/lib/limite-peticiones";
 import { revalidatePath } from "next/cache";
 import {
   describirAlmacenamiento,
@@ -8,17 +15,19 @@ import {
   usaBlob,
 } from "@/lib/galardones-store";
 
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "sgp-admin-2026";
 
-function autorizado(req: NextRequest): boolean {
-  return req.headers.get("x-admin-password") === ADMIN_PASSWORD;
-}
 
-const NO_AUTORIZADO = NextResponse.json({ error: "No autorizado" }, { status: 401 });
 
 /** Devuelve todo el contenido, incluidos los galardones sin publicar. */
 export async function GET(req: NextRequest) {
-  if (!autorizado(req)) return NO_AUTORIZADO;
+  // Es la puerta de entrada al panel: sin tope, la contraseña se puede
+  // probar a repetición hasta acertarla.
+  if (excedeLimite(`admin:${identificar(req)}`, LIMITE_INGRESO)) {
+    return respuestaLimite("Demasiados intentos. Probá de nuevo en unos minutos.");
+  }
+
+  const rechazo = verificarAdmin(req);
+  if (rechazo) return rechazo;
 
   return NextResponse.json({
     contenido: await leerGalardones({ fresco: true }),
@@ -32,7 +41,8 @@ export async function GET(req: NextRequest) {
  * que dos guardados simultáneos dejen la lista a medias.
  */
 export async function PUT(req: NextRequest) {
-  if (!autorizado(req)) return NO_AUTORIZADO;
+  const rechazo = verificarAdmin(req);
+  if (rechazo) return rechazo;
 
   let contenido;
   try {

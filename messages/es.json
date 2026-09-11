@@ -996,5 +996,15 @@
         "resumen": "Fechas"
       }
     }
+  },
+  "noEncontrado": {
+    "titulo": "No encontramos esta página",
+    "texto": "Puede que el enlace esté desactualizado o que la página se haya movido.",
+    "volver": "Ir al inicio"
+  },
+  "errorInesperado": {
+    "titulo": "Algo salió mal",
+    "texto": "Tuvimos un problema al cargar esta página. Podés reintentar o escribirnos si vuelve a pasar.",
+    "reintentar": "Reintentar"
   }
 }

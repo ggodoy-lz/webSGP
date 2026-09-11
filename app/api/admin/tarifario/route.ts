@@ -1,62 +1,44 @@
 import { NextRequest, NextResponse } from "next/server";
-import { promises as fs } from "fs";
-import path from "path";
+import { verificarAdmin } from "@/lib/admin-auth";
+import {
+  excedeLimite,
+  identificar,
+  LIMITE_INGRESO,
+  respuestaLimite,
+} from "@/lib/limite-peticiones";
+import {
+  CATEGORIA_DEFAULT,
+  DESCUENTO_AFORO,
+  INCIDENCIAS,
+  MEDIOS_DE_USO,
+  UDA,
+} from "@/lib/tarifario-config";
 
-const DATA_PATH = path.join(process.cwd(), "data", "tarifario.json");
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? "sgp-admin-2026";
-
-function checkAuth(req: NextRequest): boolean {
-  const auth = req.headers.get("x-admin-password");
-  return auth === ADMIN_PASSWORD;
-}
-
-async function readConfig() {
-  try {
-    const raw = await fs.readFile(DATA_PATH, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    return null;
-  }
-}
-
-async function writeConfig(data: unknown) {
-  await fs.mkdir(path.dirname(DATA_PATH), { recursive: true });
-  await fs.writeFile(DATA_PATH, JSON.stringify(data, null, 2), "utf-8");
-}
-
+/**
+ * Solo lectura, a propósito.
+ *
+ * Antes esta ruta también escribía `data/tarifario.json`, un archivo que
+ * ninguna parte del sitio leía: las calculadoras toman los valores de
+ * `lib/tarifario-config.ts`. El panel confirmaba "Guardado" y no cambiaba
+ * ninguna tarifa, lo que invitaba a creer lo contrario. Ahora devuelve lo que
+ * el motor usa de verdad y no acepta escrituras.
+ */
 export async function GET(req: NextRequest) {
-  if (!checkAuth(req)) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  // Es la puerta de entrada al panel: sin tope, la contraseña se puede
+  // probar a repetición hasta acertarla.
+  if (excedeLimite(`admin:${identificar(req)}`, LIMITE_INGRESO)) {
+    return respuestaLimite("Demasiados intentos. Probá de nuevo en unos minutos.");
   }
 
-  const config = await readConfig();
-  if (!config) {
-    return NextResponse.json({
-      uda: 39200,
-      incidencias: { secundaria: 0.33, necesaria: 0.60, indispensable: 1.00 },
-      categoriaDefault: 0.24,
-      medios: { parlante: 0.15, televisor: 0.12 },
-      descuentoAforo: 0.60,
-    });
-  }
+  const rechazo = verificarAdmin(req);
+  if (rechazo) return rechazo;
 
-  return NextResponse.json(config);
-}
-
-export async function POST(req: NextRequest) {
-  if (!checkAuth(req)) {
-    return NextResponse.json({ error: "No autorizado" }, { status: 401 });
-  }
-
-  try {
-    const body = await req.json();
-    await writeConfig(body);
-    return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json(
-      { error: "Error al guardar la configuración" },
-      { status: 500 },
-    );
-  }
+  return NextResponse.json({
+    uda: UDA,
+    incidencias: INCIDENCIAS,
+    categoriaDefault: CATEGORIA_DEFAULT,
+    medios: MEDIOS_DE_USO,
+    descuentoAforo: DESCUENTO_AFORO,
+    soloLectura: true,
+  });
 }

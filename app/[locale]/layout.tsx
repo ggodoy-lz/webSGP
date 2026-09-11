@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITIO } from "@/lib/sitio";
 import { Antonio, Montserrat } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
@@ -21,13 +22,28 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+const TITULO = "SGP — Sociedad de Gestión de Productores Fonográficos del Paraguay";
+const DESCRIPCION =
+  "SGP gestiona los derechos de los productores fonográficos del Paraguay. Licencias, regalías e ISRC.";
+
 export const metadata: Metadata = {
-  title: {
-    default: "SGP — Sociedad de Gestión de Productores Fonográficos del Paraguay",
-    template: "%s | SGP Paraguay",
+  // Sin metadataBase, las URL de las imágenes para compartir quedan relativas
+  // y las redes no las resuelven.
+  metadataBase: new URL(SITIO),
+  title: { default: TITULO, template: "%s | SGP Paraguay" },
+  description: DESCRIPCION,
+  openGraph: {
+    type: "website",
+    siteName: "SGP Paraguay",
+    title: TITULO,
+    description: DESCRIPCION,
+    locale: "es_PY",
+    alternateLocale: "en_US",
   },
-  description:
-    "SGP gestiona los derechos de los productores fonográficos del Paraguay. Licencias, regalías e ISRC.",
+  twitter: { card: "summary_large_image", title: TITULO, description: DESCRIPCION },
+  alternates: {
+    languages: { es: "/es", en: "/en" },
+  },
 };
 
 type Props = { children: React.ReactNode; params: Promise<{ locale: string }> };
