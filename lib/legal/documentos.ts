@@ -15,4 +15,5 @@ export const TERMINOS_ACTUALIZADO = "8 de setiembre de 2026";
 export const DOCUMENTOS_LEGALES = {
   terminos: "/docs/legal/terminos-y-condiciones-de-uso.pdf",
   declaracionJurada: "/docs/legal/declaracion-jurada-solicitud-de-licencia.pdf",
+  privacidad: "/docs/legal/politica-de-privacidad.pdf",
 } as const;

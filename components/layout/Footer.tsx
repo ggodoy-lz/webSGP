@@ -115,9 +115,6 @@ export default function Footer() {
               {t("legal.title")}
             </h5>
             <ul className="space-y-2.5 mb-8">
-              {/* La Política de Privacidad todavía no se enlaza: el documento
-                  recibido es un dictamen jurídico sobre la política de IFPI,
-                  no el texto de la política de SGP. */}
               <li>
                 <Link href={`/${locale}/marco-legal`} className="text-sm text-white/40 hover:text-white transition-colors">
                   {t("legal.marcoLegal")}
@@ -132,6 +129,16 @@ export default function Footer() {
                   className="text-sm text-white/40 hover:text-white transition-colors"
                 >
                   {t("legal.terminos")}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={DOCUMENTOS_LEGALES.privacidad}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white/40 hover:text-white transition-colors"
+                >
+                  {t("legal.privacidad")}
                 </a>
               </li>
             </ul>
