@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckIcon, ArrowTopRightOnSquareIcon, ArrowRightIcon, DocumentTextIcon, CalculatorIcon } from "@heroicons/react/24/outline";
 import PageHero from "@/components/ui/PageHero";
 import TarifarioPageLink from "@/components/ui/TarifarioPageLink";
+import { DOCUMENTOS_LEGALES } from "@/lib/legal/documentos";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("licencias");
@@ -166,16 +167,19 @@ export default function LicenciasPage() {
               <p className="font-display font-black text-[#f2e2c4] text-5xl mb-3">PAGOPAR</p>
               <p className="text-white/20 text-xs uppercase tracking-widest mb-6">Pagos seguros en Paraguay</p>
               <div className="mb-8 bg-white/5 p-5 text-left">
-                <p className="font-display font-black text-white text-xl mb-3">Comprobante de licencia</p>
-                <p className="text-sm text-white/50 leading-relaxed mb-4">
-                  El comprobante descargable incluye los datos declarados del formulario, el plan seleccionado y los Terminos & Condiciones como declaracion jurada.
-                </p>
+                {/* SGP pidió que se llame "Comprobante de solicitud de licencia": la
+                    declaración jurada aclara que ni la solicitud ni el pago
+                    son una licencia. Antes decía "Comprobante de licencia" y
+                    descargaba un "Certificado de licencia" de muestra. */}
+                <p className="font-display font-black text-white text-xl mb-3">{t("comprobante.titulo")}</p>
+                <p className="text-sm text-white/50 leading-relaxed mb-4">{t("comprobante.texto")}</p>
                 <a
-                  href={"data:text/plain;charset=utf-8," + encodeURIComponent("Certificado de licencia SGP\n\nDatos del solicitante: completar desde el formulario de pago.\nPlan: mensual o anual.\n\nTerminos & Condiciones: el solicitante declara bajo fe de juramento que los datos ingresados son correctos y que utilizara la licencia conforme a las condiciones de SGP.")}
-                  download="certificado-licencia-sgp.txt"
+                  href={DOCUMENTOS_LEGALES.declaracionJurada}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#f2b33d] hover:text-white transition-colors"
                 >
-                  Descargar modelo <DocumentTextIcon className="w-4 h-4" />
+                  {t("comprobante.enlace")} <DocumentTextIcon className="w-4 h-4" />
                 </a>
               </div>
               <div className="flex flex-wrap justify-center gap-2">

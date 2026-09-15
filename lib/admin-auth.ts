@@ -11,12 +11,22 @@
 import { timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 
-export const NO_AUTORIZADO = NextResponse.json({ error: "No autorizado" }, { status: 401 });
+/*
+ * Las respuestas se crean en cada llamada: el cuerpo de una Response se consume
+ * una sola vez, así que devolver la misma instancia a dos peticiones puede
+ * dejar la segunda sin cuerpo.
+ */
 
-const SIN_CONFIGURAR = NextResponse.json(
-  { error: "El panel no está configurado. Falta definir ADMIN_PASSWORD en el servidor." },
-  { status: 503 },
-);
+function noAutorizado(): NextResponse {
+  return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+}
+
+function sinConfigurar(): NextResponse {
+  return NextResponse.json(
+    { error: "El panel no está configurado. Falta definir ADMIN_PASSWORD en el servidor." },
+    { status: 503 },
+  );
+}
 
 /**
  * Compara sin filtrar por tiempo. Una comparación normal corta en el primer
@@ -46,11 +56,11 @@ export function verificarAdmin(req: NextRequest): NextResponse | null {
     console.error(
       "[admin] ADMIN_PASSWORD no está definida: se rechaza el acceso al panel.",
     );
-    return SIN_CONFIGURAR;
+    return sinConfigurar();
   }
 
   const recibida = req.headers.get("x-admin-password");
-  if (!recibida || !igualdadSegura(recibida, esperada)) return NO_AUTORIZADO;
+  if (!recibida || !igualdadSegura(recibida, esperada)) return noAutorizado();
 
   return null;
 }

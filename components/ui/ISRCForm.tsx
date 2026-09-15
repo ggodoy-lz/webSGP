@@ -6,8 +6,9 @@ import { useTranslations } from "next-intl";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircleIcon, ExclamationCircleIcon } from "@heroicons/react/24/outline";
 import Button from "./Button";
+import { DOCUMENTOS_LEGALES } from "@/lib/legal/documentos";
 
-type FormData = { productora: string; nombreObra: string; artista: string; anio: string; cantidad: number; nombre: string; email: string; telefono: string; };
+type FormData = { productora: string; nombreObra: string; artista: string; anio: string; cantidad: number; nombre: string; email: string; telefono: string; aceptaTerminos: boolean; };
 type Status = "idle"|"sending"|"success"|"error";
 
 const fieldBase = (err?: boolean) => `w-full bg-transparent border-0 border-b px-0 py-3 text-sm outline-none transition-colors placeholder:text-[#212226]/25 ${err ? "border-[#f0552f]" : "border-[#212226]/20 focus:border-[#212226]"}`;
@@ -16,6 +17,7 @@ const fields = [["productora","text",true],["nombreObra","text",true],["artista"
 
 export default function ISRCForm() {
   const t = useTranslations("isrc.form");
+  const tf = useTranslations("formularios");
   const [status, setStatus] = useState<Status>("idle");
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -40,6 +42,17 @@ export default function ISRCForm() {
               <input type={type} {...register(field, { required, ...(field==="email"?{pattern:/^\S+@\S+$/i}:{}) })} placeholder={t(`fields.${field}Placeholder`)} className={fieldBase(!!errors[field as keyof FormData])} />
             </div>
           ))}
+        </div>
+        {/* Los Términos de SGP piden aceptación expresa antes de enviar una solicitud. */}
+        <div>
+          <label className="flex items-start gap-3 text-sm text-[#212226]/60 cursor-pointer">
+            <input type="checkbox" {...register("aceptaTerminos", { required: true })} className="mt-0.5 h-4 w-4 shrink-0 accent-[#f0552f]" />
+            <span>
+              {tf("aceptaPrefijo")}{" "}
+              <a href={DOCUMENTOS_LEGALES.terminos} target="_blank" rel="noopener noreferrer" className="font-bold text-[#212226] underline underline-offset-2 hover:text-[#f0552f] transition-colors">{tf("aceptaEnlace")}</a>.
+            </span>
+          </label>
+          {errors.aceptaTerminos && <p className="text-xs text-[#f0552f] mt-2">{tf("aceptaError")}</p>}
         </div>
         <div className="flex items-center gap-4">
           <Button type="submit" variant="primary" disabled={status==="sending"||status==="success"} className="disabled:opacity-40">

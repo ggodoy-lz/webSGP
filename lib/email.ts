@@ -11,20 +11,47 @@
 
 const RESEND_URL = "https://api.resend.com/emails";
 
-/** A dónde llegan los avisos. */
-const DESTINO = process.env.EMAIL_DESTINO ?? "sgp@sgp.com.py";
+export type Casilla = "consultas" | "isrc" | "licencias" | "devoluciones";
+
+/**
+ * Casillas que indicó SGP para cada tipo de solicitud. Cada una se puede
+ * reemplazar con su variable de entorno sin tocar código.
+ *
+ * `devoluciones` todavía no tiene formulario en el sitio: los Términos piden
+ * que las solicitudes de reembolso se hagan por escrito a esa casilla, así que
+ * queda definida para cuando se implemente.
+ */
+const CASILLAS: Record<Casilla, { variable: string; porDefecto: string }> = {
+  consultas: { variable: "EMAIL_CONSULTAS", porDefecto: "operaciones@sgp.com.py" },
+  isrc: { variable: "EMAIL_ISRC", porDefecto: "isrc@sgp.com.py" },
+  licencias: { variable: "EMAIL_LICENCIAS", porDefecto: "licencias@sgp.com.py" },
+  devoluciones: { variable: "EMAIL_DEVOLUCIONES", porDefecto: "administracionsgp@sgp.com.py" },
+};
+
+/**
+ * Se lee en cada envío y no al cargar el módulo, para que un cambio de variable
+ * no quede tapado por un valor leído antes.
+ */
+export function destinoDe(casilla: Casilla): string {
+  const { variable, porDefecto } = CASILLAS[casilla];
+  return process.env[variable] || porDefecto;
+}
 
 /**
  * Remitente. Tiene que ser un dominio verificado en Resend; si no, Resend
  * rechaza el envío.
  */
-const REMITENTE = process.env.EMAIL_REMITENTE ?? "SGP Web <web@sgp.com.py>";
+function remitente(): string {
+  return process.env.EMAIL_REMITENTE || "SGP Web <web@sgp.com.py>";
+}
 
 export function emailConfigurado(): boolean {
   return Boolean(process.env.RESEND_API_KEY);
 }
 
 export type Aviso = {
+  /** A qué casilla de SGP va el aviso. */
+  casilla: Casilla;
   asunto: string;
   /** Pares etiqueta/valor que se listan en el cuerpo. */
   datos: [string, string | number | undefined | null][];
@@ -86,8 +113,8 @@ export async function enviarAviso(aviso: Aviso): Promise<void> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: REMITENTE,
-      to: [DESTINO],
+      from: remitente(),
+      to: [destinoDe(aviso.casilla)],
       subject: aviso.asunto,
       html,
       text,

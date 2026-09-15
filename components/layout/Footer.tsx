@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
+import { DOCUMENTOS_LEGALES } from "@/lib/legal/documentos";
 
 export default function Footer() {
   const t = useTranslations("footer");
@@ -18,9 +19,14 @@ export default function Footer() {
           {/* Brand block */}
           <div className="lg:col-span-4">
             <Link href={`/${locale}`}>
-              <span className="font-display block text-[5rem] font-black leading-none text-white hover:text-[#f0552f] transition-colors -ml-1 mb-2">
-                SGP
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element -- logo de SGP en SVG */}
+              <img
+                src="/img/sgp-logo-blanco.svg"
+                alt="SGP"
+                width={101}
+                height={96}
+                className="block h-24 w-auto mb-4 transition-opacity hover:opacity-80"
+              />
             </Link>
             <p className="text-xs font-bold uppercase tracking-[0.15em] text-white/30 mb-5">
               Sociedad de Gestión de<br />Productores Fonográficos del Paraguay
@@ -109,11 +115,25 @@ export default function Footer() {
               {t("legal.title")}
             </h5>
             <ul className="space-y-2.5 mb-8">
-              {[t("legal.marcoLegal"), t("legal.privacidad"), t("legal.terminos")].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-white/40 hover:text-white transition-colors">{item}</a>
-                </li>
-              ))}
+              {/* La Política de Privacidad todavía no se enlaza: el documento
+                  recibido es un dictamen jurídico sobre la política de IFPI,
+                  no el texto de la política de SGP. */}
+              <li>
+                <Link href={`/${locale}/marco-legal`} className="text-sm text-white/40 hover:text-white transition-colors">
+                  {t("legal.marcoLegal")}
+                </Link>
+              </li>
+              <li>
+                {/* El PDF tal cual lo entregó SGP, como en el sitio actual. */}
+                <a
+                  href={DOCUMENTOS_LEGALES.terminos}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-white/40 hover:text-white transition-colors"
+                >
+                  {t("legal.terminos")}
+                </a>
+              </li>
             </ul>
             <Link
               href={`/${locale}/contacto`}

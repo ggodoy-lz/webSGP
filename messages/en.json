@@ -197,7 +197,12 @@
       "verTarifario": "Calculate my rate →"
     },
     "proximamente": "Coming soon",
-    "calcularTarifa": "Calculate tariff"
+    "calcularTarifa": "Calculate tariff",
+    "comprobante": {
+      "titulo": "Licence application receipt",
+      "texto": "Before you confirm payment, a receipt is generated with the details you provided and the sworn statement. It is not a licence: the licence is granted once SGP confirms the payment and issues the electronic invoice.",
+      "enlace": "View the sworn statement (PDF)"
+    }
   },
   "regalias": {
     "hero": {
@@ -276,7 +281,7 @@
       "submit": "Request ISRC",
       "sending": "Sending...",
       "success": "Request received! We'll contact you within 48 hours.",
-      "error": "We could not send your message. Please write to sgp@sgp.com.py or try again in a few minutes."
+      "error": "We could not send your request. Please write to isrc@sgp.com.py or try again in a few minutes."
     }
   },
   "sobreNosotros": {
@@ -396,7 +401,7 @@
       "submit": "Send message",
       "sending": "Sending...",
       "success": "Message sent! We'll get back to you shortly.",
-      "error": "We could not send your message. Please write to sgp@sgp.com.py or try again in a few minutes."
+      "error": "We could not send your message. Please write to operaciones@sgp.com.py or try again in a few minutes."
     },
     "info": {
       "title": "Contact information",
@@ -1006,5 +1011,18 @@
     "titulo": "Something went wrong",
     "texto": "We had a problem loading this page. You can try again, or write to us if it keeps happening.",
     "reintentar": "Try again"
+  },
+  "paginasLegales": {
+    "soloEspanol": "This document is available in Spanish only.",
+    "marcoLegal": {
+      "titulo": "Legal Framework",
+      "subtitulo": "Regulations governing the rights of phonographic producers in Paraguay.",
+      "documentos": "Documents"
+    }
+  },
+  "formularios": {
+    "aceptaPrefijo": "I have read and accept the",
+    "aceptaEnlace": "Terms and Conditions of use",
+    "aceptaError": "You need to accept the Terms and Conditions to send this form."
   }
 }

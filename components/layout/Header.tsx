@@ -82,9 +82,16 @@ export default function Header() {
 
           {/* Logo */}
           <Link href={`/${locale}`} className="flex items-center gap-3 group">
-            <span className="font-display text-4xl font-black leading-none text-white group-hover:text-[#f0552f] transition-colors tracking-tighter">
-              SGP
-            </span>
+            {/* Solo las letras del logo: a la altura del encabezado, la onda del
+                logo completo queda como una mancha ilegible. */}
+            {/* eslint-disable-next-line @next/next/no-img-element -- SVG vectorial del logo */}
+            <img
+              src="/img/sgp-letras-blanco.svg"
+              alt="SGP"
+              width={48}
+              height={32}
+              className="h-8 w-auto transition-opacity group-hover:opacity-80"
+            />
             <span className="hidden sm:block text-[10px] font-bold uppercase tracking-[0.15em] text-white/30 leading-tight max-w-[150px]">
               Productores<br />Fonográficos del Paraguay
             </span>

@@ -1,13 +1,21 @@
 import { NextRequest } from "next/server";
-import { excedeEnvios, FALTAN_CAMPOS, responderFormulario } from "@/lib/formulario";
+import {
+  aceptoTerminos,
+  constanciaDeAceptacion,
+  excedeEnvios,
+  faltanCampos,
+  noAceptoTerminos,
+  responderFormulario,
+} from "@/lib/formulario";
 import { campo, emailValido } from "@/lib/validacion";
 
+/** Consultas generales: van a operaciones@. */
 export async function POST(req: NextRequest) {
   const demasiados = excedeEnvios(req);
   if (demasiados) return demasiados;
 
   const datos = await req.json().catch(() => null);
-  if (!datos) return FALTAN_CAMPOS;
+  if (!datos || typeof datos !== "object") return faltanCampos();
 
   const nombre = campo(datos.nombre, 120);
   const email = campo(datos.email, 254);
@@ -16,11 +24,13 @@ export async function POST(req: NextRequest) {
   const empresa = campo(datos.empresa, 160);
   const telefono = campo(datos.telefono, 60);
 
-  if (!nombre || !asunto || !mensaje || !emailValido(email)) return FALTAN_CAMPOS;
+  if (!nombre || !asunto || !mensaje || !emailValido(email)) return faltanCampos();
+  if (!aceptoTerminos(datos)) return noAceptoTerminos();
 
   return responderFormulario(
     "contacto",
     {
+      casilla: "consultas",
       asunto: `Consulta desde la web: ${asunto}`,
       responderA: email,
       datos: [
@@ -30,6 +40,7 @@ export async function POST(req: NextRequest) {
         ["Teléfono", telefono],
         ["Asunto", asunto],
         ["Mensaje", mensaje],
+        constanciaDeAceptacion(),
       ],
     },
     { nombre, email, asunto, mensaje, empresa, telefono },

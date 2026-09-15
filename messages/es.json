@@ -197,7 +197,12 @@
       "verTarifario": "Calcular mi tarifa →"
     },
     "proximamente": "Próximamente",
-    "calcularTarifa": "Calcular tarifa"
+    "calcularTarifa": "Calcular tarifa",
+    "comprobante": {
+      "titulo": "Comprobante de solicitud de licencia",
+      "texto": "Antes de confirmar el pago se genera un comprobante con los datos declarados y la declaración jurada. No es una licencia: la licencia se obtiene cuando SGP confirma el pago y emite la factura electrónica.",
+      "enlace": "Ver la declaración jurada (PDF)"
+    }
   },
   "regalias": {
     "hero": {
@@ -276,7 +281,7 @@
       "submit": "Solicitar ISRC",
       "sending": "Enviando...",
       "success": "¡Solicitud recibida! Nos contactaremos contigo en las próximas 48 horas.",
-      "error": "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py o probá de nuevo en unos minutos."
+      "error": "No pudimos enviar tu solicitud. Escribinos a isrc@sgp.com.py o probá de nuevo en unos minutos."
     }
   },
   "sobreNosotros": {
@@ -396,7 +401,7 @@
       "submit": "Enviar mensaje",
       "sending": "Enviando...",
       "success": "¡Mensaje enviado! Te responderemos a la brevedad.",
-      "error": "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py o probá de nuevo en unos minutos."
+      "error": "No pudimos enviar tu mensaje. Escribinos a operaciones@sgp.com.py o probá de nuevo en unos minutos."
     },
     "info": {
       "title": "Información de contacto",
@@ -1006,5 +1011,18 @@
     "titulo": "Algo salió mal",
     "texto": "Tuvimos un problema al cargar esta página. Podés reintentar o escribirnos si vuelve a pasar.",
     "reintentar": "Reintentar"
+  },
+  "paginasLegales": {
+    "soloEspanol": "",
+    "marcoLegal": {
+      "titulo": "Marco Legal",
+      "subtitulo": "Normativa que regula los derechos de los productores fonográficos en Paraguay.",
+      "documentos": "Documentos"
+    }
+  },
+  "formularios": {
+    "aceptaPrefijo": "Leí y acepto los",
+    "aceptaEnlace": "Términos y Condiciones de uso",
+    "aceptaError": "Para enviar tenés que aceptar los Términos y Condiciones."
   }
 }

@@ -16,6 +16,7 @@ const SECCIONES = [
   "/noticias",
   "/sobre-nosotros",
   "/contacto",
+  "/marco-legal",
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

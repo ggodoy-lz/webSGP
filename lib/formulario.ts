@@ -1,22 +1,60 @@
 /**
- * Respuesta compartida por los tres formularios del sitio (contacto, ISRC y
- * presupuesto). Solo servidor.
+ * Piezas compartidas por los formularios del sitio (contacto, ISRC y
+ * solicitud de licencia). Solo servidor.
  *
  * La normalización de los campos vive en `validacion.ts`.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { enviarAviso, type Aviso } from "./email";
+import { destinoDe, enviarAviso, type Aviso } from "./email";
 import { excedeLimite, identificar, LIMITE_FORMULARIO } from "./limite-peticiones";
+import { TERMINOS_ACTUALIZADO } from "./legal/documentos";
 
-export const FALTAN_CAMPOS = NextResponse.json(
-  { error: "Faltan campos requeridos" },
-  { status: 400 },
-);
+/*
+ * Las respuestas se crean en cada llamada y no se reutiliza una constante: el
+ * cuerpo de una Response se consume una sola vez, así que devolver la misma
+ * instancia a dos peticiones puede dejar la segunda sin cuerpo.
+ */
+
+export function faltanCampos(): NextResponse {
+  return NextResponse.json({ error: "Faltan campos requeridos" }, { status: 400 });
+}
 
 /**
- * Frena el envío repetido desde una misma IP. Son endpoints públicos que ahora
- * mandan correo: sin tope, alcanza un script para inundar la casilla de SGP.
+ * Los Términos de SGP exigen aceptación expresa antes de enviar una solicitud.
+ * La casilla del formulario ya lo pide en el navegador, pero se vuelve a exigir
+ * acá: una petición armada a mano la saltearía.
+ */
+export function aceptoTerminos(datos: Record<string, unknown>): boolean {
+  return datos.aceptaTerminos === true;
+}
+
+export function noAceptoTerminos(): NextResponse {
+  return NextResponse.json(
+    { error: "Hay que aceptar los Términos y Condiciones para enviar el formulario" },
+    { status: 400 },
+  );
+}
+
+/**
+ * Constancia de la aceptación para el aviso que recibe SGP. Los Términos prevén
+ * conservar la versión aceptada y la fecha y hora de la operación.
+ */
+export function constanciaDeAceptacion(): [string, string] {
+  const cuando = new Intl.DateTimeFormat("es-PY", {
+    dateStyle: "long",
+    timeStyle: "short",
+    timeZone: "America/Asuncion",
+  }).format(new Date());
+  return [
+    "Términos y Condiciones",
+    `Aceptó la versión del ${TERMINOS_ACTUALIZADO}, el ${cuando} (hora de Asunción)`,
+  ];
+}
+
+/**
+ * Frena el envío repetido desde una misma IP. Son endpoints públicos que
+ * mandan correo: sin tope, alcanza un script para inundar las casillas de SGP.
  *
  * Devuelve la respuesta a retornar, o `null` si puede seguir.
  */
@@ -51,7 +89,7 @@ export async function responderFormulario(
     console.error(`[${etiqueta}] contenido:`, JSON.stringify(contenido));
 
     return NextResponse.json(
-      { error: "No pudimos enviar tu mensaje. Escribinos a sgp@sgp.com.py." },
+      { error: `No pudimos enviar tu mensaje. Escribinos a ${destinoDe(aviso.casilla)}.` },
       { status: 502 },
     );
   }
