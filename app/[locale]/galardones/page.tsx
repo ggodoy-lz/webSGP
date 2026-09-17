@@ -71,7 +71,7 @@ export default async function GalardonesPage() {
             <p className="text-[#212226]/55 text-sm leading-relaxed">{t("streaming.description")}</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-16">
             {[{Icon:DiscoOro,lbl:t("streaming.niveles.oro"),c:"#f2b33d",r:"100K+"},
               {Icon:DiscoPlatino,lbl:t("streaming.niveles.platino"),c:"#8a847a",r:"500K+"},
               {Icon:DiscoDiamante,lbl:t("streaming.niveles.diamante"),c:"#4666a6",r:"1M+"}].map(lvl => (
@@ -80,7 +80,9 @@ export default async function GalardonesPage() {
                 className="group text-center bg-[#f2e2c4] border-t-4 px-6 py-10 lg:py-12 transition-colors hover:bg-[#eeddb9]"
                 style={{borderColor:lvl.c}}
               >
-                <lvl.Icon className="mx-auto w-28 h-28 lg:w-36 lg:h-36 mb-7 drop-shadow-lg transition-transform duration-500 group-hover:scale-105" />
+                {/* Grande a propósito: la placa del disco lleva texto y a tamaño chico no
+                    se lee. El archivo es de 1024 px, así que aguanta este tamaño. */}
+                <lvl.Icon className="mx-auto w-64 md:w-56 lg:w-72 xl:w-80 h-auto aspect-square mb-7 drop-shadow-lg transition-transform duration-500 group-hover:scale-105" />
                 <div className="font-display font-black text-[#212226] text-2xl lg:text-3xl">{lvl.lbl}</div>
                 <div className="text-[10px] font-black uppercase tracking-[0.18em] text-[#212226]/40 mt-2">
                   {lvl.r} {t("streaming.reproducciones")}
