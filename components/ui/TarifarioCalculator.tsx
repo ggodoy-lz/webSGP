@@ -33,7 +33,7 @@ import {
   type MedioDeUso,
   type CategoriaHotel,
 } from "@/lib/tarifario-config";
-import { getGimnasioSubtipo } from "@/lib/tarifario-config";
+import { getGimnasioSubtipo, gimnasioPorSuperficie } from "@/lib/tarifario-config";
 import type { TarifarioInput } from "@/lib/tarifario-engine";
 import PanelResumen from "@/components/ui/PanelResumen";
 import IndicadorPasos from "@/components/ui/IndicadorPasos";
@@ -134,8 +134,12 @@ export default function TarifarioCalculator({
     "Hotel 5 Estrellas": 5,
   };
   const categoriaImplicita = hotelEstrellasImplicitas[tipoLocal] ?? null;
-  const subtipoGimnasio =
-    grupo === "gimnasios" && tipoLocal ? getGimnasioSubtipo(tipoLocal) : null;
+  // Solo Retail mide el salón de ventas; el resto de los rubros, la superficie
+  // total. Antes todos compartían la etiqueta de Retail.
+  const etiquetaSuperficie =
+    grupo === "comercial" ? t("fields.metrosCuadradosVentas") : t("fields.metrosCuadrados");
+  const gymPorSuperficie = grupo === "gimnasios" && gimnasioPorSuperficie(tipoLocal);
+
 
   const needsHorario = grupo !== "academias" && grupo !== "hoteles";
   const needsMedio = (() => {
@@ -223,21 +227,15 @@ export default function TarifarioCalculator({
       if (grupo === "gastronomia" && mesas <= 0 && butacas <= 0)
         f.push(`${t("fields.mesas")} / ${t("fields.butacas")}`);
       if ((grupo === "comercial" || grupo === "entretenimiento") && metrosCuadrados <= 0)
-        f.push(t("fields.metrosCuadrados"));
+        f.push(etiquetaSuperficie);
       if (grupo === "hoteles" && habitaciones <= 0) f.push(t("fields.habitaciones"));
       if (grupo === "estetica" && estaciones <= 0) f.push(t("fields.estaciones"));
       if (grupo === "academias" && alumnos <= 0) f.push(t("fields.alumnos"));
       if (grupo === "gimnasios") {
         const sub = getGimnasioSubtipo(tipoLocal);
-        if (sub === "indispensable") {
-          if (metrosCuadrados <= 0) f.push(t("fields.metrosCuadrados"));
-          if (sesionesPorDia <= 0) f.push(t("fields.sesiones"));
-        } else if (sub === "necesario") {
-          if (maquinas <= 0) f.push(t("fields.maquinas"));
-          if (sesionesPorDia <= 0) f.push(t("fields.sesiones"));
-        } else if (maquinas <= 0) {
-          f.push(t("fields.maquinas"));
-        }
+        if (gymPorSuperficie ? metrosCuadrados <= 0 : maquinas <= 0)
+          f.push(gymPorSuperficie ? etiquetaSuperficie : t("fields.maquinas"));
+        if (sub !== "secundario" && sesionesPorDia <= 0) f.push(t("fields.sesiones"));
       }
       if (grupo === "oficinas" && sillasEspera <= 0) f.push(t("fields.sillasEspera"));
       if (grupo === "motel" && camas <= 0) f.push(t("fields.camas"));
@@ -288,7 +286,7 @@ export default function TarifarioCalculator({
       return alumnos > 0 ? `${compactNumber(alumnos)} ${t("fields.alumnos").toLowerCase()}` : "";
     if (grupo === "gimnasios") {
       const base =
-        subtipoGimnasio === "indispensable"
+        gymPorSuperficie
           ? metrosCuadrados > 0 ? `${compactNumber(metrosCuadrados)} m²` : ""
           : maquinas > 0 ? `${compactNumber(maquinas)} ${t("fields.maquinas").toLowerCase()}` : "";
       const ses = sesionesPorDia > 0 ? `${compactNumber(sesionesPorDia)} ${t("fields.sesiones").toLowerCase()}` : "";
@@ -467,7 +465,7 @@ export default function TarifarioCalculator({
 
                   {(grupo === "comercial" || grupo === "entretenimiento") && (
                     <NumberStepper
-                      label={t("fields.metrosCuadrados")}
+                      label={etiquetaSuperficie}
                       placeholder={t("fields.metrosCuadradosPlaceholder")}
                       value={metrosCuadrados}
                       onChange={setMetrosCuadrados}
@@ -538,9 +536,9 @@ export default function TarifarioCalculator({
 
                   {grupo === "gimnasios" && (
                     <>
-                      {getGimnasioSubtipo(tipoLocal) === "indispensable" ? (
+                      {gymPorSuperficie ? (
                         <NumberStepper
-                          label={t("fields.metrosCuadrados")}
+                          label={etiquetaSuperficie}
                           placeholder={t("fields.metrosCuadradosPlaceholder")}
                           value={metrosCuadrados}
                           onChange={setMetrosCuadrados}

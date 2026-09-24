@@ -254,6 +254,14 @@ export const GIMNASIO_TIPOS_INDISPENSABLE = [
   "Zumba", "Bailoterapia", "Danzaterapia", "Fitdance",
 ];
 
+/**
+ * true si el gimnasio se declara en m² (uso indispensable); false si por
+ * máquinas o estaciones.
+ */
+export function gimnasioPorSuperficie(tipoLocal: string): boolean {
+  return GIMNASIO_TIPOS_INDISPENSABLE.includes(tipoLocal);
+}
+
 export const SHOPPING_TIPOS = ["Shopping", "Centro Comercial"];
 
 // ── Horas estándar para estética ──────────────────────────────────────────
