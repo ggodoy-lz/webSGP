@@ -59,12 +59,17 @@ export function excedeLimite(clave: string, limite: Limite): boolean {
   return actual.intentos > limite.maximo;
 }
 
+/**
+ * Consulta si la clave está bloqueada, sin registrar un intento. Permite contar
+ * solo los fallos: quien ya agotó el cupo no pasa, pero un acceso correcto no
+ * lo gasta.
+ */
+export function estaBloqueado(clave: string, limite: Limite): boolean {
+  const actual = registros.get(clave);
+  return Boolean(actual && actual.hasta > Date.now() && actual.intentos >= limite.maximo);
+}
+
 /** Solo para las pruebas. */
 export function reiniciarLimites() {
   registros.clear();
-}
-
-/** Respuesta estándar cuando se superó el tope. */
-export function respuestaLimite(mensaje: string): Response {
-  return Response.json({ error: mensaje }, { status: 429 });
 }

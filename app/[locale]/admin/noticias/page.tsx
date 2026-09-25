@@ -89,7 +89,10 @@ export default function AdminNoticiasPage() {
     try {
       const res = await fetch("/api/admin/noticias", { headers: { "x-admin-password": pw } });
       if (!res.ok) {
-        setErrorLogin(res.status === 401 ? "Contraseña incorrecta" : "No se pudo cargar el panel");
+        // El servidor distingue contraseña incorrecta, demasiados intentos y
+        // panel sin configurar; su mensaje le dice a quien entra qué hacer.
+        const data = await res.json().catch(() => ({}));
+        setErrorLogin(data.error ?? "No se pudo cargar el panel");
         return;
       }
       const data = await res.json();

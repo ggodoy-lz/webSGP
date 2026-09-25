@@ -59,7 +59,8 @@ export default function AdminTarifarioPage() {
         setConfig({ ...DEFAULT_CONFIG, ...data });
         setAuthenticated(true);
       } else {
-        alert("Contraseña incorrecta");
+        const data = await res.json().catch(() => ({}));
+        alert(data.error ?? "No se pudo cargar el panel");
       }
     } catch {
       alert("Error de conexión");

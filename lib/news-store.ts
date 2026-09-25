@@ -18,6 +18,7 @@ import {
   CATEGORIAS,
   ESTADOS,
   NOTICIAS_SEMILLA,
+  generarSlug,
   type CategoriaNoticia,
   type EstadoNoticia,
   type NewsArticle,
@@ -53,7 +54,11 @@ export function normalizarNoticia(entrada: unknown, indice: number): NewsArticle
   // Sin título no hay nota que mostrar; una fila vacía se descarta.
   if (!titleEs && !titleEn) return null;
 
-  const slug = texto(n.slug, 80) || `noticia-${indice + 1}`;
+  // El slug va en la URL de la nota: se reduce a letras, números y guiones
+  // aunque llegue escrito a mano, para que no pueda romper el enlace ni
+  // colarle una ruta.
+  const slug =
+    generarSlug(texto(n.slug, 80)) || generarSlug(titleEs || titleEn) || `noticia-${indice + 1}`;
   const categoria = texto(n.category, 40) as CategoriaNoticia;
   const estado = texto(n.estado, 20) as EstadoNoticia;
   const fecha = texto(n.fecha, 10);

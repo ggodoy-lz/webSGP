@@ -31,6 +31,28 @@ const EXTENSION: Record<string, string> = {
   "image/png": "png",
 };
 
+/**
+ * Comprueba que los primeros bytes correspondan al tipo declarado. El tipo lo
+ * informa el navegador y se puede falsear: sin esto, un archivo HTML o un
+ * script declarado como `image/png` se guardaría y se serviría desde el sitio.
+ */
+export function coincideConTipo(bytes: Uint8Array, tipo: string): boolean {
+  const empieza = (firma: number[], desde = 0) =>
+    bytes.length >= desde + firma.length && firma.every((b, i) => bytes[desde + i] === b);
+
+  switch (tipo) {
+    case "image/jpeg":
+      return empieza([0xff, 0xd8, 0xff]);
+    case "image/png":
+      return empieza([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    case "image/webp":
+      // "RIFF", cuatro bytes de tamaño, "WEBP".
+      return empieza([0x52, 0x49, 0x46, 0x46]) && empieza([0x57, 0x45, 0x42, 0x50], 8);
+    default:
+      return false;
+  }
+}
+
 /** Nombre irrepetible, para que subir una imagen nueva no pise a la anterior. */
 function nombreDe(tipo: string): string {
   const id =
@@ -79,16 +101,33 @@ export async function borrarImagen(url: string): Promise<void> {
   }
 }
 
+/** Nombre de archivo tal como lo arma `nombreDe`. */
+const NOMBRE_VALIDO = /^[\w-]+\.(webp|jpg|png)$/;
+
 /**
  * Acepta solo rutas que haya generado este módulo. Sin esto, el panel podría
  * guardar una URL a un servidor externo y el sitio terminaría cargando —y
  * mostrando— una imagen de un tercero.
+ *
+ * En Blob se exige además la carpeta de portadas: el mismo almacén guarda el
+ * JSON de noticias y de galardones, y la ruta que borra imágenes no tiene que
+ * poder apuntarle a esos archivos.
  */
 export function esUrlDeImagenValida(url: string): boolean {
-  if (url.startsWith("/img/noticias/")) return !url.includes("..");
+  if (url.startsWith("/img/noticias/")) {
+    return NOMBRE_VALIDO.test(url.slice("/img/noticias/".length));
+  }
   try {
-    const { protocol, hostname } = new URL(url);
-    return protocol === "https:" && hostname.endsWith(".blob.vercel-storage.com");
+    const { protocol, hostname, pathname, search, hash } = new URL(url);
+    const prefijo = `/${CARPETA}/`;
+    return (
+      protocol === "https:" &&
+      hostname.endsWith(".public.blob.vercel-storage.com") &&
+      pathname.startsWith(prefijo) &&
+      NOMBRE_VALIDO.test(pathname.slice(prefijo.length)) &&
+      !search &&
+      !hash
+    );
   } catch {
     return false;
   }

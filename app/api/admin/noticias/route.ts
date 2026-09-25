@@ -1,11 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verificarAdmin } from "@/lib/admin-auth";
-import {
-  excedeLimite,
-  identificar,
-  LIMITE_INGRESO,
-  respuestaLimite,
-} from "@/lib/limite-peticiones";
 import { revalidatePath } from "next/cache";
 import {
   describirAlmacenamiento,
@@ -15,17 +9,8 @@ import {
   usaBlob,
 } from "@/lib/news-store";
 
-
-
-
 /** Devuelve todas las noticias, incluidos los borradores. */
 export async function GET(req: NextRequest) {
-  // Es la puerta de entrada al panel: sin tope, la contraseña se puede
-  // probar a repetición hasta acertarla.
-  if (excedeLimite(`admin:${identificar(req)}`, LIMITE_INGRESO)) {
-    return respuestaLimite("Demasiados intentos. Probá de nuevo en unos minutos.");
-  }
-
   const rechazo = verificarAdmin(req);
   if (rechazo) return rechazo;
 
